@@ -152,6 +152,28 @@ protocol AIProvider {
 - `WordClipKit` 中若有面向用户的字符串，也在 Package 内建自己的本地化资源（`defaultLocalization` + `.process` 资源），不把文案泄露到 UI 层。
 - 词库释义本身的语言（如英译中 vs 英英）属于「学习内容」，由词库数据决定，与界面语言无关。
 
+### 3.8 订阅与权益抽象（EntitlementProvider）
+
+收费功能由一层抽象隔离，开发期可用 mock 跑通整套 paywall/Pro 边界，账号就绪后只换实现：
+
+```swift
+enum SubscriptionPlan { case monthly, yearly, lifetime }
+
+protocol EntitlementProvider {
+    var isPro: Bool { get }                       // 是否解锁 Pro
+    var statePublisher: AnyPublisher<Bool, Never> { get }
+    func purchase(_ plan: SubscriptionPlan) async throws
+    func restore() async throws
+    func products() async -> [PlanProduct]        // 价格/本地化标题
+}
+
+struct MockEntitlement: EntitlementProvider { ... }      // 开发期：开关即「已订阅」
+// 账号就绪后：StoreKitEntitlement / RevenueCatEntitlement，UI 不变
+```
+
+- **功能闸门**统一走 `entitlement.isPro`，业务代码不直接碰 StoreKit。
+- 免费/Pro 边界见 PLAN「收费计划」一节。
+
 ---
 
 ## 4. 同步策略：本地优先，云端后置
@@ -170,6 +192,23 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 - 所有属性有默认值或可选；关系可选；不使用 `@Attribute(.unique)` 唯一约束（去重在应用层做）。
 
 开云后：私有数据库自动增量同步；冲突以「最近修改」为主，复习状态取更靠前的进度。
+
+---
+
+## 4.5 收费与同步选型（决策：Apple 生态内起步）
+
+**已确认路线：StoreKit 2（+ RevenueCat）做订阅 + CloudKit 做同步，零自建后端。** 权益判断在本地完成，跨设备权益与数据同步都交给 Apple 生态。未来若需网页端购买/跨平台账号，再引入自建后端——核心逻辑已沉淀在 `WordClipKit`，可平滑扩展。
+
+| 关注点 | 选择 | 备注 |
+|--------|------|------|
+| 收费渠道 | **StoreKit 2 内购**（数字订阅强制走 IAP） | 起步可纯 StoreKit；引入 RevenueCat 省掉收据校验/跨设备权益同步 |
+| 抽成 | 申请 **Small Business Program** → 15% | 年收入 < $100 万适用 |
+| 同步 | **CloudKit 私有库** | 与 SwiftData 集成，见 §4 |
+| 后端 | **暂不自建** | Apple 生态内一切由 StoreKit + CloudKit 托管 |
+
+**红线提醒**：iOS 上数字商品/订阅不得用 Stripe/微信支付等外部渠道在 App 内完成交易，否则下架。这也是选 StoreKit 的根本原因。
+
+> 前置条件：以上全部需要 Apple 付费开发者账号（$99/年）。开发阶段先用 `MockEntitlement`（见 §3.8）跑通，账号就绪后换真实现。
 
 ---
 
