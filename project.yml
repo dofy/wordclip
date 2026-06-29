@@ -13,6 +13,9 @@ options:
 packages:
   WordClipKit:
     path: WordClipKit
+  KeyboardShortcuts:
+    url: https://github.com/sindresorhus/KeyboardShortcuts
+    exactVersion: 2.2.0
 
 settings:
   base:
@@ -43,6 +46,8 @@ targets:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
       - package: WordClipKit
+      - package: KeyboardShortcuts
+      - sdk: ServiceManagement.framework
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: xyz.phpz.WordClip.macOS

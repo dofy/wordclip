@@ -259,18 +259,78 @@
     "settings.debug.pro" : {
       "comment" : "Debug toggle: simulate Pro",
       "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Simulate Pro (Debug)"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "模拟 Pro（调试）"
-          }
-        }
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Simulate Pro (Debug)" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "模拟 Pro（调试）" } }
+      }
+    },
+    "settings.section.capture" : {
+      "comment" : "Settings section header: word capture",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Word Capture" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取词" } }
+      }
+    },
+    "settings.capture.enabled" : {
+      "comment" : "Settings toggle: enable global word capture",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Global Word Capture" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用全局取词" } }
+      }
+    },
+    "settings.capture.shortcut" : {
+      "comment" : "Settings row label: capture keyboard shortcut recorder",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shortcut" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取词快捷键" } }
+      }
+    },
+    "settings.capture.hint" : {
+      "comment" : "Settings footer: capture shortcut usage hint",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Select a word in any app and press the shortcut to save it to WordClip" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在任意 App 中选中单词，按下快捷键即可收录到 WordClip" } }
+      }
+    },
+    "settings.section.general" : {
+      "comment" : "Settings section header: general",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "General" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通用" } }
+      }
+    },
+    "settings.general.launchatlogin" : {
+      "comment" : "Settings toggle: launch at login",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at Login" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "登录时自动启动" } }
+      }
+    },
+    "menubar.capture.enable" : {
+      "comment" : "Menu bar menu item: enable capture",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Word Capture" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用取词" } }
+      }
+    },
+    "menubar.capture.disable" : {
+      "comment" : "Menu bar menu item: disable capture",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Disable Word Capture" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "停用取词" } }
+      }
+    },
+    "menubar.open" : {
+      "comment" : "Menu bar menu item: open main window",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open WordClip" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开 WordClip" } }
+      }
+    },
+    "menubar.quit" : {
+      "comment" : "Menu bar menu item: quit app",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } },
+        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出" } }
       }
     }
   },

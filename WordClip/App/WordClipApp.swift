@@ -6,23 +6,17 @@ import WordClipKit
 struct WordClipApp: App {
 
     // MARK: Dependencies
-    // 开发期用 Mock；账号就绪后换 StoreKitEntitlement
     @StateObject private var entitlement = MockEntitlement(overridePro: false)
+    @StateObject private var appState = AppState()
 
     // MARK: SwiftData 容器
-    // 纯本地配置。账号就绪后只需将 configuration 改为 CloudKit 版本。
     let modelContainer: ModelContainer = {
         let schema = Schema([
             WordEntry.self,
             CollectSource.self,
             ReviewLog.self,
         ])
-        let config = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false
-            // CloudKit 就绪后替换为：
-            // cloudKitDatabase: .private("iCloud.xyz.phpz.WordClip")
-        )
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
             return try ModelContainer(for: schema, configurations: config)
         } catch {
@@ -32,19 +26,34 @@ struct WordClipApp: App {
 
     var body: some Scene {
         #if os(macOS)
-        WindowGroup {
+        // ── 主窗口 ───────────────────────────────────────
+        WindowGroup(id: "main") {
             ContentView()
                 .environmentObject(entitlement)
+                .environmentObject(appState)
                 .onOpenURL(perform: handleURL)
         }
         .modelContainer(modelContainer)
         .commands {
             WordClipCommands()
         }
+
+        // ── 状态栏图标 ────────────────────────────────────
+        MenuBarExtra {
+            MenuBarMenuView()
+                .environmentObject(appState)
+        } label: {
+            // 取词启用时用实心剪刀，禁用时用半透明
+            Label("WordClip", systemImage: "scissors")
+                .symbolVariant(appState.captureEnabled ? .fill : .none)
+                .opacity(appState.captureEnabled ? 1.0 : 0.4)
+        }
+
         #else
         WindowGroup {
             ContentView()
                 .environmentObject(entitlement)
+                .environmentObject(appState)
                 .onOpenURL(perform: handleURL)
         }
         .modelContainer(modelContainer)
@@ -62,11 +71,9 @@ struct WordClipApp: App {
         switch components.host {
         case "collect":
             let word = components.queryItems?.first(where: { $0.name == "word" })?.value
-            // TODO(M2): 触发收词流程，word 为目标词（可为空则弹出输入框）
-            _ = word
+            _ = word  // TODO(M2): 触发收词流程
         case "review":
-            // TODO(M3): 跳转到复习页
-            break
+            break     // TODO(M3): 跳转复习页
         default:
             break
         }

@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import WordClipKit
+import KeyboardShortcuts
 
 /// macOS 侧边栏
 struct SidebarView: View {
@@ -66,12 +67,44 @@ struct ReviewPlaceholderView: View {
     }
 }
 
-/// 设置页占位
+/// 设置页
 struct SettingsView: View {
     @EnvironmentObject private var entitlement: MockEntitlement
+    @EnvironmentObject private var appState: AppState
 
     var body: some View {
         Form {
+            // ── 取词 ──────────────────────────────────────
+            Section {
+                Toggle(
+                    String(localized: "settings.capture.enabled", defaultValue: "启用全局取词"),
+                    isOn: $appState.captureEnabled
+                )
+
+                KeyboardShortcuts.Recorder(
+                    String(localized: "settings.capture.shortcut", defaultValue: "取词快捷键"),
+                    name: .collectWord
+                )
+                .disabled(!appState.captureEnabled)
+            } header: {
+                Text(String(localized: "settings.section.capture", defaultValue: "取词"))
+            } footer: {
+                Text(String(localized: "settings.capture.hint",
+                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip"))
+                .foregroundStyle(.secondary)
+            }
+
+            // ── 通用 ──────────────────────────────────────
+            Section {
+                Toggle(
+                    String(localized: "settings.general.launchatlogin", defaultValue: "登录时自动启动"),
+                    isOn: $appState.launchAtLogin
+                )
+            } header: {
+                Text(String(localized: "settings.section.general", defaultValue: "通用"))
+            }
+
+            // ── 账户 ──────────────────────────────────────
             Section {
                 LabeledContent(
                     String(localized: "settings.plan", defaultValue: "当前方案"),
