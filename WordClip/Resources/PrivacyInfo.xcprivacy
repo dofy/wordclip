@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 声明 App 收集的数据类型 -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array>
+        <!-- 用户生成的内容（收藏的单词）仅存本地/iCloud，不发送到我们服务器 -->
+    </array>
+
+    <!-- 声明使用的追踪域名（无）-->
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+
+    <!-- 不进行跨 App 追踪 -->
+    <key>NSPrivacyTracking</key>
+    <false/>
+
+    <!-- 使用的系统 API 及原因 -->
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <!-- UserDefaults：存储用户偏好设置 -->
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>  <!-- 存储 App 自身偏好，不传出设备 -->
+            </array>
+        </dict>
+        <!-- 文件时间戳：读取用户选择的导入文件 -->
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>C617.1</string>  <!-- 用户选择的文件 -->
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -21,7 +21,7 @@ struct WordClipApp: App {
             schema: schema,
             isStoredInMemoryOnly: false
             // CloudKit 就绪后替换为：
-            // cloudKitDatabase: .private("iCloud.com.yourname.WordClip")
+            // cloudKitDatabase: .private("iCloud.xyz.phpz.WordClip")
         )
         do {
             return try ModelContainer(for: schema, configurations: config)
@@ -35,6 +35,7 @@ struct WordClipApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(entitlement)
+                .onOpenURL(perform: handleURL)
         }
         .modelContainer(modelContainer)
         .commands {
@@ -44,8 +45,30 @@ struct WordClipApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(entitlement)
+                .onOpenURL(perform: handleURL)
         }
         .modelContainer(modelContainer)
         #endif
+    }
+
+    // MARK: - URL Scheme Handler
+    // wordclip://collect?word=serendipity
+    // wordclip://review
+    private func handleURL(_ url: URL) {
+        guard url.scheme == "wordclip",
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else { return }
+
+        switch components.host {
+        case "collect":
+            let word = components.queryItems?.first(where: { $0.name == "word" })?.value
+            // TODO(M2): 触发收词流程，word 为目标词（可为空则弹出输入框）
+            _ = word
+        case "review":
+            // TODO(M3): 跳转到复习页
+            break
+        default:
+            break
+        }
     }
 }

@@ -16,6 +16,24 @@
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
+
+    <!-- App Store 分类 -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.education</string>
+
+    <!-- URL Scheme: wordclip:// -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>xyz.phpz.WordClip.url</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>wordclip</string>
+            </array>
+        </dict>
+    </array>
+
     <key>UILaunchScreen</key>
     <dict/>
     <key>UISupportedInterfaceOrientations~ipad</key>
