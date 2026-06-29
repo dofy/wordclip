@@ -2,6 +2,19 @@
 
 随时随地收集单词、离线查词、间隔重复测试的多平台单词学习工具。当前面向英语，架构上支持扩展到任意语言。
 
+---
+
+## 当前状态
+
+⏳ **等待 Xcode 安装完成，准备进入 M0 · 项目骨架**
+
+**上次停在**：文档与词库脚本就绪，Xcode 下载中
+**下一步**：Xcode 安装完成后，创建多平台工程 + `WordClipKit` Package + SwiftData 模型
+
+→ 完整进度见 [docs/PROGRESS.md](docs/PROGRESS.md)
+
+---
+
 ## 平台
 
 - **macOS** —— 全局快捷键，一键将任意 App 中选中的单词收录到词典
@@ -23,7 +36,8 @@ SwiftUI（多平台）· SwiftData + CloudKit · Swift Package（`WordClipKit` �
 
 ## 文档
 
-- [开发计划](docs/PLAN.md)
+- [开发进度](docs/PROGRESS.md) — 当前状态、每个里程碑完成内容、下一步
+- [开发计划](docs/PLAN.md) — 里程碑规划、功能边界、收费方案
 - [架构与关键技术决策](docs/ARCHITECTURE.md)
 
 ## 开发环境要求
@@ -33,4 +47,4 @@ SwiftUI（多平台）· SwiftData + CloudKit · Swift Package（`WordClipKit` �
 
 ## 状态
 
-🚧 规划阶段。详见 [docs/PLAN.md](docs/PLAN.md)。
+⏳ 初始化完成，等待进入 M0。详见 [docs/PROGRESS.md](docs/PROGRESS.md)。
