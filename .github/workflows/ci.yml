@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-kit:
+    name: WordClipKit Tests
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: Cache Swift Package dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            WordClipKit/.build
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('WordClipKit/Package.swift') }}
+          restore-keys: ${{ runner.os }}-spm-
+
+      - name: Run WordClipKit tests
+        working-directory: WordClipKit
+        run: swift test --configuration release 2>&1 | tee test-output.txt
+
+      - name: Upload test output on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: WordClipKit/test-output.txt

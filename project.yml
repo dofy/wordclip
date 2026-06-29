@@ -1,0 +1,101 @@
+name: WordClip
+options:
+  bundleIdPrefix: com.dofy
+  deploymentTarget:
+    macOS: "15.0"
+    iOS: "18.0"
+  defaultConfig: Debug
+  xcodeVersion: "27.0"
+  groupSortPosition: top
+  createIntermediateGroups: true
+
+# 本地 Swift Package（WordClipKit）
+packages:
+  WordClipKit:
+    path: WordClipKit
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""           # 有开发者账号后填入 Team ID
+    DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+
+configs:
+  Debug: debug
+  Release: release
+
+targets:
+
+  # ── macOS App ──────────────────────────────────────────────
+  WordClip-macOS:
+    type: application
+    platform: macOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: WordClip
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: data/dictionary-en.sqlite
+        optional: true           # 开发期可不存在，M1 再正式打包
+    dependencies:
+      - package: WordClipKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dofy.WordClip.macOS
+        PRODUCT_NAME: WordClip
+        INFOPLIST_FILE: WordClip/Resources/Info-macOS.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        # 上架后需要的 entitlements
+        CODE_SIGN_ENTITLEMENTS: WordClip/Resources/WordClip-macOS.entitlements
+
+  # ── iOS / iPadOS App ───────────────────────────────────────
+  WordClip-iOS:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: WordClip
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: data/dictionary-en.sqlite
+        optional: true
+    dependencies:
+      - package: WordClipKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dofy.WordClip
+        PRODUCT_NAME: WordClip
+        INFOPLIST_FILE: WordClip/Resources/Info-iOS.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO  # 不用 Mac Catalyst
+        TARGETED_DEVICE_FAMILY: "1,2"              # iPhone + iPad
+
+schemes:
+  WordClip-macOS:
+    build:
+      targets:
+        WordClip-macOS: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets: []     # App 层无 XCTest；Kit 测试由 swift test 跑
+    archive:
+      config: Release
+
+  WordClip-iOS:
+    build:
+      targets:
+        WordClip-iOS: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    archive:
+      config: Release

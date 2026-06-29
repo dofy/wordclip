@@ -6,10 +6,10 @@
 
 ## 当前状态
 
-⏳ **等待 Xcode 安装完成，准备进入 M0 · 项目骨架**
+✅ **M0 · 项目骨架完成** — 可在 Xcode 模拟器运行，单测 12/12 通过
+🚧 **进行中：M1 · 离线词库 + 查词**
 
-**上次停在**：文档与词库脚本就绪，Xcode 下载中
-**下一步**：Xcode 安装完成后，创建多平台工程 + `WordClipKit` Package + SwiftData 模型
+**下一步**：将 `dictionary-en.sqlite` 打包进 App bundle，接入查词 UI
 
 → 完整进度见 [docs/PROGRESS.md](docs/PROGRESS.md)
 
@@ -47,4 +47,4 @@ SwiftUI（多平台）· SwiftData + CloudKit · Swift Package（`WordClipKit` �
 
 ## 状态
 
-⏳ 初始化完成，等待进入 M0。详见 [docs/PROGRESS.md](docs/PROGRESS.md)。
+🚧 M1 进行中。详见 [docs/PROGRESS.md](docs/PROGRESS.md)。

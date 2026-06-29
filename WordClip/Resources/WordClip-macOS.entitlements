@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Sandbox（上架 Mac App Store 必须）-->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <!-- 读写用户选择的文件（导入/导出 CSV）-->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+    <!-- Accessibility（M2 全局快捷键需要，上架时需要说明用途）-->
+    <!-- 暂时注释，M2 阶段按需开启 -->
+    <!-- <key>com.apple.security.automation.apple-events</key>
+    <true/> -->
+</dict>
+</plist>

@@ -1,0 +1,278 @@
+{
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "app.name" : {
+      "comment" : "App display name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip"
+          }
+        }
+      }
+    },
+    "tab.wordlist" : {
+      "comment" : "Tab bar / sidebar: word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictionary"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "词典"
+          }
+        }
+      }
+    },
+    "tab.review" : {
+      "comment" : "Tab bar / sidebar: review",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习"
+          }
+        }
+      }
+    },
+    "tab.settings" : {
+      "comment" : "Tab bar / sidebar: settings",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        }
+      }
+    },
+    "sidebar.allwords" : {
+      "comment" : "macOS sidebar: all words item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All Words"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部单词"
+          }
+        }
+      }
+    },
+    "sidebar.review" : {
+      "comment" : "macOS sidebar: review item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习"
+          }
+        }
+      }
+    },
+    "sidebar.settings" : {
+      "comment" : "macOS sidebar: settings item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        }
+      }
+    },
+    "wordlist.empty.title" : {
+      "comment" : "Empty state title in word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Words Yet"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有收藏的单词"
+          }
+        }
+      }
+    },
+    "wordlist.empty.description" : {
+      "comment" : "Empty state description in word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select any word in any app and use the shortcut to save it here"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在任意 App 中选中单词，用快捷键一键收录"
+          }
+        }
+      }
+    },
+    "review.coming.title" : {
+      "comment" : "Review feature placeholder title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review Coming Soon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习功能即将上线"
+          }
+        }
+      }
+    },
+    "review.coming.description" : {
+      "comment" : "Review feature placeholder description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start collecting words now — spaced repetition review will be available soon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先收集一些单词，复习功能将在后续版本中推出"
+          }
+        }
+      }
+    },
+    "settings.account" : {
+      "comment" : "Settings section header: account",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账户"
+          }
+        }
+      }
+    },
+    "settings.plan" : {
+      "comment" : "Settings row: current plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current Plan"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前方案"
+          }
+        }
+      }
+    },
+    "settings.plan.pro" : {
+      "comment" : "Plan name: Pro",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        }
+      }
+    },
+    "settings.plan.free" : {
+      "comment" : "Plan name: Free",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版"
+          }
+        }
+      }
+    },
+    "settings.debug.pro" : {
+      "comment" : "Debug toggle: simulate Pro",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulate Pro (Debug)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟 Pro（调试）"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
