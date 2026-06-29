@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import WordClipKit
 
 /// macOS 侧边栏
 struct SidebarView: View {
