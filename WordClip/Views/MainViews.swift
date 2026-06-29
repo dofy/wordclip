@@ -13,9 +13,13 @@ struct SidebarView: View {
             NavigationLink(destination: ReviewPlaceholderView()) {
                 Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
             }
-            NavigationLink(destination: SettingsView()) {
+            // 设置通过 ⌘, 打开独立 Settings 窗口，不在侧边栏内导航
+            Button {
+                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+            } label: {
                 Label(String(localized: "sidebar.settings", defaultValue: "设置"), systemImage: "gearshape")
             }
+            .buttonStyle(.plain)
         }
         .navigationTitle(String(localized: "app.name", defaultValue: "WordClip"))
         .listStyle(.sidebar)
@@ -85,7 +89,6 @@ struct SettingsView: View {
                     String(localized: "settings.capture.shortcut", defaultValue: "取词快捷键"),
                     name: .collectWord
                 )
-                .disabled(!appState.captureEnabled)
             } header: {
                 Text(String(localized: "settings.section.capture", defaultValue: "取词"))
             } footer: {
@@ -130,6 +133,7 @@ struct SettingsView: View {
         .navigationTitle(String(localized: "tab.settings", defaultValue: "设置"))
         #if os(macOS)
         .formStyle(.grouped)
+        .frame(width: 420)
         #endif
     }
 }

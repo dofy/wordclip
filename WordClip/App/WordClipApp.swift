@@ -38,6 +38,13 @@ struct WordClipApp: App {
             WordClipCommands()
         }
 
+        // ── 系统设置窗口（⌘, 触发）────────────────────────
+        Settings {
+            SettingsView()
+                .environmentObject(entitlement)
+                .environmentObject(appState)
+        }
+
         // ── 状态栏图标 ────────────────────────────────────
         MenuBarExtra {
             MenuBarMenuView()
