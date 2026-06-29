@@ -135,9 +135,45 @@ protocol AIProvider {
 
 先给 `NoopAIProvider` / `MockAIProvider` 占位，UI 留入口默认关闭。后续可接 Claude 等。
 
+### 3.7 界面本地化（i18n）—— 与学习语言正交
+
+**两个独立维度，不要混为一谈：**
+
+| 维度 | 指 | 由谁决定 | 技术 |
+|------|----|---------|------|
+| 学习内容语言 | 用户在学的语言（en/ja…） | `LanguagePack`（App 内可切） | 词库 + 分词 + TTS |
+| 界面语言 | 菜单/按钮显示语言 | 系统语言（用户在系统设置选） | String Catalog `.xcstrings` |
+
+一个用中文系统的人，可以学英语、也可以学日语；界面始终中文。
+
+**实施约定：**
+- 所有用户可见文案一律 `String(localized: "...")` / SwiftUI `Text("...")` 自动本地化，**禁止硬编码**。
+- 用 **String Catalog（`.xcstrings`）** 统一管理，首批配 `zh-Hans` + `en`。
+- `WordClipKit` 中若有面向用户的字符串，也在 Package 内建自己的本地化资源（`defaultLocalization` + `.process` 资源），不把文案泄露到 UI 层。
+- 词库释义本身的语言（如英译中 vs 英英）属于「学习内容」，由词库数据决定，与界面语言无关。
+
 ---
 
-## 4. 系统内置词典：为什么不作数据源
+## 4. 同步策略：本地优先，云端后置
+
+当前无付费开发者账号，**MVP 全程本地 SwiftData**，CloudKit 推迟（见 PLAN M5）。设计上预留平滑切换：
+
+```swift
+// 本地阶段
+let config = ModelConfiguration(isStoredInMemoryOnly: false)
+// 账号就绪后，仅此处改为：
+// let config = ModelConfiguration(cloudKitDatabase: .private("iCloud.com.example.WordClip"))
+let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations: config)
+```
+
+**为此从第一天起就遵守 CloudKit 建模约束**（即便当前不开云），避免日后迁移返工：
+- 所有属性有默认值或可选；关系可选；不使用 `@Attribute(.unique)` 唯一约束（去重在应用层做）。
+
+开云后：私有数据库自动增量同步；冲突以「最近修改」为主，复习状态取更靠前的进度。
+
+---
+
+## 5. 系统内置词典：为什么不作数据源
 
 - **iOS**：`UIReferenceLibraryViewController` 只能弹出 Apple 查词界面，**无法读取文本**进自己的模型。
 - **macOS**：`DCSCopyTextDefinition`（CoreServices）能取到纯文本，但①接口半公开，上架审核有风险；②返回格式不稳定、难结构化；③Apple 授权的牛津等词典内容仅用于「系统查词」，抽取入库属版权灰区。
@@ -146,14 +182,14 @@ protocol AIProvider {
 
 ---
 
-## 5. 同步与导入导出
+## 6. 导入导出
 
-- **同步**：SwiftData 的 CloudKit 集成（`ModelConfiguration(cloudKitDatabase:)`），私有数据库，自动增量同步。冲突以「最近修改」为主，复习状态取更靠前的进度。
-- **导入导出**：`ImportExport` 模块，CSV（headword, lemma, definition, phonetic, tags, familiarity, dueAt…）与 JSON（全量含来源/日志）。导入做字段映射与去重。
+- `ImportExport` 模块，CSV（headword, lemma, definition, phonetic, tags, familiarity, dueAt…）与 JSON（全量含来源/日志）。导入做字段映射与去重。
+- 同步策略见上文 §4。
 
 ---
 
-## 6. 测试策略
+## 7. 测试策略
 
 - `WordClipKit` 全量单元测试（算法、词库查询、导入导出、分词）—— 不依赖 UI，可在 CI（GitHub Actions macOS runner）跑 `swift test`。
 - App 层只做必要的集成/快照测试。
