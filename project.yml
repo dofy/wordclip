@@ -40,6 +40,9 @@ targets:
       - path: WordClip
         excludes:
           - "**/*.md"
+          - "Resources/Info-macOS.plist"
+          - "Resources/Info-iOS.plist"
+          - "Resources/*.entitlements"
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
@@ -66,6 +69,9 @@ targets:
       - path: WordClip
         excludes:
           - "**/*.md"
+          - "Resources/Info-macOS.plist"
+          - "Resources/Info-iOS.plist"
+          - "Resources/*.entitlements"
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:

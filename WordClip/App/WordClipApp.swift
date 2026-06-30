@@ -23,6 +23,17 @@ struct WordClipApp: App {
             CollectSource.self,
             ReviewLog.self,
         ])
+
+        // 确保 Application Support 目录存在（iOS 沙盒里默认不存在，
+        // SwiftData 不会自动创建，否则报 "file-write-create denied"）。
+        let fm = FileManager.default
+        if let appSupport = try? fm.url(
+            for: .applicationSupportDirectory, in: .userDomainMask,
+            appropriateFor: nil, create: true
+        ) {
+            try? fm.createDirectory(at: appSupport, withIntermediateDirectories: true)
+        }
+
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
             return try ModelContainer(for: schema, configurations: config)
