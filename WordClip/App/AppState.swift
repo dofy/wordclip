@@ -41,6 +41,36 @@ final class AppState: ObservableObject {
         }
     }
 
+    // MARK: - 复习提醒（每日本地通知，跨平台）
+
+    @Published var reviewReminderEnabled: Bool = UserDefaults.standard.bool(forKey: "reviewReminderEnabled") {
+        didSet {
+            UserDefaults.standard.set(reviewReminderEnabled, forKey: "reviewReminderEnabled")
+            applyReviewReminder()
+        }
+    }
+    /// 提醒时间（仅取 hour/minute），默认 20:00。
+    @Published var reviewReminderTime: Date = {
+        let saved = UserDefaults.standard.double(forKey: "reviewReminderTime")
+        if saved > 0 { return Date(timeIntervalSince1970: saved) }
+        return Calendar.current.date(from: DateComponents(hour: 20, minute: 0)) ?? Date()
+    }() {
+        didSet {
+            UserDefaults.standard.set(reviewReminderTime.timeIntervalSince1970, forKey: "reviewReminderTime")
+            applyReviewReminder()
+        }
+    }
+
+    /// 按当前开关与时间应用提醒调度。
+    func applyReviewReminder() {
+        if reviewReminderEnabled {
+            let c = Calendar.current.dateComponents([.hour, .minute], from: reviewReminderTime)
+            NotificationService.scheduleReviewReminder(hour: c.hour ?? 20, minute: c.minute ?? 0)
+        } else {
+            NotificationService.cancelReviewReminder()
+        }
+    }
+
     #if os(macOS)
 
     // MARK: - 取词开关（仅 macOS）

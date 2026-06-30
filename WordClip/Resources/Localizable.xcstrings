@@ -848,6 +848,91 @@
           }
         }
       }
+    },
+    "settings.section.reminder": {
+      "comment": "Settings: reminder section",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提醒"
+          }
+        }
+      }
+    },
+    "settings.reminder.enabled": {
+      "comment": "Toggle daily review reminder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily Review Reminder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日复习提醒"
+          }
+        }
+      }
+    },
+    "settings.reminder.time": {
+      "comment": "Reminder time",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder Time"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "提醒时间"
+          }
+        }
+      }
+    },
+    "reminder.title": {
+      "comment": "Review reminder title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time to Review"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该复习单词啦"
+          }
+        }
+      }
+    },
+    "reminder.body": {
+      "comment": "Review reminder body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open WordClip to review words due today"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开 WordClip 复习今天到期的单词"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

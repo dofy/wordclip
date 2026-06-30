@@ -49,4 +49,44 @@ enum NotificationService {
         )
         UNUserNotificationCenter.current().add(request)
     }
+
+    // MARK: - 复习提醒（每日重复）
+
+    private static let reviewReminderID = "review-reminder-daily"
+
+    /// 调度每日复习提醒。
+    /// - Parameters:
+    ///   - hour: 提醒小时（0–23）
+    ///   - minute: 提醒分钟
+    static func scheduleReviewReminder(hour: Int, minute: Int) {
+        Task {
+            let center = UNUserNotificationCenter.current()
+            let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
+            guard granted else { return }
+
+            let content = UNMutableNotificationContent()
+            content.title = String(localized: "reminder.title", defaultValue: "该复习单词啦")
+            content.body = String(localized: "reminder.body",
+                                  defaultValue: "打开 WordClip 复习今天到期的单词")
+            content.sound = .default
+
+            var components = DateComponents()
+            components.hour = hour
+            components.minute = minute
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+
+            let request = UNNotificationRequest(
+                identifier: reviewReminderID, content: content, trigger: trigger
+            )
+            center.removePendingNotificationRequests(withIdentifiers: [reviewReminderID])
+            try? await center.add(request)
+        }
+    }
+
+    /// 取消每日复习提醒。
+    static func cancelReviewReminder() {
+        UNUserNotificationCenter.current()
+            .removePendingNotificationRequests(withIdentifiers: [reviewReminderID])
+    }
 }
+

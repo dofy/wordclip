@@ -421,6 +421,23 @@ struct SettingsView: View {
             }
             #endif
 
+            // ── 复习提醒（跨平台）────────────────────────────
+            Section {
+                Toggle(
+                    String(localized: "settings.reminder.enabled", defaultValue: "每日复习提醒"),
+                    isOn: $appState.reviewReminderEnabled
+                )
+                if appState.reviewReminderEnabled {
+                    DatePicker(
+                        String(localized: "settings.reminder.time", defaultValue: "提醒时间"),
+                        selection: $appState.reviewReminderTime,
+                        displayedComponents: .hourAndMinute
+                    )
+                }
+            } header: {
+                Text(String(localized: "settings.section.reminder", defaultValue: "提醒"))
+            }
+
             // ── 账户 ──────────────────────────────────────
             Section {
                 LabeledContent(
