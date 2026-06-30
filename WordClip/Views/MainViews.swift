@@ -314,6 +314,7 @@ struct WordDetailView: View {
                                 .foregroundStyle(.tint)
                         }
                         .buttonStyle(.plain)
+                        .focusable(false)
                         Button {
                             word.isFavorite.toggle()
                             try? modelContext.save()
@@ -323,6 +324,7 @@ struct WordDetailView: View {
                                 .foregroundStyle(word.isFavorite ? .yellow : .secondary)
                         }
                         .buttonStyle(.plain)
+                        .focusable(false)
                     }
                     if let phonetic = word.phonetic, !phonetic.isEmpty {
                         Text("/\(phonetic)/")
@@ -339,29 +341,16 @@ struct WordDetailView: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.plain)
+                .focusable(false)
             }
 
             Divider()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    if let definition = word.definition, !definition.isEmpty {
-                        Text(definition)
-                            .font(.body)
-                            .textSelection(.enabled)
-                    } else {
-                        Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
-                            .foregroundStyle(.secondary)
-                    }
-
-                    if let en = word.definitionEn, !en.isEmpty {
-                        Text(en)
-                            .font(.callout)
-                            .foregroundStyle(.secondary)
-                            .textSelection(.enabled)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                StructuredDefinitionView(
+                    definition: word.definition,
+                    definitionEn: word.definitionEn
+                )
             }
 
             Divider()

@@ -211,6 +211,82 @@ struct WordBackupTests {
     }
 }
 
+// MARK: - DefinitionFormatter Tests
+
+@Suite("DefinitionFormatter")
+struct DefinitionFormatterTests {
+
+    @Test("单行词性前缀被拆分")
+    func singlePOS() {
+        let lines = DefinitionFormatter.parse("a. 美丽的")
+        #expect(lines.count == 1)
+        #expect(lines[0].pos == "a.")
+        #expect(lines[0].tag == nil)
+        #expect(lines[0].text == "美丽的")
+    }
+
+    @Test("多行按词性分行")
+    func multiLine() {
+        let raw = "n. 跑, 赛跑\nvi. 跑, 奔跑\nvt. 使跑"
+        let lines = DefinitionFormatter.parse(raw)
+        #expect(lines.count == 3)
+        #expect(lines.map(\.pos) == ["n.", "vi.", "vt."])
+        #expect(lines[0].text == "跑, 赛跑")
+    }
+
+    @Test("学科标记被识别并去括号")
+    func subjectTag() {
+        let lines = DefinitionFormatter.parse("[计] 配置")
+        #expect(lines.count == 1)
+        #expect(lines[0].pos == nil)
+        #expect(lines[0].tag == "计")
+        #expect(lines[0].text == "配置")
+    }
+
+    @Test("configuration 真实样例：词性行 + 学科行")
+    func configurationSample() {
+        let raw = "n. 结构, 表面配置, 外形, 配置\n[计] 配置"
+        let lines = DefinitionFormatter.parse(raw)
+        #expect(lines.count == 2)
+        #expect(lines[0].pos == "n.")
+        #expect(lines[0].text == "结构, 表面配置, 外形, 配置")
+        #expect(lines[1].tag == "计")
+        #expect(lines[1].text == "配置")
+    }
+
+    @Test("组合词性 vt.&vi. 被拼接")
+    func combinedPOS() {
+        let lines = DefinitionFormatter.parse("vt.&vi. 改变")
+        #expect(lines.count == 1)
+        #expect(lines[0].pos == "vt.&vi.")
+        #expect(lines[0].text == "改变")
+    }
+
+    @Test("无词性无标记的纯文本行原样保留")
+    func plainText() {
+        let lines = DefinitionFormatter.parse("run的过去式和过去分词")
+        #expect(lines.count == 1)
+        #expect(lines[0].pos == nil)
+        #expect(lines[0].tag == nil)
+        #expect(lines[0].text == "run的过去式和过去分词")
+    }
+
+    @Test("空行被忽略")
+    func emptyLinesIgnored() {
+        let lines = DefinitionFormatter.parse("n. 名词\n\n\nv. 动词")
+        #expect(lines.count == 2)
+    }
+
+    @Test("不认识的缩写不当作词性")
+    func unknownAbbrevNotPOS() {
+        // "etc." 不在已知词性集合，整行作为正文保留
+        let lines = DefinitionFormatter.parse("etc. 等等")
+        #expect(lines.count == 1)
+        #expect(lines[0].pos == nil)
+        #expect(lines[0].text == "etc. 等等")
+    }
+}
+
 // MARK: - StatsCalculator Tests
 
 @Suite("StatsCalculator")

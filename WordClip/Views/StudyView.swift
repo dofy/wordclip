@@ -142,6 +142,18 @@ struct StudyView: View {
                 .padding(.bottom, 24)
                 .frame(maxWidth: .infinity)
         }
+        .background(spaceFlipShortcut)
+    }
+
+    /// 正面时用空格键翻转。隐藏按钮承载快捷键，避免依赖卡片 focusable（蓝框）。
+    @ViewBuilder
+    private var spaceFlipShortcut: some View {
+        if session.phase == .front {
+            Button { session.flip() } label: { EmptyView() }
+                .keyboardShortcut(.space, modifiers: [])
+                .opacity(0)
+                .accessibilityHidden(true)
+        }
     }
 
     private var coverageBar: some View {

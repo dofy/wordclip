@@ -594,6 +594,23 @@
         }
       }
     },
+    "definition.english": {
+      "comment": "Definition section: English-English gloss",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "英英释义"
+          }
+        }
+      }
+    },
     "tab.stats": {
       "comment": "Tab: stats",
       "localizations": {
