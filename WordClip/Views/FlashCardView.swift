@@ -19,6 +19,10 @@ struct FlashCardView: View {
                     Spacer()
                     Text(entry.headword)
                         .font(.system(size: 42, weight: .bold, design: .serif))
+                        .minimumScaleFactor(0.5)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
                     if let phonetic = entry.phonetic, !phonetic.isEmpty {
                         Text("/\(phonetic)/")
                             .font(.title3)
@@ -54,7 +58,9 @@ struct FlashCardView: View {
             }
             .opacity(rotation >= 90 ? 1 : 0)
         }
-        .frame(maxWidth: 520, maxHeight: 320)
+        .frame(maxWidth: 600)
+        .aspectRatio(1.55, contentMode: .fit)
+        .frame(maxHeight: 400)
         .onTapGesture { flip() }
         .onChange(of: isFlipped) { _, flipped in
             withAnimation(.spring(duration: 0.45)) {

@@ -332,7 +332,12 @@ struct WordDetailView: View {
             }
         }
         .padding(24)
+        #if os(macOS)
         .frame(width: 420, height: 360)
+        #else
+        .frame(maxWidth: 520)
+        .presentationDetents([.medium, .large])
+        #endif
     }
 }
 

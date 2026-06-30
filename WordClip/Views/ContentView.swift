@@ -8,13 +8,17 @@ enum SidebarItem: Hashable {
     case settings
 }
 
-/// 顶层导航容器。macOS 用 NavigationSplitView，iOS 用 TabView。
+/// 顶层导航容器。
+/// - macOS / iPad（regular 宽度）：NavigationSplitView 侧边栏 + 详情
+/// - iPhone（compact 宽度）：底部 TabView
 struct ContentView: View {
 
     @EnvironmentObject private var appState: AppState
 
-    #if os(macOS)
     @State private var selection: SidebarItem? = .allWords
+
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var hSizeClass
     #endif
 
     var body: some View {
@@ -48,47 +52,62 @@ struct ContentView: View {
     @ViewBuilder
     private var content: some View {
         #if os(macOS)
+        splitView
+        #else
+        // iPad（regular）用侧边栏，iPhone（compact）用 TabView
+        if hSizeClass == .regular {
+            splitView
+        } else {
+            tabView
+        }
+        #endif
+    }
+
+    // MARK: - 侧边栏 + 详情（macOS / iPad）
+
+    @ViewBuilder
+    private var splitView: some View {
         NavigationSplitView {
             SidebarView(selection: $selection)
         } detail: {
-            switch selection ?? .allWords {
-            case .allWords: WordListView()
-            case .review: StudyView()
-            case .stats: StatsView()
-            case .settings: SettingsView()
+            NavigationStack {
+                detailView(for: selection ?? .allWords)
             }
         }
-        #else
+    }
+
+    @ViewBuilder
+    private func detailView(for item: SidebarItem) -> some View {
+        switch item {
+        case .allWords: WordListView()
+        case .review: StudyView()
+        case .stats: StatsView()
+        case .settings: SettingsView()
+        }
+    }
+
+    // MARK: - 底部标签栏（iPhone）
+
+    @ViewBuilder
+    private var tabView: some View {
         TabView {
-            NavigationStack {
-                WordListView()
-            }
-            .tabItem {
-                Label(String(localized: "tab.wordlist", defaultValue: "词典"), systemImage: "books.vertical")
-            }
-
-            NavigationStack {
-                StudyView()
-            }
-            .tabItem {
-                Label(String(localized: "tab.review", defaultValue: "复习"), systemImage: "checkmark.circle")
-            }
-
-            NavigationStack {
-                StatsView()
-            }
-            .tabItem {
-                Label(String(localized: "tab.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
-            }
-
-            NavigationStack {
-                SettingsView()
-            }
-            .tabItem {
-                Label(String(localized: "tab.settings", defaultValue: "设置"), systemImage: "gearshape")
-            }
+            NavigationStack { WordListView() }
+                .tabItem {
+                    Label(String(localized: "tab.wordlist", defaultValue: "词典"), systemImage: "books.vertical")
+                }
+            NavigationStack { StudyView() }
+                .tabItem {
+                    Label(String(localized: "tab.review", defaultValue: "复习"), systemImage: "checkmark.circle")
+                }
+            NavigationStack { StatsView() }
+                .tabItem {
+                    Label(String(localized: "tab.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
+                }
+            NavigationStack { SettingsView() }
+                .tabItem {
+                    Label(String(localized: "tab.settings", defaultValue: "设置"), systemImage: "gearshape")
+                }
         }
-        #endif
     }
 }
 

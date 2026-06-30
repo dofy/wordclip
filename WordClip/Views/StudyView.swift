@@ -71,6 +71,8 @@ struct StudyView: View {
 
             Spacer()
         }
+        .frame(maxWidth: 500)
+        .frame(maxWidth: .infinity)
         .padding()
     }
 
@@ -128,13 +130,16 @@ struct StudyView: View {
                     onFlip: { session.flip() }
                 )
                 .padding(.horizontal, 24)
+                .frame(maxWidth: .infinity)
             }
 
             Spacer()
 
             gradeButtons
+                .frame(maxWidth: 600)
                 .padding(.horizontal, 32)
                 .padding(.bottom, 24)
+                .frame(maxWidth: .infinity)
         }
     }
 
