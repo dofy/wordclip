@@ -36,7 +36,7 @@ struct StudyView: View {
                 .font(.system(size: 56))
                 .foregroundStyle(.tint)
 
-            HStack(spacing: 20) {
+            HStack(spacing: 12) {
                 statCard(value: session.stats.total,
                          label: String(localized: "study.stat.total", defaultValue: "总词数"),
                          color: .blue)
@@ -47,6 +47,7 @@ struct StudyView: View {
                          label: String(localized: "study.stat.new", defaultValue: "新词"),
                          color: .green)
             }
+            .padding(.horizontal, 20)
 
             if session.stats.total == 0 {
                 Text(String(localized: "study.empty",
@@ -86,9 +87,9 @@ struct StudyView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(minWidth: 80)
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 12)
         .background(color.opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
     }
 
