@@ -28,6 +28,14 @@ struct FlashCardView: View {
                             .font(.title3)
                             .foregroundStyle(.secondary)
                     }
+                    Button {
+                        Speaker.shared.speak(entry.headword)
+                    } label: {
+                        Image(systemName: "speaker.wave.2.fill")
+                            .font(.title3)
+                            .foregroundStyle(.tint)
+                    }
+                    .buttonStyle(.plain)
                     FamiliarityBadge(familiarity: entry.familiarity)
                     Spacer()
                     Text(String(localized: "study.tap.to.flip", defaultValue: "点击查看释义"))

@@ -273,8 +273,18 @@ struct WordDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(word.headword)
-                        .font(.largeTitle.bold())
+                    HStack(spacing: 10) {
+                        Text(word.headword)
+                            .font(.largeTitle.bold())
+                        Button {
+                            Speaker.shared.speak(word.headword)
+                        } label: {
+                            Image(systemName: "speaker.wave.2.fill")
+                                .font(.title3)
+                                .foregroundStyle(.tint)
+                        }
+                        .buttonStyle(.plain)
+                    }
                     if let phonetic = word.phonetic, !phonetic.isEmpty {
                         Text("/\(phonetic)/")
                             .font(.title3)
