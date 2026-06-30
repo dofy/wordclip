@@ -102,6 +102,11 @@ final class StudySession: ObservableObject {
         entry.repetitions    = next.repetitions
         entry.dueAt          = dueAt
         entry.lastReviewedAt = Date()
+
+        // 记录复习历史，供统计图表使用
+        let log = ReviewLog(wordID: entry.id, grade: g, mode: .multipleChoice)
+        modelContext?.insert(log)
+
         try? modelContext?.save()
 
         sessionCount  += 1

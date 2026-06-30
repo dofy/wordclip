@@ -593,6 +593,193 @@
           }
         }
       }
+    },
+    "tab.stats": {
+      "comment": "Tab: stats",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stats"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "统计"
+          }
+        }
+      }
+    },
+    "sidebar.stats": {
+      "comment": "Sidebar: stats",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stats"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "统计"
+          }
+        }
+      }
+    },
+    "stats.total": {
+      "comment": "Stat: total words",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "总词数"
+          }
+        }
+      }
+    },
+    "stats.mastered": {
+      "comment": "Stat: mastered",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mastered"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已掌握"
+          }
+        }
+      }
+    },
+    "stats.learning": {
+      "comment": "Stat: learning",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learning"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "学习中"
+          }
+        }
+      }
+    },
+    "stats.accuracy": {
+      "comment": "Stat: accuracy",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accuracy"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正确率"
+          }
+        }
+      }
+    },
+    "stats.familiarity.title": {
+      "comment": "Chart: familiarity",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Familiarity Distribution"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "熟悉度分布"
+          }
+        }
+      }
+    },
+    "stats.collect.title": {
+      "comment": "Chart: collect trend",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last 30 Days Collected"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "近 30 天收录"
+          }
+        }
+      }
+    },
+    "stats.review.title": {
+      "comment": "Chart: review accuracy",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review Accuracy"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复习正确率"
+          }
+        }
+      }
+    },
+    "stats.empty.title": {
+      "comment": "Stats empty title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Stats Yet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有统计数据"
+          }
+        }
+      }
+    },
+    "stats.empty.desc": {
+      "comment": "Stats empty desc",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collect and review words to see your learning stats here"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收录单词并复习后，这里会显示你的学习统计"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

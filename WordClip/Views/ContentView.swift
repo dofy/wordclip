@@ -4,6 +4,7 @@ import SwiftUI
 enum SidebarItem: Hashable {
     case allWords
     case review
+    case stats
     case settings
 }
 
@@ -53,6 +54,7 @@ struct ContentView: View {
             switch selection ?? .allWords {
             case .allWords: WordListView()
             case .review: StudyView()
+            case .stats: StatsView()
             case .settings: SettingsView()
             }
         }
@@ -70,6 +72,13 @@ struct ContentView: View {
             }
             .tabItem {
                 Label(String(localized: "tab.review", defaultValue: "复习"), systemImage: "checkmark.circle")
+            }
+
+            NavigationStack {
+                StatsView()
+            }
+            .tabItem {
+                Label(String(localized: "tab.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
             }
 
             NavigationStack {

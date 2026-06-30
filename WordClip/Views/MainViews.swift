@@ -16,6 +16,8 @@ struct SidebarView: View {
                 .tag(SidebarItem.allWords)
             Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
                 .tag(SidebarItem.review)
+            Label(String(localized: "sidebar.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
+                .tag(SidebarItem.stats)
             Label(String(localized: "sidebar.settings", defaultValue: "设置"), systemImage: "gearshape")
                 .tag(SidebarItem.settings)
         }

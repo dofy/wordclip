@@ -210,3 +210,81 @@ struct WordBackupTests {
         #expect(backup.version == WordBackup.currentVersion)
     }
 }
+
+// MARK: - StatsCalculator Tests
+
+@Suite("StatsCalculator")
+struct StatsCalculatorTests {
+
+    var cal: Calendar {
+        var c = Calendar(identifier: .gregorian)
+        c.timeZone = TimeZone(identifier: "UTC")!
+        return c
+    }
+    let now = Date(timeIntervalSince1970: 1_700_000_000) // 固定基准
+
+    @Test("熟悉度分布始终返回 6 个桶并正确计数")
+    func familiarityDistribution() {
+        let buckets = StatsCalculator.familiarityDistribution([0, 0, 3, 5, 5, 5])
+        #expect(buckets.count == 6)
+        #expect(buckets[0].count == 2)
+        #expect(buckets[3].count == 1)
+        #expect(buckets[5].count == 3)
+        #expect(buckets[1].count == 0)
+    }
+
+    @Test("熟悉度越界值被钳制到 0–5")
+    func familiarityClamped() {
+        let buckets = StatsCalculator.familiarityDistribution([-1, 99, 7])
+        #expect(buckets[0].count == 1)   // -1 → 0
+        #expect(buckets[5].count == 2)   // 99,7 → 5
+    }
+
+    @Test("收录趋势按天分桶，窗口含今天且补零")
+    func collectTrend() {
+        let today = cal.startOfDay(for: now)
+        let yesterday = cal.date(byAdding: .day, value: -1, to: today)!
+        let dates = [today, today, yesterday]
+        let trend = StatsCalculator.collectTrend(dates: dates, days: 7, now: now, calendar: cal)
+        #expect(trend.count == 7)
+        #expect(trend.last?.count == 2)        // 今天 2 条
+        #expect(trend[trend.count - 2].count == 1) // 昨天 1 条
+        #expect(trend.first?.count == 0)       // 7 天前补零
+    }
+
+    @Test("复习趋势统计每天总数与答对数")
+    func reviewTrend() {
+        let today = cal.startOfDay(for: now)
+        let entries = [
+            (date: today, grade: 4),  // 对
+            (date: today, grade: 5),  // 对
+            (date: today, grade: 1),  // 错
+        ]
+        let trend = StatsCalculator.reviewTrend(entries: entries, days: 3, now: now, calendar: cal)
+        let todayBucket = trend.last!
+        #expect(todayBucket.total == 3)
+        #expect(todayBucket.correct == 2)
+        #expect(abs((todayBucket.accuracy ?? 0) - 2.0/3.0) < 0.0001)
+    }
+
+    @Test("summary 正确分类掌握/学习中/新词与正确率")
+    func summary() {
+        let s = StatsCalculator.summary(
+            familiarities: [0, 0, 2, 4, 5],   // 2新 1学习中 2掌握
+            reviewGrades: [5, 4, 1, 3]        // 3对 1错
+        )
+        #expect(s.totalWords == 5)
+        #expect(s.fresh == 2)
+        #expect(s.learning == 1)
+        #expect(s.mastered == 2)
+        #expect(s.totalReviews == 4)
+        #expect(abs((s.overallAccuracy ?? 0) - 0.75) < 0.0001)
+    }
+
+    @Test("无复习时正确率为 nil")
+    func noReviewsAccuracyNil() {
+        let s = StatsCalculator.summary(familiarities: [1, 2], reviewGrades: [])
+        #expect(s.overallAccuracy == nil)
+        #expect(s.totalReviews == 0)
+    }
+}
