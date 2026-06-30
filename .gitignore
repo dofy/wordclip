@@ -33,6 +33,9 @@ xcuserdata/
 # Swift Package Manager
 .build/
 .swiftpm/
+# xcodebuild 自定义 derivedDataPath 产物
+.build-ios/
+.build-xcode/
 # Package.resolved 入库，确保跨机器构建使用相同依赖版本
 
 # Provisioning / secrets

@@ -1,3 +1,4 @@
+#if os(macOS)
 import SwiftUI
 
 /// 状态栏菜单内容
@@ -29,6 +30,13 @@ struct MenuBarMenuView: View {
         }
         .keyboardShortcut("o", modifiers: [.command])
 
+        // 打开设置
+        Button(String(localized: "menubar.settings", defaultValue: "设置…")) {
+            openWindow(id: "settings")
+            NSApp.activate(ignoringOtherApps: true)
+        }
+        .keyboardShortcut(",", modifiers: .command)
+
         Divider()
 
         // 退出
@@ -38,3 +46,4 @@ struct MenuBarMenuView: View {
         .keyboardShortcut("q", modifiers: [.command])
     }
 }
+#endif

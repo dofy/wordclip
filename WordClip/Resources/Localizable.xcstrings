@@ -1,6 +1,22 @@
 {
   "sourceLanguage" : "zh-Hans",
   "strings" : {
+    "/%@/" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ / %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
     "app.name" : {
       "comment" : "App display name",
       "localizations" : {
@@ -18,53 +34,328 @@
         }
       }
     },
-    "tab.wordlist" : {
-      "comment" : "Tab bar / sidebar: word list",
+    "menubar.capture.disable" : {
+      "comment" : "Menu bar menu item: disable capture",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dictionary"
+            "value" : "Disable Word Capture"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "词典"
+            "value" : "停用取词"
           }
         }
       }
     },
-    "tab.review" : {
-      "comment" : "Tab bar / sidebar: review",
+    "menubar.capture.enable" : {
+      "comment" : "Menu bar menu item: enable capture",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review"
+            "value" : "Enable Word Capture"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复习"
+            "value" : "启用取词"
           }
         }
       }
     },
-    "tab.settings" : {
-      "comment" : "Tab bar / sidebar: settings",
+    "menubar.open" : {
+      "comment" : "Menu bar menu item: open main window",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Settings"
+            "value" : "Open WordClip"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "设置"
+            "value" : "打开 WordClip"
+          }
+        }
+      }
+    },
+    "menubar.quit" : {
+      "comment" : "Menu bar menu item: quit app",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        }
+      }
+    },
+    "recorder.empty" : {
+      "comment" : "Shortcut recorder placeholder when empty",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to record"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击录制"
+          }
+        }
+      }
+    },
+    "recorder.press" : {
+      "comment" : "Shortcut recorder prompt while recording",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press shortcut…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按下快捷键…"
+          }
+        }
+      }
+    },
+    "review.coming.description" : {
+      "comment" : "Review feature placeholder description",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start collecting words now — spaced repetition review will be available soon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "先收集一些单词，复习功能将在后续版本中推出"
+          }
+        }
+      }
+    },
+    "review.coming.title" : {
+      "comment" : "Review feature placeholder title",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review Coming Soon"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习功能即将上线"
+          }
+        }
+      }
+    },
+    "settings.account" : {
+      "comment" : "Settings section header: account",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账户"
+          }
+        }
+      }
+    },
+    "settings.capture.enabled" : {
+      "comment" : "Settings toggle: enable global word capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Global Word Capture"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用全局取词"
+          }
+        }
+      }
+    },
+    "settings.capture.hint" : {
+      "comment" : "Settings footer: capture shortcut usage hint",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a word in any app and press the shortcut to save it to WordClip"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在任意 App 中选中单词，按下快捷键即可收录到 WordClip"
+          }
+        }
+      }
+    },
+    "settings.capture.shortcut" : {
+      "comment" : "Settings row label: capture keyboard shortcut recorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取词快捷键"
+          }
+        }
+      }
+    },
+    "settings.debug.pro" : {
+      "comment" : "Debug toggle: simulate Pro",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulate Pro (Debug)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟 Pro（调试）"
+          }
+        }
+      }
+    },
+    "settings.general.launchatlogin" : {
+      "comment" : "Settings toggle: launch at login",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launch at Login"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录时自动启动"
+          }
+        }
+      }
+    },
+    "settings.plan" : {
+      "comment" : "Settings row: current plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current Plan"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前方案"
+          }
+        }
+      }
+    },
+    "settings.plan.free" : {
+      "comment" : "Plan name: Free",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版"
+          }
+        }
+      }
+    },
+    "settings.plan.pro" : {
+      "comment" : "Plan name: Pro",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
+          }
+        }
+      }
+    },
+    "settings.section.capture" : {
+      "comment" : "Settings section header: word capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Word Capture"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取词"
+          }
+        }
+      }
+    },
+    "settings.section.general" : {
+      "comment" : "Settings section header: general",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通用"
           }
         }
       }
@@ -120,19 +411,53 @@
         }
       }
     },
-    "wordlist.empty.title" : {
-      "comment" : "Empty state title in word list",
+    "tab.review" : {
+      "comment" : "Tab bar / sidebar: review",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Words Yet"
+            "value" : "Review"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "还没有收藏的单词"
+            "value" : "复习"
+          }
+        }
+      }
+    },
+    "tab.settings" : {
+      "comment" : "Tab bar / sidebar: settings",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
+          }
+        }
+      }
+    },
+    "tab.wordlist" : {
+      "comment" : "Tab bar / sidebar: word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictionary"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "词典"
           }
         }
       }
@@ -154,183 +479,21 @@
         }
       }
     },
-    "review.coming.title" : {
-      "comment" : "Review feature placeholder title",
+    "wordlist.empty.title" : {
+      "comment" : "Empty state title in word list",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review Coming Soon"
+            "value" : "No Words Yet"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "复习功能即将上线"
+            "value" : "还没有收藏的单词"
           }
         }
-      }
-    },
-    "review.coming.description" : {
-      "comment" : "Review feature placeholder description",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start collecting words now — spaced repetition review will be available soon"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "先收集一些单词，复习功能将在后续版本中推出"
-          }
-        }
-      }
-    },
-    "settings.account" : {
-      "comment" : "Settings section header: account",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Account"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "账户"
-          }
-        }
-      }
-    },
-    "settings.plan" : {
-      "comment" : "Settings row: current plan",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Current Plan"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前方案"
-          }
-        }
-      }
-    },
-    "settings.plan.pro" : {
-      "comment" : "Plan name: Pro",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pro"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pro"
-          }
-        }
-      }
-    },
-    "settings.plan.free" : {
-      "comment" : "Plan name: Free",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Free"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "免费版"
-          }
-        }
-      }
-    },
-    "settings.debug.pro" : {
-      "comment" : "Debug toggle: simulate Pro",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Simulate Pro (Debug)" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "模拟 Pro（调试）" } }
-      }
-    },
-    "settings.section.capture" : {
-      "comment" : "Settings section header: word capture",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Word Capture" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取词" } }
-      }
-    },
-    "settings.capture.enabled" : {
-      "comment" : "Settings toggle: enable global word capture",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Global Word Capture" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用全局取词" } }
-      }
-    },
-    "settings.capture.shortcut" : {
-      "comment" : "Settings row label: capture keyboard shortcut recorder",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shortcut" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "取词快捷键" } }
-      }
-    },
-    "settings.capture.hint" : {
-      "comment" : "Settings footer: capture shortcut usage hint",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Select a word in any app and press the shortcut to save it to WordClip" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "在任意 App 中选中单词，按下快捷键即可收录到 WordClip" } }
-      }
-    },
-    "settings.section.general" : {
-      "comment" : "Settings section header: general",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "General" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "通用" } }
-      }
-    },
-    "settings.general.launchatlogin" : {
-      "comment" : "Settings toggle: launch at login",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch at Login" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "登录时自动启动" } }
-      }
-    },
-    "menubar.capture.enable" : {
-      "comment" : "Menu bar menu item: enable capture",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable Word Capture" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "启用取词" } }
-      }
-    },
-    "menubar.capture.disable" : {
-      "comment" : "Menu bar menu item: disable capture",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Disable Word Capture" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "停用取词" } }
-      }
-    },
-    "menubar.open" : {
-      "comment" : "Menu bar menu item: open main window",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Open WordClip" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "打开 WordClip" } }
-      }
-    },
-    "menubar.quit" : {
-      "comment" : "Menu bar menu item: quit app",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Quit" } },
-        "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "退出" } }
       }
     }
   },

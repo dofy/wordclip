@@ -2,15 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- App Sandbox（上架 Mac App Store 必须）-->
-    <key>com.apple.security.app-sandbox</key>
-    <true/>
-    <!-- 读写用户选择的文件（导入/导出 CSV）-->
-    <key>com.apple.security.files.user-selected.read-write</key>
-    <true/>
-    <!-- Accessibility（M2 全局快捷键需要，上架时需要说明用途）-->
-    <!-- 暂时注释，M2 阶段按需开启 -->
-    <!-- <key>com.apple.security.automation.apple-events</key>
-    <true/> -->
+    <!-- 注意：取词功能需通过 Accessibility API 读取其他 App 的选中文本，
+         这与 App Sandbox 不兼容，故关闭沙盒，采用开发者 ID 直接分发（非 Mac App Store）。 -->
+    <!-- 如未来需上架 App Store，需改用剪贴板方案并重新开启 app-sandbox。 -->
 </dict>
 </plist>

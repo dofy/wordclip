@@ -1,34 +1,56 @@
 import SwiftUI
 import SwiftData
 import WordClipKit
+#if os(macOS)
 import KeyboardShortcuts
+#endif
 
 /// macOS 侧边栏
 struct SidebarView: View {
+    @Binding var selection: SidebarItem?
+
     var body: some View {
-        List {
-            NavigationLink(destination: WordListView()) {
-                Label(String(localized: "sidebar.allwords", defaultValue: "全部单词"), systemImage: "books.vertical")
-            }
-            NavigationLink(destination: ReviewPlaceholderView()) {
-                Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
-            }
-            // 设置通过 ⌘, 打开独立 Settings 窗口，不在侧边栏内导航
-            Button {
-                NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
-            } label: {
-                Label(String(localized: "sidebar.settings", defaultValue: "设置"), systemImage: "gearshape")
-            }
-            .buttonStyle(.plain)
+        List(selection: $selection) {
+            Label(String(localized: "sidebar.allwords", defaultValue: "全部单词"), systemImage: "books.vertical")
+                .tag(SidebarItem.allWords)
+            Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
+                .tag(SidebarItem.review)
+            Label(String(localized: "sidebar.settings", defaultValue: "设置"), systemImage: "gearshape")
+                .tag(SidebarItem.settings)
         }
         .navigationTitle(String(localized: "app.name", defaultValue: "WordClip"))
         .listStyle(.sidebar)
     }
 }
 
-/// 词典列表页（M1 实现查词功能，当前为骨架）
+/// 词典列表页：支持查看详情、删除、修复释义（单条 + 批量）。
 struct WordListView: View {
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var appState: AppState
     @Query(sort: \WordEntry.createdAt, order: .reverse) private var words: [WordEntry]
+
+    @State private var selectedWord: WordEntry?      // 详情 sheet
+    @State private var selection = Set<WordEntry.ID>() // 多选
+    @State private var isRepairing = false
+    @State private var repairMessage: String?
+    @State private var pendingDelete: [WordEntry] = []  // 待确认删除
+    @State private var showDeleteConfirm = false
+    @State private var searchText = ""
+
+    private var actions: WordListActions {
+        WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
+    }
+
+    /// 按搜索词过滤：匹配单词或释义（不区分大小写）。
+    private var filteredWords: [WordEntry] {
+        let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !q.isEmpty else { return words }
+        return words.filter { word in
+            word.headword.lowercased().contains(q)
+                || word.lemma.contains(q)
+                || (word.definition?.lowercased().contains(q) ?? false)
+        }
+    }
 
     var body: some View {
         Group {
@@ -39,35 +61,265 @@ struct WordListView: View {
                     description: Text(String(localized: "wordlist.empty.description",
                         defaultValue: "在任意 App 中选中单词，用快捷键一键收录"))
                 )
+            } else if filteredWords.isEmpty {
+                ContentUnavailableView.search(text: searchText)
             } else {
-                List(words) { word in
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(word.headword)
-                            .font(.headline)
-                        if let definition = word.definition {
-                            Text(definition.components(separatedBy: "\n").first ?? definition)
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
+                List(selection: $selection) {
+                    ForEach(filteredWords) { word in
+                        row(for: word)
+                            .tag(word.id)
+                            .contextMenu {
+                                Button {
+                                    selectedWord = word
+                                } label: {
+                                    Label(String(localized: "wordlist.menu.detail", defaultValue: "查看详情"),
+                                          systemImage: "info.circle")
+                                }
+                                Button {
+                                    Task { await repairOne(word) }
+                                } label: {
+                                    Label(String(localized: "wordlist.menu.repair", defaultValue: "修复释义"),
+                                          systemImage: "arrow.clockwise")
+                                }
+                                Divider()
+                                Button(role: .destructive) {
+                                    requestDelete([word])
+                                } label: {
+                                    Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"),
+                                          systemImage: "trash")
+                                }
+                            }
+                    }
+                    .onDelete { offsets in
+                        requestDelete(offsets.map { filteredWords[$0] })
                     }
                 }
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
+        .searchable(
+            text: $searchText,
+            placement: .toolbar,
+            prompt: String(localized: "wordlist.search.prompt", defaultValue: "搜索单词或释义")
+        )
+        .toolbar {
+            ToolbarItemGroup {
+                if !selection.isEmpty {
+                    // 批量删除选中
+                    Button(role: .destructive) {
+                        let toDelete = words.filter { selection.contains($0.id) }
+                        requestDelete(toDelete)
+                    } label: {
+                        Label(String(localized: "wordlist.toolbar.delete.selected",
+                                     defaultValue: "删除选中 (\(selection.count))"),
+                              systemImage: "trash")
+                    }
+                }
+                // 批量修复无释义
+                Button {
+                    Task { await repairAll() }
+                } label: {
+                    if isRepairing {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Label(String(localized: "wordlist.toolbar.repair.all", defaultValue: "修复无释义"),
+                              systemImage: "wand.and.stars")
+                    }
+                }
+                .disabled(isRepairing || appState.dictionary == nil)
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if let msg = repairMessage {
+                Text(msg)
+                    .font(.callout)
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                    .background(.regularMaterial, in: Capsule())
+                    .shadow(radius: 4, y: 2)
+                    .padding(.bottom, 16)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(duration: 0.3), value: repairMessage)
+        .sheet(item: $selectedWord) { word in
+            WordDetailView(word: word, onRepair: { await repairOne(word) })
+        }
+        .confirmationDialog(
+            deleteConfirmTitle,
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "delete.confirm", defaultValue: "删除"), role: .destructive) {
+                actions.delete(pendingDelete)
+                selection.removeAll()
+                pendingDelete = []
+            }
+            Button(String(localized: "delete.cancel", defaultValue: "取消"), role: .cancel) {
+                pendingDelete = []
+            }
+        }
+    }
+
+    private var deleteConfirmTitle: String {
+        if pendingDelete.count == 1 {
+            return String(localized: "delete.confirm.one",
+                          defaultValue: "确定删除「\(pendingDelete.first?.headword ?? "")」？")
+        }
+        return String(localized: "delete.confirm.many",
+                      defaultValue: "确定删除选中的 \(pendingDelete.count) 个单词？")
+    }
+
+    private func requestDelete(_ targets: [WordEntry]) {
+        guard !targets.isEmpty else { return }
+        pendingDelete = targets
+        showDeleteConfirm = true
+    }
+
+    @ViewBuilder
+    private func row(for word: WordEntry) -> some View {
+        Button {
+            selectedWord = word
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Text(word.headword)
+                        .font(.headline)
+                    if let phonetic = word.phonetic, !phonetic.isEmpty {
+                        Text("/\(phonetic)/")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+                if let definition = word.definition, !definition.isEmpty {
+                    Text(definition.components(separatedBy: "\n").first ?? definition)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                } else {
+                    Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .swipeActions(edge: .trailing) {
+            Button(role: .destructive) {
+                requestDelete([word])
+            } label: {
+                Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"), systemImage: "trash")
+            }
+        }
+    }
+
+    // MARK: - 修复操作
+
+    private func repairOne(_ word: WordEntry) async {
+        let ok = await actions.repair(word)
+        flashRepair(ok
+            ? String(localized: "repair.one.success", defaultValue: "已更新：\(word.headword)")
+            : String(localized: "repair.one.fail", defaultValue: "词典未收录：\(word.headword)"))
+    }
+
+    private func repairAll() async {
+        isRepairing = true
+        let count = await actions.repairAll(words)
+        isRepairing = false
+        flashRepair(String(localized: "repair.all.done", defaultValue: "已修复 \(count) 个词条"))
+    }
+
+    private func flashRepair(_ message: String) {
+        repairMessage = message
+        Task {
+            try? await Task.sleep(nanoseconds: 2_500_000_000)
+            if repairMessage == message { repairMessage = nil }
+        }
     }
 }
 
-/// 复习页占位（M3 实现）
-struct ReviewPlaceholderView: View {
+/// 单词详情：展示完整释义、音标、来源。
+struct WordDetailView: View {
+    let word: WordEntry
+    var onRepair: (() async -> Void)? = nil
+    @Environment(\.dismiss) private var dismiss
+    @State private var isRepairing = false
+
     var body: some View {
-        ContentUnavailableView(
-            String(localized: "review.coming.title", defaultValue: "复习功能即将上线"),
-            systemImage: "checkmark.circle",
-            description: Text(String(localized: "review.coming.description",
-                defaultValue: "先收集一些单词，复习功能将在后续版本中推出"))
-        )
-        .navigationTitle(String(localized: "tab.review", defaultValue: "复习"))
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(word.headword)
+                        .font(.largeTitle.bold())
+                    if let phonetic = word.phonetic, !phonetic.isEmpty {
+                        Text("/\(phonetic)/")
+                            .font(.title3)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Divider()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    if let definition = word.definition, !definition.isEmpty {
+                        Text(definition)
+                            .font(.body)
+                            .textSelection(.enabled)
+                    } else {
+                        Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
+                            .foregroundStyle(.secondary)
+                    }
+
+                    if let en = word.definitionEn, !en.isEmpty {
+                        Text(en)
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            Divider()
+            HStack {
+                if !word.sources.isEmpty {
+                    Text(String(localized: "detail.collected.count", defaultValue: "收录 \(word.sources.count) 次"))
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+                Spacer()
+                if let onRepair {
+                    Button {
+                        Task {
+                            isRepairing = true
+                            await onRepair()
+                            isRepairing = false
+                        }
+                    } label: {
+                        if isRepairing {
+                            ProgressView().controlSize(.small)
+                        } else {
+                            Label(String(localized: "detail.repair", defaultValue: "修复释义"),
+                                  systemImage: "arrow.clockwise")
+                        }
+                    }
+                    .controlSize(.small)
+                    .disabled(isRepairing)
+                }
+            }
+        }
+        .padding(24)
+        .frame(width: 420, height: 360)
     }
 }
 
@@ -76,19 +328,29 @@ struct SettingsView: View {
     @EnvironmentObject private var entitlement: MockEntitlement
     @EnvironmentObject private var appState: AppState
 
+    #if os(macOS)
+    // macOS 26+ 上 name 式 Recorder 失效，改用 binding 式录制器，
+    // 在 onChange 中把快捷键写回 .collectWord 名称的存储，保证全局监听照常生效。
+    @State private var collectShortcut: KeyboardShortcuts.Shortcut? = KeyboardShortcuts.getShortcut(for: .collectWord)
+    #endif
+
     var body: some View {
         Form {
-            // ── 取词 ──────────────────────────────────────
+            #if os(macOS)
+            // ── 取词（仅 macOS）──────────────────────────────
             Section {
                 Toggle(
                     String(localized: "settings.capture.enabled", defaultValue: "启用全局取词"),
                     isOn: $appState.captureEnabled
                 )
 
-                KeyboardShortcuts.Recorder(
-                    String(localized: "settings.capture.shortcut", defaultValue: "取词快捷键"),
-                    name: .collectWord
-                )
+                LabeledContent(String(localized: "settings.capture.shortcut", defaultValue: "取词快捷键")) {
+                    ShortcutRecorderField(shortcut: $collectShortcut)
+                }
+                .onChange(of: collectShortcut) { _, newValue in
+                    KeyboardShortcuts.setShortcut(newValue, for: .collectWord)
+                    appState.refreshHotkeyRegistration()
+                }
             } header: {
                 Text(String(localized: "settings.section.capture", defaultValue: "取词"))
             } footer: {
@@ -97,7 +359,7 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
 
-            // ── 通用 ──────────────────────────────────────
+            // ── 通用（仅 macOS）──────────────────────────────
             Section {
                 Toggle(
                     String(localized: "settings.general.launchatlogin", defaultValue: "登录时自动启动"),
@@ -106,6 +368,7 @@ struct SettingsView: View {
             } header: {
                 Text(String(localized: "settings.section.general", defaultValue: "通用"))
             }
+            #endif
 
             // ── 账户 ──────────────────────────────────────
             Section {
@@ -133,7 +396,6 @@ struct SettingsView: View {
         .navigationTitle(String(localized: "tab.settings", defaultValue: "设置"))
         #if os(macOS)
         .formStyle(.grouped)
-        .frame(width: 420)
         #endif
     }
 }

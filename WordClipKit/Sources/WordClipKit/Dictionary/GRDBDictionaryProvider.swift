@@ -20,17 +20,54 @@ public final class GRDBDictionaryProvider: DictionaryProvider {
 
     public func lookup(_ word: String) async -> DictionaryResult? {
         let key = word.lowercased().trimmingCharacters(in: .whitespaces)
+        guard !key.isEmpty else { return nil }
+
+        // 1. 精确匹配
+        if let exact = try? await dbPool.read({ db in
+            try Row.fetchOne(
+                db,
+                sql: """
+                    SELECT word, lemma, phonetic, definition, definition_en, pos, exchange, freq_rank
+                    FROM entries WHERE word = ? LIMIT 1
+                """,
+                arguments: [key]
+            ).map { Self.result(from: $0) }
+        }) {
+            return exact
+        }
+
+        // 2. 前缀 fallback：取前缀匹配里词频最高的候选词（freq_rank 最小）
+        //    适合 config→configuration、app→application 等技术缩写场景
+        guard key.count >= 3 else { return nil }   // 太短的词不做前缀扩展
         return try? await dbPool.read { db in
             try Row.fetchOne(
                 db,
                 sql: """
                     SELECT word, lemma, phonetic, definition, definition_en, pos, exchange, freq_rank
                     FROM entries
-                    WHERE word = ?
+                    WHERE word LIKE ? ESCAPE '\\'
+                    ORDER BY freq_rank ASC
                     LIMIT 1
                 """,
-                arguments: [key]
-            ).map { Self.result(from: $0) }
+                arguments: ["\(key)%"]
+            ).map { row -> DictionaryResult in
+                var r = Self.result(from: row)
+                // 在释义前标注实际匹配到的词，让用户知道来源
+                let matched: String = row["word"]
+                if matched != key, let def = r.definition {
+                    r = DictionaryResult(
+                        word:         key,
+                        lemma:        r.lemma,
+                        phonetic:     r.phonetic,
+                        definition:   "[\(matched)] \(def)",
+                        definitionEn: r.definitionEn,
+                        pos:          r.pos,
+                        exchange:     r.exchange,
+                        freqRank:     r.freqRank
+                    )
+                }
+                return r
+            }
         }
     }
 

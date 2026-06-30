@@ -15,14 +15,14 @@ packages:
     path: WordClipKit
   KeyboardShortcuts:
     url: https://github.com/sindresorhus/KeyboardShortcuts
-    exactVersion: 2.2.0
+    exactVersion: 3.0.1
 
 settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
-    DEVELOPMENT_TEAM: ""           # 有开发者账号后填入 Team ID
+    DEVELOPMENT_TEAM: "5GS5X3MD6G"    # Apple Development 签名（需在 Xcode Accounts 里重新生成证书）
     DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
 
 configs:
@@ -41,8 +41,6 @@ targets:
         excludes:
           - "**/*.md"
     resources:
-      - path: data/dictionary-en.sqlite
-        optional: true           # 开发期可不存在，M1 再正式打包
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
       - package: WordClipKit
@@ -54,7 +52,8 @@ targets:
         PRODUCT_NAME: WordClip
         INFOPLIST_FILE: WordClip/Resources/Info-macOS.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "9212B14D50ACB86986465B987F4DEBBAB8D6B4F7"
         # 上架后需要的 entitlements
         CODE_SIGN_ENTITLEMENTS: WordClip/Resources/WordClip-macOS.entitlements
 
@@ -68,8 +67,6 @@ targets:
         excludes:
           - "**/*.md"
     resources:
-      - path: data/dictionary-en.sqlite
-        optional: true
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
       - package: WordClipKit
