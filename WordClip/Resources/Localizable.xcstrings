@@ -933,6 +933,40 @@
           }
         }
       }
+    },
+    "wordlist.toolbar.favorites": {
+      "comment": "Toolbar: favorites filter",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorites Only"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只看收藏"
+          }
+        }
+      }
+    },
+    "wordlist.menu.favorite": {
+      "comment": "Swipe: favorite",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收藏"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

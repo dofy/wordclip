@@ -40,6 +40,7 @@ struct WordListView: View {
     @State private var showDeleteConfirm = false
     @State private var searchText = ""
     @State private var showingAddWord = false
+    @State private var showFavoritesOnly = false
 
     private var actions: WordListActions {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
@@ -56,11 +57,15 @@ struct WordListView: View {
         #endif
     }
 
-    /// 按搜索词过滤：匹配单词或释义（不区分大小写）。
+    /// 按搜索词过滤：匹配单词或释义（不区分大小写），可叠加只看收藏。
     private var filteredWords: [WordEntry] {
+        var result = words
+        if showFavoritesOnly {
+            result = result.filter { $0.isFavorite }
+        }
         let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !q.isEmpty else { return words }
-        return words.filter { word in
+        guard !q.isEmpty else { return result }
+        return result.filter { word in
             word.headword.lowercased().contains(q)
                 || word.lemma.contains(q)
                 || (word.definition?.lowercased().contains(q) ?? false)
@@ -142,6 +147,15 @@ struct WordListView: View {
                 }
                 .disabled(isRepairing || appState.dictionary == nil)
 
+                // 只看收藏
+                Button {
+                    showFavoritesOnly.toggle()
+                } label: {
+                    Label(String(localized: "wordlist.toolbar.favorites", defaultValue: "只看收藏"),
+                          systemImage: showFavoritesOnly ? "star.fill" : "star")
+                }
+                .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
+
                 // 添加单词
                 Button {
                     showingAddWord = true
@@ -214,6 +228,11 @@ struct WordListView: View {
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
+                    if word.isFavorite {
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.yellow)
+                    }
                 }
                 if let definition = word.definition, !definition.isEmpty {
                     Text(definition.components(separatedBy: "\n").first ?? definition)
@@ -228,6 +247,16 @@ struct WordListView: View {
             }
         }
         .buttonStyle(.plain)
+        .swipeActions(edge: .leading) {
+            Button {
+                word.isFavorite.toggle()
+                try? modelContext.save()
+            } label: {
+                Label(String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
+                      systemImage: word.isFavorite ? "star.slash" : "star")
+            }
+            .tint(.yellow)
+        }
         .swipeActions(edge: .trailing) {
             Button(role: .destructive) {
                 requestDelete([word])
@@ -267,6 +296,7 @@ struct WordDetailView: View {
     let word: WordEntry
     var onRepair: (() async -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @State private var isRepairing = false
 
     var body: some View {
@@ -282,6 +312,15 @@ struct WordDetailView: View {
                             Image(systemName: "speaker.wave.2.fill")
                                 .font(.title3)
                                 .foregroundStyle(.tint)
+                        }
+                        .buttonStyle(.plain)
+                        Button {
+                            word.isFavorite.toggle()
+                            try? modelContext.save()
+                        } label: {
+                            Image(systemName: word.isFavorite ? "star.fill" : "star")
+                                .font(.title3)
+                                .foregroundStyle(word.isFavorite ? .yellow : .secondary)
                         }
                         .buttonStyle(.plain)
                     }
