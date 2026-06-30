@@ -41,6 +41,17 @@ struct WordListView: View {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
     }
 
+    /// 空状态描述文案：macOS 用全局快捷键，iOS 用快捷指令/分享。
+    private var emptyDescription: String {
+        #if os(macOS)
+        String(localized: "wordlist.empty.description",
+               defaultValue: "在任意 App 中选中单词，用快捷键一键收录")
+        #else
+        String(localized: "wordlist.empty.description.ios",
+               defaultValue: "通过快捷指令或分享菜单，把生词收录到 WordClip")
+        #endif
+    }
+
     /// 按搜索词过滤：匹配单词或释义（不区分大小写）。
     private var filteredWords: [WordEntry] {
         let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
@@ -58,8 +69,7 @@ struct WordListView: View {
                 ContentUnavailableView(
                     String(localized: "wordlist.empty.title", defaultValue: "还没有收藏的单词"),
                     systemImage: "books.vertical",
-                    description: Text(String(localized: "wordlist.empty.description",
-                        defaultValue: "在任意 App 中选中单词，用快捷键一键收录"))
+                    description: Text(emptyDescription)
                 )
             } else if filteredWords.isEmpty {
                 ContentUnavailableView.search(text: searchText)
