@@ -76,9 +76,8 @@ struct WordClipApp: App {
             MenuBarMenuView()
                 .environmentObject(appState)
         } label: {
-            // 取词启用时用实心剪刀，禁用时用半透明
-            Label("WordClip", systemImage: "scissors")
-                .symbolVariant(appState.captureEnabled ? .fill : .none)
+            // 自定义书签模板图，取词禁用时半透明提示
+            Image("MenuBarIcon")
                 .opacity(appState.captureEnabled ? 1.0 : 0.4)
         }
 
