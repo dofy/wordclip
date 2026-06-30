@@ -134,3 +134,79 @@ struct MockEntitlementTests {
         #expect(products.contains { $0.plan == .lifetime })
     }
 }
+
+// MARK: - WordBackup Tests
+
+@Suite("WordBackup")
+struct WordBackupTests {
+
+    private func sampleDTO() -> WordDTO {
+        WordDTO(
+            headword: "Serendipity", lemma: "serendipity", language: "en",
+            definition: "n. 意外发现珍宝的运气", definitionEn: nil, phonetic: "ˌserənˈdipiti",
+            tags: ["favorite", "hard"], createdAt: Date(timeIntervalSince1970: 1_700_000_000),
+            isFavorite: true,
+            familiarity: 3, easeFactor: 2.6, interval: 6, repetitions: 3,
+            dueAt: Date(timeIntervalSince1970: 1_700_500_000),
+            lastReviewedAt: Date(timeIntervalSince1970: 1_700_000_500)
+        )
+    }
+
+    @Test("WordBackup encode/decode round-trip 数据一致")
+    func roundTrip() throws {
+        let backup = WordBackup(
+            exportedAt: Date(timeIntervalSince1970: 1_700_000_000),
+            words: [sampleDTO()]
+        )
+
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(backup)
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let decoded = try decoder.decode(WordBackup.self, from: data)
+
+        #expect(decoded.version == WordBackup.currentVersion)
+        #expect(decoded.words.count == 1)
+        let w = try #require(decoded.words.first)
+        #expect(w.headword == "Serendipity")
+        #expect(w.lemma == "serendipity")
+        #expect(w.definition == "n. 意外发现珍宝的运气")
+        #expect(w.phonetic == "ˌserənˈdipiti")
+        #expect(w.tags == ["favorite", "hard"])
+        #expect(w.isFavorite == true)
+        #expect(w.familiarity == 3)
+        #expect(w.easeFactor == 2.6)
+        #expect(w.interval == 6)
+        #expect(w.repetitions == 3)
+        #expect(w.dueAt == Date(timeIntervalSince1970: 1_700_500_000))
+    }
+
+    @Test("可选字段为 nil 时也能 round-trip")
+    func roundTripWithNils() throws {
+        let dto = WordDTO(
+            headword: "test", lemma: "test", language: "en",
+            definition: nil, definitionEn: nil, phonetic: nil,
+            tags: [], createdAt: Date(timeIntervalSince1970: 0), isFavorite: false,
+            familiarity: 0, easeFactor: 2.5, interval: 0, repetitions: 0,
+            dueAt: nil, lastReviewedAt: nil
+        )
+        let backup = WordBackup(exportedAt: Date(timeIntervalSince1970: 0), words: [dto])
+
+        let data = try JSONEncoder().encode(backup)
+        let decoded = try JSONDecoder().decode(WordBackup.self, from: data)
+
+        let w = try #require(decoded.words.first)
+        #expect(w.definition == nil)
+        #expect(w.dueAt == nil)
+        #expect(w.tags.isEmpty)
+    }
+
+    @Test("默认 version 为当前版本")
+    func defaultVersion() {
+        let backup = WordBackup(exportedAt: Date(timeIntervalSince1970: 0), words: [])
+        #expect(backup.version == 1)
+        #expect(backup.version == WordBackup.currentVersion)
+    }
+}

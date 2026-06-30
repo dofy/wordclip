@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import WordClipKit
+import UniformTypeIdentifiers
 #if os(macOS)
 import KeyboardShortcuts
 #endif
@@ -337,12 +338,23 @@ struct WordDetailView: View {
 struct SettingsView: View {
     @EnvironmentObject private var entitlement: MockEntitlement
     @EnvironmentObject private var appState: AppState
+    @Environment(\.modelContext) private var modelContext
 
     #if os(macOS)
     // macOS 26+ 上 name 式 Recorder 失效，改用 binding 式录制器，
     // 在 onChange 中把快捷键写回 .collectWord 名称的存储，保证全局监听照常生效。
     @State private var collectShortcut: KeyboardShortcuts.Shortcut? = KeyboardShortcuts.getShortcut(for: .collectWord)
     #endif
+
+    // 备份导出/导入
+    @State private var showingExporter = false
+    @State private var showingImporter = false
+    @State private var exportDocument: WordBackupDocument?
+    @State private var backupMessage: String?
+
+    private var backup: BackupService {
+        BackupService(modelContext: modelContext)
+    }
 
     var body: some View {
         Form {
@@ -392,6 +404,28 @@ struct SettingsView: View {
                 Text(String(localized: "settings.account", defaultValue: "账户"))
             }
 
+            // ── 数据（导出/导入）──────────────────────────
+            Section {
+                Button {
+                    exportBackup()
+                } label: {
+                    Label(String(localized: "settings.export", defaultValue: "导出词库"),
+                          systemImage: "square.and.arrow.up")
+                }
+                Button {
+                    showingImporter = true
+                } label: {
+                    Label(String(localized: "settings.import", defaultValue: "导入词库"),
+                          systemImage: "square.and.arrow.down")
+                }
+            } header: {
+                Text(String(localized: "settings.section.data", defaultValue: "数据"))
+            } footer: {
+                Text(String(localized: "settings.data.hint",
+                    defaultValue: "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。"))
+                .foregroundStyle(.secondary)
+            }
+
             #if DEBUG
             Section {
                 Toggle(
@@ -407,5 +441,78 @@ struct SettingsView: View {
         #if os(macOS)
         .formStyle(.grouped)
         #endif
+        .fileExporter(
+            isPresented: $showingExporter,
+            document: exportDocument,
+            contentType: .json,
+            defaultFilename: exportFilename
+        ) { result in
+            if case .failure(let error) = result {
+                flashBackup(String(localized: "backup.export.fail",
+                                   defaultValue: "导出失败：\(error.localizedDescription)"))
+            } else {
+                flashBackup(String(localized: "backup.export.ok", defaultValue: "已导出词库"))
+            }
+        }
+        .fileImporter(
+            isPresented: $showingImporter,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            handleImport(result)
+        }
+        .overlay(alignment: .bottom) {
+            if let msg = backupMessage {
+                Text(msg)
+                    .font(.callout)
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                    .background(.regularMaterial, in: Capsule())
+                    .shadow(radius: 4, y: 2)
+                    .padding(.bottom, 16)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(duration: 0.3), value: backupMessage)
+    }
+
+    // MARK: - 备份操作
+
+    private var exportFilename: String {
+        "wordclip-backup"
+    }
+
+    private func exportBackup() {
+        do {
+            let data = try backup.export(exportedAt: Date())
+            exportDocument = WordBackupDocument(data: data)
+            showingExporter = true
+        } catch {
+            flashBackup(String(localized: "backup.export.fail",
+                               defaultValue: "导出失败：\(error.localizedDescription)"))
+        }
+    }
+
+    private func handleImport(_ result: Result<[URL], Error>) {
+        guard case .success(let urls) = result, let url = urls.first else { return }
+        // fileImporter 返回的 URL 需要 security scope 访问
+        let needsScope = url.startAccessingSecurityScopedResource()
+        defer { if needsScope { url.stopAccessingSecurityScopedResource() } }
+        do {
+            let data = try Data(contentsOf: url)
+            let r = try backup.importData(data)
+            flashBackup(String(localized: "backup.import.result",
+                               defaultValue: "已导入：新增 \(r.added)，合并 \(r.merged)"))
+        } catch {
+            flashBackup(String(localized: "backup.import.fail",
+                               defaultValue: "导入失败：\(error.localizedDescription)"))
+        }
+    }
+
+    private func flashBackup(_ message: String) {
+        backupMessage = message
+        Task {
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            if backupMessage == message { backupMessage = nil }
+        }
     }
 }

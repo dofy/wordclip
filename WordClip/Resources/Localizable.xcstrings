@@ -508,6 +508,91 @@
           }
         }
       }
+    },
+    "settings.section.data": {
+      "comment": "Settings section: data",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据"
+          }
+        }
+      }
+    },
+    "settings.export": {
+      "comment": "Export vocabulary",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export Vocabulary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出词库"
+          }
+        }
+      }
+    },
+    "settings.import": {
+      "comment": "Import vocabulary",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Vocabulary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入词库"
+          }
+        }
+      }
+    },
+    "settings.data.hint": {
+      "comment": "Data section footer",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export a JSON backup, or import on a new device. Import merges by word and won't overwrite your learning progress."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。"
+          }
+        }
+      }
+    },
+    "backup.export.ok": {
+      "comment": "Export success",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vocabulary exported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已导出词库"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
