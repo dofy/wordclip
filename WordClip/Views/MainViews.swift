@@ -39,6 +39,7 @@ struct WordListView: View {
     @State private var pendingDelete: [WordEntry] = []  // 待确认删除
     @State private var showDeleteConfirm = false
     @State private var searchText = ""
+    @State private var showingAddWord = false
 
     private var actions: WordListActions {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
@@ -140,7 +141,18 @@ struct WordListView: View {
                     }
                 }
                 .disabled(isRepairing || appState.dictionary == nil)
+
+                // 添加单词
+                Button {
+                    showingAddWord = true
+                } label: {
+                    Label(String(localized: "wordlist.toolbar.add", defaultValue: "添加单词"),
+                          systemImage: "plus")
+                }
             }
+        }
+        .sheet(isPresented: $showingAddWord) {
+            AddWordView()
         }
         .overlay(alignment: .bottom) {
             if let msg = repairMessage {

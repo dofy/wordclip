@@ -88,6 +88,7 @@ struct WordClipApp: App {
                 .environmentObject(entitlement)
                 .environmentObject(appState)
                 .onOpenURL(perform: handleURL)
+                .task { setupCollector() }
         }
         .modelContainer(modelContainer)
         #endif
@@ -104,38 +105,24 @@ struct WordClipApp: App {
         switch components.host {
         case "collect":
             if let word = components.queryItems?.first(where: { $0.name == "word" })?.value {
-                #if os(macOS)
                 Task { @MainActor in
                     if let collector = collectorBox.collector {
-                        // collector 已就绪，直接收录
-                        let outcome = await collector.collect(word: word)
-                        appState.flashCollectMessage(Self.feedback(for: outcome))
-                        Self.sendNotification(for: outcome)
+                        await runCollect { await collector.collect(word: word) }
                     } else {
                         // app 刚启动，collector 还没初始化完，先排队
                         collectorBox.pendingWords.append(word)
                     }
                 }
-                #endif
             }
         case "review":
-            break     // TODO(M3): 跳转复习页
+            break     // TODO: 跳转复习页
         default:
             break
         }
     }
 
-    #if os(macOS)
     // collector 在主窗口出现时初始化一次，持有于引用盒中供回调/URL 复用。
     private let collectorBox = CollectorBox()
-
-    /// 申请通知权限并设置 delegate（前台也能收通知）。
-    @MainActor
-    private func requestNotificationPermission() async {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = NotificationDelegate.shared
-        _ = try? await center.requestAuthorization(options: [.alert, .sound])
-    }
 
     @MainActor
     private func setupCollector() {
@@ -147,7 +134,6 @@ struct WordClipApp: App {
             let path = try DictionarySetup.prepareDatabasePath()
             dictionary = try GRDBDictionaryProvider(dbPath: path)
         } catch {
-            // 词典不可用时退化为空词典，仍可收词（释义留空）。
             dictionary = NullDictionaryProvider()
         }
 
@@ -156,7 +142,12 @@ struct WordClipApp: App {
             dictionary: dictionary
         )
         collectorBox.collector = collector
-        appState.dictionary = dictionary   // 共享给 WordListView 用于修复释义
+        appState.dictionary = dictionary
+        appState.collector = collector   // 暴露给 UI（手输/粘贴）
+
+        #if os(macOS)
+        // 申请通知权限
+        Task { await requestNotificationPermission() }
 
         // 注入全局热键回调
         appState.onCollect = { [weak appState] in
@@ -166,27 +157,34 @@ struct WordClipApp: App {
                 if case .notTrusted = outcome {
                     appState.needsAccessibilityPrompt = true
                 }
-                // app 在前台时显示 toast，同时发系统通知（后台/未激活时可见）
                 appState.flashCollectMessage(Self.feedback(for: outcome))
                 Self.sendNotification(for: outcome)
             }
         }
-        // 注入完成后重新注册热键，确保回调生效
         appState.refreshHotkeyRegistration()
+        #endif
 
         // 消费 collector 就绪前积压的 URL 请求
         for word in collectorBox.pendingWords {
             Task { @MainActor in
-                let outcome = await collector.collect(word: word)
-                appState.flashCollectMessage(Self.feedback(for: outcome))
-                Self.sendNotification(for: outcome)
+                await runCollect { await collector.collect(word: word) }
             }
         }
         collectorBox.pendingWords.removeAll()
     }
 
+    /// 统一执行收录并反馈：前台 toast + macOS 系统通知。
+    @MainActor
+    private func runCollect(_ action: () async -> WordCollector.CollectOutcome) async {
+        let outcome = await action()
+        appState.flashCollectMessage(Self.feedback(for: outcome))
+        #if os(macOS)
+        Self.sendNotification(for: outcome)
+        #endif
+    }
+
     /// 把收录结果转成给用户看的反馈文案。
-    private static func feedback(for outcome: WordCollector.CollectOutcome) -> String {
+    static func feedback(for outcome: WordCollector.CollectOutcome) -> String {
         switch outcome {
         case .collected(let word, let found, _):
             return found
@@ -197,32 +195,36 @@ struct WordClipApp: App {
         case .notTrusted:
             return String(localized: "collect.notrusted", defaultValue: "需要在系统设置中授予辅助功能权限")
         case .invalid:
-            return String(localized: "collect.invalid", defaultValue: "选中的内容不是有效单词")
+            return String(localized: "collect.invalid", defaultValue: "不是有效的单词")
         }
+    }
+
+    #if os(macOS)
+    /// 申请通知权限并设置 delegate（前台也能收通知）。
+    @MainActor
+    private func requestNotificationPermission() async {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = NotificationDelegate.shared
+        _ = try? await center.requestAuthorization(options: [.alert, .sound])
     }
 
     /// 根据收录结果发送系统通知（app 未激活时也能看到）。
     private static func sendNotification(for outcome: WordCollector.CollectOutcome) {
         switch outcome {
         case .collected(let word, let found, let definition):
-            NotificationService.sendCollectNotification(
-                word: word,
-                definition: definition,
-                found: found
-            )
+            NotificationService.sendCollectNotification(word: word, definition: definition, found: found)
         case .notTrusted:
             NotificationService.sendErrorNotification(
                 message: String(localized: "collect.notrusted",
                                 defaultValue: "需要在系统设置中授予辅助功能权限")
             )
         case .noSelection, .invalid:
-            break  // 静默失败，不打扰用户
+            break
         }
     }
     #endif
 }
 
-#if os(macOS)
 /// 持有 WordCollector 的引用盒（App 是值类型，需引用类型跨回调保活）。
 @MainActor
 final class CollectorBox {
@@ -230,4 +232,3 @@ final class CollectorBox {
     /// collector 初始化前通过 URL scheme 进来的词，就绪后统一处理。
     var pendingWords: [String] = []
 }
-#endif

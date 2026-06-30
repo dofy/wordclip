@@ -780,6 +780,74 @@
           }
         }
       }
+    },
+    "addword.title": {
+      "comment": "Add word panel title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Word"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加单词"
+          }
+        }
+      }
+    },
+    "addword.placeholder": {
+      "comment": "Add word input placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an English word"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入英文单词"
+          }
+        }
+      }
+    },
+    "addword.add": {
+      "comment": "Add button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加"
+          }
+        }
+      }
+    },
+    "wordlist.toolbar.add": {
+      "comment": "Toolbar: add word",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Word"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加单词"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

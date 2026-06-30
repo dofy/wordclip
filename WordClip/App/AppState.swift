@@ -12,6 +12,18 @@ final class AppState: ObservableObject {
     // MARK: - 词典（由 App 层初始化后注入，供收词和修复释义共用）
     var dictionary: (any DictionaryProvider)?
 
+    // MARK: - 收词服务（由 App 层初始化后注入，供手动添加/粘贴调用）
+    var collector: WordCollector?
+
+    /// 手动添加单词（手输/粘贴）。返回反馈文案供 UI 展示。
+    func collect(word: String) async -> String? {
+        guard let collector else { return nil }
+        let outcome = await collector.collect(word: word)
+        let msg = WordClipApp.feedback(for: outcome)
+        flashCollectMessage(msg)
+        return msg
+    }
+
     // MARK: - 收录反馈
     /// 最近一次收录的提示文案，UI（状态栏/Toast）可观察展示。
     @Published var lastCollectMessage: String?

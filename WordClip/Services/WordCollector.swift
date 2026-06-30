@@ -1,15 +1,18 @@
-#if os(macOS)
 import Foundation
 import SwiftData
-import AppKit
 import NaturalLanguage
 import WordClipKit
+#if os(macOS)
+import AppKit
+#endif
 
-/// 取词收录服务：选中文本 → 查本地词典 → 写入 SwiftData。
+/// 取词收录服务：单词 → 查本地词典 → 写入 SwiftData。
 ///
 /// 设计要点：
 /// - 查不到词仍收录（释义留空），不丢词。
 /// - 按 lemma 去重：同一个词重复收集只新增一条 CollectSource，不重复建 WordEntry。
+/// - 跨平台核心（collect/extractWord/normalizeCase/upsert）；
+///   macOS 专属的选中文本取词在 collectFromSelection。
 @MainActor
 final class WordCollector {
 
@@ -29,25 +32,16 @@ final class WordCollector {
         case invalid
     }
 
-    /// 完整收词流程：读取选中文本 → 查词 → 入库。
-    func collectFromSelection() async -> CollectOutcome {
-        guard SelectionReader.isTrusted else { return .notTrusted }
-        guard let raw = SelectionReader.selectedText() else { return .noSelection }
-
-        // 取第一个单词（容忍用户选中了一个短语，但只收第一个词）
-        guard let extracted = Self.extractWord(from: raw) else { return .invalid }
-
-        let headword = Self.normalizeCase(extracted)
-        let lemma = headword.lowercased()
-        let result = await dictionary.lookup(lemma)
-        let frontApp = NSWorkspace.shared.frontmostApplication
-
-        upsert(headword: headword, lemma: lemma, dict: result, sourceApp: frontApp)
-
-        return .collected(word: headword, found: result != nil, definition: result?.definition)
+    /// 当前平台标识，写入 CollectSource.platform。
+    private var currentPlatform: String {
+        #if os(macOS)
+        "macOS"
+        #else
+        "iOS"
+        #endif
     }
 
-    /// 直接按单词收录（供 URL scheme wordclip://collect?word= 调用）。
+    /// 直接按单词收录（手动输入 / 粘贴 / URL scheme / 分享）。
     func collect(word: String) async -> CollectOutcome {
         guard let extracted = Self.extractWord(from: word) else { return .invalid }
         let headword = Self.normalizeCase(extracted)
@@ -57,14 +51,15 @@ final class WordCollector {
         return .collected(word: headword, found: result != nil, definition: result?.definition)
     }
 
-    // MARK: - Private
+    // MARK: - 写入
 
     /// 写入或更新词条（按 lemma 去重，追加 CollectSource）。
+    /// sourceApp 仅 macOS 选中取词时携带来源 App。
     private func upsert(
         headword: String,
         lemma: String,
         dict: DictionaryResult?,
-        sourceApp: NSRunningApplication?
+        sourceApp: SourceApp?
     ) {
         let existing = fetchEntry(lemma: lemma)
 
@@ -92,8 +87,8 @@ final class WordCollector {
         }
 
         let source = CollectSource(
-            platform: "macOS",
-            appName: sourceApp?.localizedName,
+            platform: currentPlatform,
+            appName: sourceApp?.name,
             contextSentence: nil,
             bundleIdentifier: sourceApp?.bundleIdentifier
         )
@@ -110,33 +105,29 @@ final class WordCollector {
         return try? modelContext.fetch(descriptor).first
     }
 
-    /// 从原始选中文本中提取首个有效英文单词。
+    // MARK: - 文本处理（跨平台）
+
+    /// 从原始文本中提取首个有效英文单词。
     static func extractWord(from raw: String) -> String? {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-        // 取首个 token，去掉两端标点
         let token = trimmed.split(whereSeparator: { $0.isWhitespace }).first.map(String.init) ?? trimmed
         let cleaned = token.trimmingCharacters(in: CharacterSet.letters.inverted)
-        // 必须以字母为主体
         guard cleaned.count >= 1,
               cleaned.allSatisfy({ $0.isLetter || $0 == "-" || $0 == "'" })
         else { return nil }
         return cleaned
     }
 
-    /// 大小写归一化：用 NaturalLanguage 识别专有名词。
-    /// 专有名词（国家/人名/组织等）保留首字母大写形式，其余一律转小写。
+    /// 大小写归一化：用 NaturalLanguage 识别专有名词，
+    /// 专有名词（国家/人名/组织等）保留首字母大写，其余一律转小写。
     static func normalizeCase(_ word: String) -> String {
         let lower = word.lowercased()
-
-        // 用词性标注判断是否为专有名词
         let tagger = NLTagger(tagSchemes: [.lexicalClass, .nameType])
         tagger.string = word
 
         var isProperNoun = false
         let range = word.startIndex..<word.endIndex
-
-        // 命名实体识别：国家、人名、地名、组织
         tagger.enumerateTags(in: range, unit: .word, scheme: .nameType,
                              options: [.omitWhitespace, .omitPunctuation]) { tag, _ in
             if let tag, [.personalName, .placeName, .organizationName].contains(tag) {
@@ -145,13 +136,35 @@ final class WordCollector {
             return true
         }
 
-        // 词性标注：专有名词 (.noun 中的 Proper) — NL 没有单独 Proper 标签，
-        // 用 nameType 已覆盖主要场景（国家、城市、人名、机构）。
         if isProperNoun {
-            // 专有名词：首字母大写，其余小写（China、Beijing、English）
             return lower.prefix(1).uppercased() + lower.dropFirst()
         }
         return lower
+    }
+}
+
+/// 来源 App 的中性描述（解耦 AppKit）。
+struct SourceApp {
+    var name: String?
+    var bundleIdentifier: String?
+}
+
+#if os(macOS)
+extension WordCollector {
+    /// macOS 专属：读取选中文本 → 查词 → 入库。
+    func collectFromSelection() async -> CollectOutcome {
+        guard SelectionReader.isTrusted else { return .notTrusted }
+        guard let raw = SelectionReader.selectedText() else { return .noSelection }
+        guard let extracted = Self.extractWord(from: raw) else { return .invalid }
+
+        let headword = Self.normalizeCase(extracted)
+        let lemma = headword.lowercased()
+        let result = await dictionary.lookup(lemma)
+        let frontApp = NSWorkspace.shared.frontmostApplication
+        let source = SourceApp(name: frontApp?.localizedName, bundleIdentifier: frontApp?.bundleIdentifier)
+
+        upsert(headword: headword, lemma: lemma, dict: result, sourceApp: source)
+        return .collected(word: headword, found: result != nil, definition: result?.definition)
     }
 }
 #endif
