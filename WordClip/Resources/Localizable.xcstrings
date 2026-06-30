@@ -984,6 +984,74 @@
           }
         }
       }
+    },
+    "wordlist.menu.speak": {
+      "comment": "Context menu: speak word",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Speak"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "朗读"
+          }
+        }
+      }
+    },
+    "wordlist.menu.unfavorite": {
+      "comment": "Context menu: remove from favorites",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfavorite"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消收藏"
+          }
+        }
+      }
+    },
+    "detail.shortcuts": {
+      "comment": "Detail window shortcut hint",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌘L Speak · ⌘D Favorite · ⌘R Repair"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
+          }
+        }
+      }
+    },
+    "detail.shortcuts.nav": {
+      "comment": "Detail window shortcut hint with navigation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "↑↓ Navigate · ⌘L Speak · ⌘D Favorite · ⌘R Repair"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

@@ -89,10 +89,25 @@ struct WordListView: View {
                             .tag(word.id)
                             .contextMenu {
                                 Button {
-                                    selectedWord = word
+                                    open(word)
                                 } label: {
                                     Label(String(localized: "wordlist.menu.detail", defaultValue: "查看详情"),
                                           systemImage: "info.circle")
+                                }
+                                Button {
+                                    Speaker.shared.speak(word.headword)
+                                } label: {
+                                    Label(String(localized: "wordlist.menu.speak", defaultValue: "朗读"),
+                                          systemImage: "speaker.wave.2")
+                                }
+                                Button {
+                                    word.isFavorite.toggle()
+                                    try? modelContext.save()
+                                } label: {
+                                    Label(word.isFavorite
+                                          ? String(localized: "wordlist.menu.unfavorite", defaultValue: "取消收藏")
+                                          : String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
+                                          systemImage: word.isFavorite ? "star.slash" : "star")
                                 }
                                 Button {
                                     Task { await repairOne(word) }
@@ -113,6 +128,15 @@ struct WordListView: View {
                         requestDelete(offsets.map { filteredWords[$0] })
                     }
                 }
+                #if os(macOS)
+                // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突
+                .background(selectedWord == nil ? listShortcuts : nil)
+                .onAppear {
+                    if selection.isEmpty, let first = filteredWords.first {
+                        selection = [first.id]
+                    }
+                }
+                #endif
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
@@ -181,7 +205,12 @@ struct WordListView: View {
         }
         .animation(.spring(duration: 0.3), value: repairMessage)
         .sheet(item: $selectedWord) { word in
-            WordDetailView(word: word, onRepair: { await repairOne(word) })
+            WordDetailView(
+                words: filteredWords,
+                current: $selectedWord,
+                fallback: word,
+                onRepair: { await repairOne($0) }
+            )
         }
         .confirmationDialog(
             deleteConfirmTitle,
@@ -214,39 +243,97 @@ struct WordListView: View {
         showDeleteConfirm = true
     }
 
+    /// 打开词条详情（详情页内可继续上下切换）。
+    private func open(_ word: WordEntry) {
+        selectedWord = word
+    }
+
+    /// 当前快捷键作用的目标：多选时取全部选中，否则取首个选中项。
+    private var selectedWords: [WordEntry] {
+        let inSelection = filteredWords.filter { selection.contains($0.id) }
+        return inSelection.isEmpty ? [] : inSelection
+    }
+
+    #if os(macOS)
+    /// 隐藏按钮承载列表级快捷键，作用于当前选中词条。
+    /// 回车打开、⌘L 朗读、⌘D 收藏、⌘R 修复、⌘⌫ 删除。
+    @ViewBuilder
+    private var listShortcuts: some View {
+        Group {
+            Button("") {
+                if let w = selectedWords.first { open(w) }
+            }
+            .keyboardShortcut(.return, modifiers: [])
+
+            Button("") {
+                if let w = selectedWords.first { Speaker.shared.speak(w.headword) }
+            }
+            .keyboardShortcut("l", modifiers: .command)
+
+            Button("") {
+                let targets = selectedWords
+                guard !targets.isEmpty else { return }
+                // 有任一未收藏 → 全部收藏；否则全部取消
+                let makeFav = targets.contains { !$0.isFavorite }
+                targets.forEach { $0.isFavorite = makeFav }
+                try? modelContext.save()
+            }
+            .keyboardShortcut("d", modifiers: .command)
+
+            Button("") {
+                let targets = selectedWords
+                Task { for w in targets { await repairOne(w) } }
+            }
+            .keyboardShortcut("r", modifiers: .command)
+
+            Button("") {
+                requestDelete(selectedWords)
+            }
+            .keyboardShortcut(.delete, modifiers: .command)
+        }
+        .opacity(0)
+        .frame(width: 0, height: 0)
+        .focusable(false)
+        .accessibilityHidden(true)
+    }
+    #endif
+
     @ViewBuilder
     private func row(for word: WordEntry) -> some View {
-        Button {
-            selectedWord = word
-        } label: {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 8) {
-                    Text(word.headword)
-                        .font(.headline)
-                    if let phonetic = word.phonetic, !phonetic.isEmpty {
-                        Text("/\(phonetic)/")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
-                    if word.isFavorite {
-                        Image(systemName: "star.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.yellow)
-                    }
-                }
-                if let definition = word.definition, !definition.isEmpty {
-                    Text(definition.components(separatedBy: "\n").first ?? definition)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                } else {
-                    Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                Text(word.headword)
+                    .font(.headline)
+                if let phonetic = word.phonetic, !phonetic.isEmpty {
+                    Text("/\(phonetic)/")
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
+                if word.isFavorite {
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.yellow)
+                }
+            }
+            if let definition = word.definition, !definition.isEmpty {
+                Text(definition.components(separatedBy: "\n").first ?? definition)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            } else {
+                Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
             }
         }
-        .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
+        // 单击交给 List 选中；双击打开详情（iOS 单击即开，见下）
+        #if os(macOS)
+        .onTapGesture(count: 2) { open(word) }
+        #else
+        .onTapGesture { open(word) }
+        #endif
         .swipeActions(edge: .leading) {
             Button {
                 word.isFavorite.toggle()
@@ -291,103 +378,200 @@ struct WordListView: View {
     }
 }
 
-/// 单词详情：展示完整释义、音标、来源。
+/// 单词详情：展示完整释义、音标、来源，并支持在列表内上下切换词条。
 struct WordDetailView: View {
-    let word: WordEntry
-    var onRepair: (() async -> Void)? = nil
+    let words: [WordEntry]
+    @Binding var current: WordEntry?
+    /// 兜底：words 为空或找不到时显示的词条（sheet item 保证非 nil）。
+    let fallback: WordEntry
+    var onRepair: (@MainActor (WordEntry) async -> Void)? = nil
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @State private var isRepairing = false
 
+    /// 当前展示的词条。
+    private var word: WordEntry { current ?? fallback }
+
+    /// 当前词条在列表中的下标。
+    private var index: Int? {
+        words.firstIndex { $0.id == word.id }
+    }
+
+    private var canPrev: Bool { (index ?? 0) > 0 }
+    private var canNext: Bool {
+        guard let i = index else { return false }
+        return i < words.count - 1
+    }
+
+    private func go(_ delta: Int) {
+        guard let i = index else { return }
+        let j = i + delta
+        guard words.indices.contains(j) else { return }
+        current = words[j]
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 10) {
-                        Text(word.headword)
-                            .font(.largeTitle.bold())
-                        Button {
-                            Speaker.shared.speak(word.headword)
-                        } label: {
-                            Image(systemName: "speaker.wave.2.fill")
-                                .font(.title3)
-                                .foregroundStyle(.tint)
-                        }
-                        .buttonStyle(.plain)
-                        .focusable(false)
-                        Button {
-                            word.isFavorite.toggle()
-                            try? modelContext.save()
-                        } label: {
-                            Image(systemName: word.isFavorite ? "star.fill" : "star")
-                                .font(.title3)
-                                .foregroundStyle(word.isFavorite ? .yellow : .secondary)
-                        }
-                        .buttonStyle(.plain)
-                        .focusable(false)
-                    }
-                    if let phonetic = word.phonetic, !phonetic.isEmpty {
-                        Text("/\(phonetic)/")
-                            .font(.title3)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                Spacer()
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
-                .focusable(false)
-            }
-
+            header
             Divider()
-
             ScrollView {
                 StructuredDefinitionView(
                     definition: word.definition,
                     definitionEn: word.definitionEn
                 )
             }
-
             Divider()
-            HStack {
-                if !word.sources.isEmpty {
-                    Text(String(localized: "detail.collected.count", defaultValue: "收录 \(word.sources.count) 次"))
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                }
-                Spacer()
-                if let onRepair {
-                    Button {
-                        Task {
-                            isRepairing = true
-                            await onRepair()
-                            isRepairing = false
-                        }
-                    } label: {
-                        if isRepairing {
-                            ProgressView().controlSize(.small)
-                        } else {
-                            Label(String(localized: "detail.repair", defaultValue: "修复释义"),
-                                  systemImage: "arrow.clockwise")
-                        }
-                    }
-                    .controlSize(.small)
-                    .disabled(isRepairing)
-                }
-            }
+            footer
+            #if os(macOS)
+            shortcutHint
+            #endif
         }
         .padding(24)
+        .background(navShortcuts)
         #if os(macOS)
-        .frame(width: 420, height: 360)
+        .frame(width: 440, height: 400)
         #else
         .frame(maxWidth: 520)
         .presentationDetents([.medium, .large])
         #endif
+    }
+
+    // MARK: 头部
+
+    private var header: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 10) {
+                    Text(word.headword)
+                        .font(.largeTitle.bold())
+                    iconButton("speaker.wave.2.fill", tint: .accentColor) {
+                        Speaker.shared.speak(word.headword)
+                    }
+                    iconButton(word.isFavorite ? "star.fill" : "star",
+                               tint: word.isFavorite ? .yellow : .secondary) {
+                        word.isFavorite.toggle()
+                        try? modelContext.save()
+                    }
+                }
+                if let phonetic = word.phonetic, !phonetic.isEmpty {
+                    Text("/\(phonetic)/")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
+                FamiliarityBadge(familiarity: word.familiarity)
+            }
+            Spacer()
+            VStack(alignment: .trailing, spacing: 8) {
+                iconButton("xmark.circle.fill", font: .title2, tint: .secondary) {
+                    dismiss()
+                }
+                if words.count > 1 {
+                    HStack(spacing: 6) {
+                        iconButton("chevron.up", tint: canPrev ? .secondary : Color.secondary.opacity(0.3)) {
+                            go(-1)
+                        }
+                        .disabled(!canPrev)
+                        iconButton("chevron.down", tint: canNext ? .secondary : Color.secondary.opacity(0.3)) {
+                            go(1)
+                        }
+                        .disabled(!canNext)
+                    }
+                    if let i = index {
+                        Text("\(i + 1) / \(words.count)")
+                            .font(.caption2)
+                            .foregroundStyle(.tertiary)
+                            .monospacedDigit()
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: 底部
+
+    private var footer: some View {
+        HStack {
+            if !word.sources.isEmpty {
+                Text(String(localized: "detail.collected.count", defaultValue: "收录 \(word.sources.count) 次"))
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+            Spacer()
+            if onRepair != nil {
+                Button {
+                    runRepair()
+                } label: {
+                    if isRepairing {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Label(String(localized: "detail.repair", defaultValue: "修复释义"),
+                              systemImage: "arrow.clockwise")
+                    }
+                }
+                .controlSize(.small)
+                .focusable(false)
+                .disabled(isRepairing)
+            }
+        }
+    }
+
+    #if os(macOS)
+    /// 底部一行快捷键提示，提升可发现性。
+    private var shortcutHint: some View {
+        Text(words.count > 1
+             ? String(localized: "detail.shortcuts.nav",
+                      defaultValue: "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复")
+             : String(localized: "detail.shortcuts",
+                      defaultValue: "⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"))
+            .font(.caption2)
+            .foregroundStyle(.tertiary)
+            .frame(maxWidth: .infinity, alignment: .center)
+    }
+    #endif
+
+    private func runRepair() {
+        guard let onRepair else { return }
+        let target = word
+        Task {
+            isRepairing = true
+            await onRepair(target)
+            isRepairing = false
+        }
+    }
+
+    /// 统一的纯图标按钮：无焦点框、plain 样式。
+    @ViewBuilder
+    private func iconButton(_ systemName: String, font: Font = .title3,
+                            tint: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .font(font)
+                .foregroundStyle(tint)
+        }
+        .buttonStyle(.plain)
+        .focusable(false)
+    }
+
+    /// 隐藏按钮承载详情级快捷键：↑上一条 ↓下一条，⌘L 朗读 ⌘D 收藏 ⌘R 修复。
+    @ViewBuilder
+    private var navShortcuts: some View {
+        Group {
+            Button("") { go(-1) }.keyboardShortcut(.upArrow, modifiers: [])
+            Button("") { go(1) }.keyboardShortcut(.downArrow, modifiers: [])
+            Button("") { Speaker.shared.speak(word.headword) }
+                .keyboardShortcut("l", modifiers: .command)
+            Button("") {
+                word.isFavorite.toggle()
+                try? modelContext.save()
+            }
+            .keyboardShortcut("d", modifiers: .command)
+            Button("") { runRepair() }.keyboardShortcut("r", modifiers: .command)
+        }
+        .opacity(0)
+        .frame(width: 0, height: 0)
+        .focusable(false)
+        .accessibilityHidden(true)
     }
 }
 
