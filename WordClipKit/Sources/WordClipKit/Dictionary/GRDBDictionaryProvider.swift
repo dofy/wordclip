@@ -36,7 +36,42 @@ public final class GRDBDictionaryProvider: DictionaryProvider {
             return exact
         }
 
-        // 2. 前缀 fallback：取前缀匹配里词频最高的候选词（freq_rank 最小）
+        // 2. 变形还原 fallback：exchange 字段记录「原形 → 各变形」，
+        //    如 bring 的 exchange 含 d:brought/p:brought/i:bringing/3:brings。
+        //    用 :值/ 与 :值(结尾) 两种边界精确匹配，避免子串误命中。
+        if key.count >= 2 {
+            let inflected: DictionaryResult?? = try? await dbPool.read { db in
+                try Row.fetchOne(
+                    db,
+                    sql: """
+                        SELECT word, lemma, phonetic, definition, definition_en, pos, exchange, freq_rank
+                        FROM entries
+                        WHERE exchange LIKE ? OR exchange LIKE ?
+                        ORDER BY freq_rank ASC
+                        LIMIT 1
+                    """,
+                    arguments: ["%:\(key)/%", "%:\(key)"]
+                ).map { row -> DictionaryResult in
+                    let base = Self.result(from: row)
+                    // 标注实际原形，让用户知道这是词形还原结果
+                    guard let def = base.definition else { return base }
+                    let baseWord: String = row["word"]
+                    return DictionaryResult(
+                        word:         key,
+                        lemma:        baseWord,
+                        phonetic:     base.phonetic,
+                        definition:   "[\(baseWord)] \(def)",
+                        definitionEn: base.definitionEn,
+                        pos:          base.pos,
+                        exchange:     base.exchange,
+                        freqRank:     base.freqRank
+                    )
+                }
+            }
+            if let hit = inflected ?? nil { return hit }
+        }
+
+        // 3. 前缀 fallback：取前缀匹配里词频最高的候选词（freq_rank 最小）
         //    适合 config→configuration、app→application 等技术缩写场景
         guard key.count >= 3 else { return nil }   // 太短的词不做前缀扩展
         return try? await dbPool.read { db in

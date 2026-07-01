@@ -1,6 +1,78 @@
 import Testing
 import Foundation
+import GRDB
 @testable import WordClipKit
+
+// MARK: - GRDBDictionaryProvider (inflection / fallback) Tests
+
+@Suite("GRDBDictionary lookup")
+struct GRDBDictionaryLookupTests {
+
+    /// 构建一个最小词库：bring（含变形 exchange）、quality（含复数）、configuration。
+    private func makeProvider() throws -> (GRDBDictionaryProvider, String) {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("dicttest-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let path = dir.appendingPathComponent("d.sqlite").path
+
+        let queue = try DatabaseQueue(path: path)
+        try queue.write { db in
+            try db.execute(sql: """
+                CREATE TABLE entries (
+                    id INTEGER PRIMARY KEY, word TEXT NOT NULL, lemma TEXT,
+                    phonetic TEXT, definition TEXT, definition_en TEXT,
+                    pos TEXT, exchange TEXT, freq_rank INTEGER DEFAULT 999999
+                );
+            """)
+            try db.execute(sql: """
+                INSERT INTO entries (word, definition, exchange, freq_rank) VALUES
+                ('bring', 'vt. 带来, 产生', 'd:brought/p:brought/i:bringing/3:brings', 100),
+                ('quality', 'n. 品质, 质量', 's:qualities', 200),
+                ('configuration', 'n. 配置', NULL, 300);
+            """)
+        }
+        return (try GRDBDictionaryProvider(dbPath: path), path)
+    }
+
+    @Test("精确匹配命中")
+    func exact() async throws {
+        let (dict, _) = try makeProvider()
+        let r = await dict.lookup("quality")
+        #expect(r?.definition == "n. 品质, 质量")
+    }
+
+    @Test("过去式 brought 经 exchange 还原到 bring")
+    func inflectionPast() async throws {
+        let (dict, _) = try makeProvider()
+        let r = await dict.lookup("brought")
+        #expect(r != nil)
+        #expect(r?.lemma == "bring")
+        #expect(r?.definition?.contains("带来") == true)
+        #expect(r?.definition?.hasPrefix("[bring]") == true)
+    }
+
+    @Test("复数 qualities 经 exchange 还原到 quality")
+    func inflectionPlural() async throws {
+        let (dict, _) = try makeProvider()
+        let r = await dict.lookup("qualities")
+        #expect(r?.lemma == "quality")
+        #expect(r?.definition?.contains("品质") == true)
+    }
+
+    @Test("前缀 fallback：config → configuration")
+    func prefixFallback() async throws {
+        let (dict, _) = try makeProvider()
+        let r = await dict.lookup("config")
+        #expect(r?.definition?.contains("配置") == true)
+    }
+
+    @Test("查无此词返回 nil")
+    func miss() async throws {
+        let (dict, _) = try makeProvider()
+        let r = await dict.lookup("zzzznotaword")
+        #expect(r == nil)
+    }
+}
 
 // MARK: - SM2 Engine Tests
 

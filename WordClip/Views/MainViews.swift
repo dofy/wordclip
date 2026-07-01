@@ -67,8 +67,14 @@ struct WordListView: View {
     @State private var searchText = ""
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
-    @State private var didBackfill = false
+    @State private var backfillAttempted: Set<String> = []   // 已尝试补全的 lemma
+    @State private var isBackfilling = false
     @FocusState private var searchFocused: Bool
+
+    /// 释义为空、且本会话尚未尝试补全的词。
+    private var backfillPending: [WordEntry] {
+        words.filter { ($0.definition?.isEmpty ?? true) && !backfillAttempted.contains($0.lemma) }
+    }
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
     #endif
@@ -181,7 +187,9 @@ struct WordListView: View {
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
         // 词典就绪后自动补全「收录时因词典未加载而漏填」的释义（静默，仅补空缺）。
-        .task(id: appState.dictionary != nil) {
+        // 以「待补数 + 词典是否就绪」为 id：词条随 @Query 陆续加载时会重新触发，
+        // 已尝试过的 lemma 记入 backfillAttempted，避免对词典真的没有的词反复查。
+        .task(id: "\(backfillPending.count)-\(appState.dictionary != nil)") {
             await backfillIfNeeded()
         }
         .searchable(
@@ -295,12 +303,16 @@ struct WordListView: View {
         selectedWord = word
     }
 
-    /// 词典就绪后静默补全空释义（每次进入最多跑一次）。
+    /// 词典就绪后静默补全空释义。仅处理尚未尝试过的词，查过即记入
+    /// backfillAttempted，词典真的没有的词只查一次、不反复重试。
     private func backfillIfNeeded() async {
-        guard !didBackfill, appState.dictionary != nil else { return }
-        let pending = words.filter { $0.definition?.isEmpty ?? true }
-        guard !pending.isEmpty else { didBackfill = true; return }
-        didBackfill = true
+        guard !isBackfilling, appState.dictionary != nil else { return }
+        let pending = backfillPending
+        guard !pending.isEmpty else { return }
+        isBackfilling = true
+        defer { isBackfilling = false }
+        // 先标记，避免因释义仍为空（词典没有）而下一轮又被选中
+        backfillAttempted.formUnion(pending.map(\.lemma))
         _ = await actions.repairAll(pending)
     }
 
