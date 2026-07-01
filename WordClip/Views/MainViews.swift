@@ -116,6 +116,8 @@ struct WordListView: View {
     @AppStorage("wordlist.sort") private var sortRaw = WordSort.createdDesc.rawValue
     @State private var backfillAttempted: Set<String> = []   // 已尝试补全的 lemma
     @State private var displayWords: [WordEntry] = []        // 缓存的过滤+排序结果
+    @State private var dictSuggestions: [String] = []        // 词典库里匹配但未收录的词
+    @State private var dictPreview: DictionaryResult?        // 词典项详情预览 sheet
 
     private var sort: WordSort {
         get { WordSort(rawValue: sortRaw) ?? .createdDesc }
@@ -194,77 +196,35 @@ struct WordListView: View {
         displayWords = result.sorted(by: sort.areInOrder)
     }
 
+    /// 刷新「词典库匹配但未收录」的建议：搜索非空时按前缀查词库，
+    /// 剔除已在生词本里的词。空搜索时清空。
+    private func refreshDictSuggestions() async {
+        let q = debouncedSearch.trimmingCharacters(in: .whitespaces).lowercased()
+        guard q.count >= 1, let dict = appState.dictionary else {
+            dictSuggestions = []; return
+        }
+        let collected = Set(words.map(\.lemma))
+        let hits = await dict.suggest(prefix: q, limit: 30)
+        dictSuggestions = hits.filter { !collected.contains($0.lowercased()) }
+    }
+
+    /// 是否处于搜索态（有防抖后的关键词）。
+    private var isSearching: Bool {
+        !debouncedSearch.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
     var body: some View {
         Group {
-            if words.isEmpty {
+            if words.isEmpty && !isSearching {
                 ContentUnavailableView(
                     String(localized: "wordlist.empty.title", defaultValue: "还没有收藏的单词"),
                     systemImage: "books.vertical",
                     description: Text(emptyDescription)
                 )
-            } else if filteredWords.isEmpty {
+            } else if filteredWords.isEmpty && dictSuggestions.isEmpty && isSearching {
                 ContentUnavailableView.search(text: searchText)
             } else {
-                List(selection: $selection) {
-                    ForEach(filteredWords) { word in
-                        row(for: word)
-                            .tag(word.id)
-                            .contextMenu {
-                                Button {
-                                    open(word)
-                                } label: {
-                                    Label(String(localized: "wordlist.menu.detail", defaultValue: "查看详情"),
-                                          systemImage: "info.circle")
-                                }
-                                Button {
-                                    Speaker.shared.speak(word.headword)
-                                } label: {
-                                    Label(String(localized: "wordlist.menu.speak", defaultValue: "朗读"),
-                                          systemImage: "speaker.wave.2")
-                                }
-                                Button {
-                                    word.isFavorite.toggle()
-                                    try? modelContext.save()
-                                } label: {
-                                    Label(word.isFavorite
-                                          ? String(localized: "wordlist.menu.unfavorite", defaultValue: "取消收藏")
-                                          : String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
-                                          systemImage: word.isFavorite ? "star.slash" : "star")
-                                }
-                                Button {
-                                    Task { await repairOne(word) }
-                                } label: {
-                                    Label(String(localized: "wordlist.menu.repair", defaultValue: "修复释义"),
-                                          systemImage: "arrow.clockwise")
-                                }
-                                Divider()
-                                Button(role: .destructive) {
-                                    requestDelete([word])
-                                } label: {
-                                    Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"),
-                                          systemImage: "trash")
-                                }
-                            }
-                    }
-                    .onDelete { offsets in
-                        requestDelete(offsets.map { filteredWords[$0] })
-                    }
-                }
-                // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突。
-                // 仅宽屏（iPad/macOS）启用行级键盘导航。
-                .background((isRegularWidth && selectedWord == nil) ? listShortcuts : nil)
-                #if os(macOS)
-                // 列表获得键盘焦点时，删除键（⌫）由 List 消费，window 级 ⌘⌫ 收不到；
-                // .onDeleteCommand 专门处理「聚焦列表的删除命令」，此时才可靠。
-                .onDeleteCommand {
-                    if selectedWord == nil { requestDelete(selectedWords) }
-                }
-                #endif
-                .onAppear {
-                    if isRegularWidth, selection.isEmpty, let first = filteredWords.first {
-                        selection = [first.id]
-                    }
-                }
+                wordListContent
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "生词本"))
@@ -274,6 +234,10 @@ struct WordListView: View {
         .onChange(of: showFavoritesOnly) { _, _ in recomputeDisplayWords() }
         .onChange(of: sortRaw) { _, _ in recomputeDisplayWords() }
         .onChange(of: debouncedSearch) { _, _ in recomputeDisplayWords() }
+        // 词典建议随防抖搜索刷新（依赖词典就绪与生词本变化）。
+        .task(id: "\(debouncedSearch)|\(words.count)|\(appState.dictionary != nil)") {
+            await refreshDictSuggestions()
+        }
         // 搜索防抖：停顿 250ms 再过滤，避免每敲一键都重排整表。
         .task(id: searchText) {
             if searchText == debouncedSearch { return }
@@ -350,14 +314,6 @@ struct WordListView: View {
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
 
-                // 查词典（全部词库）
-                Button {
-                    NotificationCenter.default.post(name: .showDictionaryLookup, object: nil)
-                } label: {
-                    Label(String(localized: "menu.lookup", defaultValue: "查词典…"),
-                          systemImage: "character.book.closed")
-                }
-
                 // 添加单词
                 Button {
                     showingAddWord = true
@@ -420,6 +376,130 @@ struct WordListView: View {
         guard !targets.isEmpty else { return }
         pendingDelete = targets
         showDeleteConfirm = true
+    }
+
+    // MARK: - 列表主体（生词本段 + 词典段）
+
+    @ViewBuilder
+    private var wordListContent: some View {
+        List(selection: $selection) {
+            // 生词本匹配（可选中/方向键/双击打开）
+            if !filteredWords.isEmpty {
+                Section {
+                    ForEach(filteredWords) { word in
+                        row(for: word)
+                            .tag(word.id)
+                            .contextMenu { rowContextMenu(word) }
+                    }
+                    .onDelete { offsets in
+                        requestDelete(offsets.map { filteredWords[$0] })
+                    }
+                } header: {
+                    if isSearching {
+                        Text(String(localized: "wordlist.section.mine", defaultValue: "生词本"))
+                    }
+                }
+            }
+
+            // 词典库匹配、未收录（搜索态才显示；点击弹详情预览可收录）
+            if isSearching && !dictSuggestions.isEmpty {
+                Section {
+                    ForEach(dictSuggestions, id: \.self) { term in
+                        dictSuggestionRow(term)
+                    }
+                } header: {
+                    Text(String(localized: "wordlist.section.dict", defaultValue: "词典（未收录）"))
+                }
+            }
+        }
+        // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突。
+        // 仅宽屏（iPad/macOS）启用行级键盘导航。
+        .background((isRegularWidth && selectedWord == nil) ? listShortcuts : nil)
+        #if os(macOS)
+        // 列表获得键盘焦点时，删除键（⌫）由 List 消费，window 级 ⌘⌫ 收不到；
+        // .onDeleteCommand 专门处理「聚焦列表的删除命令」，此时才可靠。
+        .onDeleteCommand {
+            if selectedWord == nil { requestDelete(selectedWords) }
+        }
+        #endif
+        .onAppear {
+            if isRegularWidth, selection.isEmpty, let first = filteredWords.first {
+                selection = [first.id]
+            }
+        }
+        // 词典项详情预览（挂在列表子视图，与 body 级 sheet 分层，避免同层多 sheet 冲突）
+        .sheet(item: $dictPreview) { result in
+            DictionaryPreviewView(result: result) {
+                await appState.collect(word: result.word)
+                dictPreview = nil
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func rowContextMenu(_ word: WordEntry) -> some View {
+        Button {
+            open(word)
+        } label: {
+            Label(String(localized: "wordlist.menu.detail", defaultValue: "查看详情"),
+                  systemImage: "info.circle")
+        }
+        Button {
+            Speaker.shared.speak(word.headword)
+        } label: {
+            Label(String(localized: "wordlist.menu.speak", defaultValue: "朗读"),
+                  systemImage: "speaker.wave.2")
+        }
+        Button {
+            word.isFavorite.toggle()
+            try? modelContext.save()
+        } label: {
+            Label(word.isFavorite
+                  ? String(localized: "wordlist.menu.unfavorite", defaultValue: "取消收藏")
+                  : String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
+                  systemImage: word.isFavorite ? "star.slash" : "star")
+        }
+        Button {
+            Task { await repairOne(word) }
+        } label: {
+            Label(String(localized: "wordlist.menu.repair", defaultValue: "修复释义"),
+                  systemImage: "arrow.clockwise")
+        }
+        Divider()
+        Button(role: .destructive) {
+            requestDelete([word])
+        } label: {
+            Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"),
+                  systemImage: "trash")
+        }
+    }
+
+    /// 词典建议行：单词 + 提示，点击弹详情预览（可在预览里收录）。
+    @ViewBuilder
+    private func dictSuggestionRow(_ term: String) -> some View {
+        Button {
+            Task { await previewDictWord(term) }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "character.book.closed")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                Text(term)
+                    .font(.body)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func previewDictWord(_ term: String) async {
+        guard let dict = appState.dictionary else { return }
+        dictPreview = await dict.lookup(term)
     }
 
     /// 打开词条详情（详情页内可继续上下切换）。

@@ -2,7 +2,9 @@ import Foundation
 
 // MARK: - DictionaryResult
 
-public struct DictionaryResult: Sendable {
+public struct DictionaryResult: Sendable, Identifiable {
+    /// 以查询词为标识（一次查词返回唯一结果），供 SwiftUI .sheet(item:) 等使用。
+    public var id: String { word }
     public let word: String
     public let lemma: String?
     public let phonetic: String?

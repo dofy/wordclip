@@ -3,8 +3,6 @@ import SwiftUI
 extension Notification.Name {
     /// 请求显示键盘快捷键速查表。
     static let showShortcutCheatSheet = Notification.Name("showShortcutCheatSheet")
-    /// 请求显示查词面板。
-    static let showDictionaryLookup = Notification.Name("showDictionaryLookup")
 }
 
 /// 侧边栏导航目标
@@ -23,14 +21,7 @@ struct ContentView: View {
     @EnvironmentObject private var appState: AppState
 
     @State private var selection: SidebarItem? = .allWords
-    @State private var activeSheet: ActiveSheet?
-
-    /// 同层多个 .sheet(isPresented:) 在 SwiftUI 只有一个会生效，
-    /// 用单一 .sheet(item:) + 枚举区分要弹哪个。
-    private enum ActiveSheet: String, Identifiable {
-        case shortcuts, lookup
-        var id: String { rawValue }
-    }
+    @State private var showingShortcuts = false
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -63,34 +54,21 @@ struct ContentView: View {
             }
             .animation(.spring(duration: 0.3), value: appState.lastCollectMessage)
             #if os(iOS)
-            // iPad：隐藏按钮承载全局快捷键；macOS 走菜单命令（见 WordClipCommands）
+            // iPad：隐藏按钮承载 ⌘/；macOS 走「帮助」菜单命令（见 WordClipCommands）
             .background(
-                Group {
-                    Button("") { activeSheet = .shortcuts }
-                        .keyboardShortcut("/", modifiers: .command)
-                    Button("") { activeSheet = .lookup }
-                        .keyboardShortcut("f", modifiers: [.command, .shift])
-                }
-                .opacity(0)
-                .frame(width: 0, height: 0)
-                .accessibilityHidden(true)
+                Button("") { showingShortcuts.toggle() }
+                    .keyboardShortcut("/", modifiers: .command)
+                    .opacity(0)
+                    .frame(width: 0, height: 0)
+                    .accessibilityHidden(true)
             )
             #else
             .onReceive(NotificationCenter.default.publisher(for: .showShortcutCheatSheet)) { _ in
-                activeSheet = .shortcuts
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .showDictionaryLookup)) { _ in
-                activeSheet = .lookup
+                showingShortcuts = true
             }
             #endif
-            .sheet(item: $activeSheet) { sheet in
-                switch sheet {
-                case .shortcuts:
-                    ShortcutCheatSheet()
-                case .lookup:
-                    DictionaryLookupView()
-                        .environmentObject(appState)
-                }
+            .sheet(isPresented: $showingShortcuts) {
+                ShortcutCheatSheet()
             }
     }
 

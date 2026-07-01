@@ -98,7 +98,6 @@ struct ShortcutCheatSheet: View {
                 Item(desc: String(localized: "shortcuts.grade.correct", defaultValue: "认识"), keys: ["→"]),
             ]),
             Group(title: String(localized: "shortcuts.group.general", defaultValue: "通用"), items: [
-                Item(desc: String(localized: "menu.lookup", defaultValue: "查词典…"), keys: ["⌘⇧F"]),
                 Item(desc: String(localized: "shortcuts.self", defaultValue: "显示此速查表"), keys: ["⌘/"]),
             ]),
         ]
