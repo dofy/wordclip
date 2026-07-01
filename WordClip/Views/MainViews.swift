@@ -41,6 +41,7 @@ struct WordListView: View {
     @State private var searchText = ""
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
+    @State private var didBackfill = false
     @FocusState private var searchFocused: Bool
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -153,6 +154,10 @@ struct WordListView: View {
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
+        // 词典就绪后自动补全「收录时因词典未加载而漏填」的释义（静默，仅补空缺）。
+        .task(id: appState.dictionary != nil) {
+            await backfillIfNeeded()
+        }
         .searchable(
             text: $searchText,
             placement: .toolbar,
@@ -264,6 +269,15 @@ struct WordListView: View {
         selectedWord = word
     }
 
+    /// 词典就绪后静默补全空释义（每次进入最多跑一次）。
+    private func backfillIfNeeded() async {
+        guard !didBackfill, appState.dictionary != nil else { return }
+        let pending = words.filter { $0.definition?.isEmpty ?? true }
+        guard !pending.isEmpty else { didBackfill = true; return }
+        didBackfill = true
+        _ = await actions.repairAll(pending)
+    }
+
     /// ⌘K / ⌘F 定位到搜索框。隐藏按钮承载快捷键。
     @ViewBuilder
     private var searchFocusShortcuts: some View {
@@ -355,12 +369,12 @@ struct WordListView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
-        // macOS：单击由 List 原生选中（流畅），双击打开详情。
-        // 用 simultaneousGesture 让双击识别器与 List 选中并存，不抢单击事件。
+        // macOS：不加 contentShape，单击由 List 原生选中（鼠标可点，流畅）；
+        //        双击打开详情。iOS：整行可点，单击即开。
         #if os(macOS)
         .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
         #else
+        .contentShape(Rectangle())
         .onTapGesture { open(word) }
         #endif
         .swipeActions(edge: .leading) {
@@ -458,7 +472,10 @@ struct WordDetailView: View {
         }
         .padding(24)
         .background(navShortcuts)
+        // Esc 关闭：文本选中态下 .onExitCommand 仍可靠触发（keyboardShortcut(.escape)
+        // 会被文本选择拦截）。
         #if os(macOS)
+        .onExitCommand { dismiss() }
         .frame(width: 440, height: 400)
         #else
         .frame(maxWidth: 520)
