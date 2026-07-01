@@ -71,7 +71,7 @@ struct ShortcutCheatSheet: View {
     static var groups: [Group] {
         [
             Group(title: String(localized: "shortcuts.group.nav", defaultValue: "导航"), items: [
-                Item(desc: String(localized: "sidebar.allwords", defaultValue: "全部单词"), keys: ["⌘1"]),
+                Item(desc: String(localized: "sidebar.allwords", defaultValue: "词典"), keys: ["⌘1"]),
                 Item(desc: String(localized: "sidebar.review", defaultValue: "复习"), keys: ["⌘2"]),
                 Item(desc: String(localized: "sidebar.stats", defaultValue: "统计"), keys: ["⌘3"]),
                 Item(desc: String(localized: "sidebar.settings", defaultValue: "设置"), keys: ["⌘4"]),

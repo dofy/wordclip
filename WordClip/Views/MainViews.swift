@@ -38,7 +38,7 @@ struct SidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
-            Label(String(localized: "sidebar.allwords", defaultValue: "全部单词"), systemImage: "books.vertical")
+            Label(String(localized: "sidebar.allwords", defaultValue: "词典"), systemImage: "books.vertical")
                 .tag(SidebarItem.allWords)
             Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
                 .tag(SidebarItem.review)

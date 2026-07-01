@@ -362,13 +362,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "All Words"
+            "value": "Dictionary"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "全部单词"
+            "value": "词典"
           }
         }
       }
