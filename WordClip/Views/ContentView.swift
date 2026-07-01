@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// 侧边栏导航目标
-enum SidebarItem: Hashable {
+enum SidebarItem: Hashable, CaseIterable {
     case allWords
     case review
     case stats
@@ -74,6 +74,21 @@ struct ContentView: View {
                 detailView(for: selection ?? .allWords)
             }
         }
+        .background(sidebarShortcuts)
+    }
+
+    /// ⌘1–⌘4 快速切换侧边栏项目。隐藏按钮承载快捷键。
+    @ViewBuilder
+    private var sidebarShortcuts: some View {
+        Group {
+            ForEach(Array(SidebarItem.allCases.enumerated()), id: \.offset) { idx, item in
+                Button("") { selection = item }
+                    .keyboardShortcut(KeyEquivalent(Character("\(idx + 1)")), modifiers: .command)
+            }
+        }
+        .opacity(0)
+        .frame(width: 0, height: 0)
+        .accessibilityHidden(true)
     }
 
     @ViewBuilder
