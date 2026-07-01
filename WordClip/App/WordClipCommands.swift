@@ -1,10 +1,7 @@
 #if os(macOS)
 import SwiftUI
 
-extension Notification.Name {
-    /// 请求显示键盘快捷键速查表（菜单 → ContentView）。
-    static let showShortcutCheatSheet = Notification.Name("showShortcutCheatSheet")
-}
+// Notification.Name 定义见 ContentView.swift（跨平台共用）。
 
 /// macOS 菜单栏命令
 struct WordClipCommands: Commands {
@@ -18,6 +15,15 @@ struct WordClipCommands: Commands {
                 NSApp.activate(ignoringOtherApps: true)
             }
             .keyboardShortcut(",", modifiers: .command)
+        }
+
+        // 文件 → 查词典（⌘⇧F）
+        CommandGroup(after: .newItem) {
+            Button(String(localized: "menu.lookup", defaultValue: "查词典…")) {
+                NotificationCenter.default.post(name: .showDictionaryLookup, object: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            .keyboardShortcut("f", modifiers: [.command, .shift])
         }
 
         // 帮助 → 键盘快捷键（⌘/）

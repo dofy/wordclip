@@ -1,5 +1,12 @@
 import SwiftUI
 
+extension Notification.Name {
+    /// 请求显示键盘快捷键速查表。
+    static let showShortcutCheatSheet = Notification.Name("showShortcutCheatSheet")
+    /// 请求显示查词面板。
+    static let showDictionaryLookup = Notification.Name("showDictionaryLookup")
+}
+
 /// 侧边栏导航目标
 enum SidebarItem: Hashable, CaseIterable {
     case allWords
@@ -17,6 +24,7 @@ struct ContentView: View {
 
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
+    @State private var showingLookup = false
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -49,21 +57,32 @@ struct ContentView: View {
             }
             .animation(.spring(duration: 0.3), value: appState.lastCollectMessage)
             #if os(iOS)
-            // iPad：隐藏按钮承载 ⌘/；macOS 走「帮助」菜单命令（见 WordClipCommands）
+            // iPad：隐藏按钮承载全局快捷键；macOS 走菜单命令（见 WordClipCommands）
             .background(
-                Button("") { showingShortcuts.toggle() }
-                    .keyboardShortcut("/", modifiers: .command)
-                    .opacity(0)
-                    .frame(width: 0, height: 0)
-                    .accessibilityHidden(true)
+                Group {
+                    Button("") { showingShortcuts.toggle() }
+                        .keyboardShortcut("/", modifiers: .command)
+                    Button("") { showingLookup = true }
+                        .keyboardShortcut("f", modifiers: [.command, .shift])
+                }
+                .opacity(0)
+                .frame(width: 0, height: 0)
+                .accessibilityHidden(true)
             )
             #else
             .onReceive(NotificationCenter.default.publisher(for: .showShortcutCheatSheet)) { _ in
                 showingShortcuts = true
             }
+            .onReceive(NotificationCenter.default.publisher(for: .showDictionaryLookup)) { _ in
+                showingLookup = true
+            }
             #endif
             .sheet(isPresented: $showingShortcuts) {
                 ShortcutCheatSheet()
+            }
+            .sheet(isPresented: $showingLookup) {
+                DictionaryLookupView()
+                    .environmentObject(appState)
             }
     }
 
@@ -126,7 +145,7 @@ struct ContentView: View {
         TabView {
             NavigationStack { WordListView() }
                 .tabItem {
-                    Label(String(localized: "tab.wordlist", defaultValue: "词典"), systemImage: "books.vertical")
+                    Label(String(localized: "tab.wordlist", defaultValue: "生词本"), systemImage: "books.vertical")
                 }
             NavigationStack { StudyView() }
                 .tabItem {

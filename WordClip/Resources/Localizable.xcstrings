@@ -362,13 +362,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dictionary"
+            "value": "Wordbook"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "词典"
+            "value": "生词本"
           }
         }
       }
@@ -447,13 +447,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dictionary"
+            "value": "Wordbook"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "词典"
+            "value": "生词本"
           }
         }
       }
@@ -1049,6 +1049,108 @@
           "stringUnit": {
             "state": "translated",
             "value": "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
+          }
+        }
+      }
+    },
+    "menu.lookup": {
+      "comment": "Menu/toolbar: open dictionary lookup panel",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Look Up in Dictionary…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查词典…"
+          }
+        }
+      }
+    },
+    "lookup.prompt": {
+      "comment": "Lookup: search field placeholder",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search dictionary (full library)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查词典（全部词库）"
+          }
+        }
+      }
+    },
+    "lookup.close": {
+      "comment": "Lookup: close button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭"
+          }
+        }
+      }
+    },
+    "lookup.empty.title": {
+      "comment": "Lookup: empty state title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search the Dictionary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查询词库"
+          }
+        }
+      }
+    },
+    "lookup.empty.desc": {
+      "comment": "Lookup: empty state description",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type an English word to see its definition and add it to your wordbook"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入英文单词，查看释义并可收录到生词本"
+          }
+        }
+      }
+    },
+    "lookup.collect": {
+      "comment": "Lookup: collect to wordbook button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Wordbook"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收录到生词本"
           }
         }
       }

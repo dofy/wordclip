@@ -71,7 +71,7 @@ struct ShortcutCheatSheet: View {
     static var groups: [Group] {
         [
             Group(title: String(localized: "shortcuts.group.nav", defaultValue: "导航"), items: [
-                Item(desc: String(localized: "sidebar.allwords", defaultValue: "词典"), keys: ["⌘1"]),
+                Item(desc: String(localized: "sidebar.allwords", defaultValue: "生词本"), keys: ["⌘1"]),
                 Item(desc: String(localized: "sidebar.review", defaultValue: "复习"), keys: ["⌘2"]),
                 Item(desc: String(localized: "sidebar.stats", defaultValue: "统计"), keys: ["⌘3"]),
                 Item(desc: String(localized: "sidebar.settings", defaultValue: "设置"), keys: ["⌘4"]),
@@ -98,6 +98,7 @@ struct ShortcutCheatSheet: View {
                 Item(desc: String(localized: "shortcuts.grade.correct", defaultValue: "认识"), keys: ["→"]),
             ]),
             Group(title: String(localized: "shortcuts.group.general", defaultValue: "通用"), items: [
+                Item(desc: String(localized: "menu.lookup", defaultValue: "查词典…"), keys: ["⌘⇧F"]),
                 Item(desc: String(localized: "shortcuts.self", defaultValue: "显示此速查表"), keys: ["⌘/"]),
             ]),
         ]

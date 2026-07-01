@@ -38,7 +38,7 @@ struct SidebarView: View {
 
     var body: some View {
         List(selection: $selection) {
-            Label(String(localized: "sidebar.allwords", defaultValue: "词典"), systemImage: "books.vertical")
+            Label(String(localized: "sidebar.allwords", defaultValue: "生词本"), systemImage: "books.vertical")
                 .tag(SidebarItem.allWords)
             Label(String(localized: "sidebar.review", defaultValue: "复习"), systemImage: "checkmark.circle")
                 .tag(SidebarItem.review)
@@ -267,7 +267,7 @@ struct WordListView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
+        .navigationTitle(String(localized: "tab.wordlist", defaultValue: "生词本"))
         // 缓存重算：仅在数据源/过滤/排序变化时重排一次，body 其余刷新直接读缓存。
         .onAppear { recomputeDisplayWords() }
         .onChange(of: words) { _, _ in recomputeDisplayWords() }
@@ -349,6 +349,14 @@ struct WordListView: View {
                           systemImage: showFavoritesOnly ? "star.fill" : "star")
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
+
+                // 查词典（全部词库）
+                Button {
+                    NotificationCenter.default.post(name: .showDictionaryLookup, object: nil)
+                } label: {
+                    Label(String(localized: "menu.lookup", defaultValue: "查词典…"),
+                          systemImage: "character.book.closed")
+                }
 
                 // 添加单词
                 Button {
