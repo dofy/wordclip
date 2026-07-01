@@ -10,10 +10,23 @@ import KeyboardShortcuts
 final class AppState: ObservableObject {
 
     // MARK: - 词典（由 App 层初始化后注入，供收词和修复释义共用）
+    /// 当前生效的词库（内置 + 用户导入的组合）。
     var dictionary: (any DictionaryProvider)?
+    /// 内置词库单独留存，用于导入/删除后重建组合词库。
+    var builtinDictionary: (any DictionaryProvider)?
 
     // MARK: - 收词服务（由 App 层初始化后注入，供手动添加/粘贴调用）
     var collector: WordCollector?
+
+    /// 词典增删后重建组合词库，并同步给 collector（取词/修复共用）。
+    /// 触发 objectWillChange 让依赖词典的视图刷新。
+    func rebuildDictionary() {
+        guard let builtin = builtinDictionary else { return }
+        let combined = DictionaryStore.shared.buildProvider(builtin: builtin)
+        dictionary = combined
+        collector?.dictionary = combined
+        objectWillChange.send()
+    }
 
     /// 手动添加单词（手输/粘贴）。返回反馈文案供 UI 展示。
     func collect(word: String) async -> String? {

@@ -74,6 +74,141 @@ struct GRDBDictionaryLookupTests {
     }
 }
 
+// MARK: - CompositeDictionaryProvider Tests
+
+@Suite("CompositeDictionary")
+struct CompositeDictionaryTests {
+
+    /// 内存假词库。
+    struct FakeDict: DictionaryProvider {
+        let entries: [String: String]   // word -> definition
+        func lookup(_ word: String) async -> DictionaryResult? {
+            guard let def = entries[word.lowercased()] else { return nil }
+            return DictionaryResult(word: word, definition: def)
+        }
+        func suggest(prefix p: String, limit: Int) async -> [String] {
+            let matches = entries.keys.filter { $0.hasPrefix(p.lowercased()) }.sorted()
+            return Array(matches.prefix(limit))
+        }
+    }
+
+    @Test("lookup 返回首个命中（优先级顺序）")
+    func lookupPriority() async {
+        let a = FakeDict(entries: ["run": "内置：跑"])
+        let b = FakeDict(entries: ["run": "自定义：奔跑", "quux": "自定义词"])
+        let composite = CompositeDictionaryProvider([a, b])
+
+        let r = await composite.lookup("run")
+        #expect(r?.definition == "内置：跑")   // a 优先
+
+        let r2 = await composite.lookup("quux")
+        #expect(r2?.definition == "自定义词")   // 仅 b 有
+    }
+
+    @Test("lookup 全部未命中返回 nil")
+    func lookupMiss() async {
+        let composite = CompositeDictionaryProvider([FakeDict(entries: [:])])
+        #expect(await composite.lookup("nope") == nil)
+    }
+
+    @Test("suggest 合并去重并保持优先级、截断到 limit")
+    func suggestMergeDedup() async {
+        let a = FakeDict(entries: ["apple": "1", "apply": "2"])
+        let b = FakeDict(entries: ["apple": "dup", "apricot": "3"])
+        let composite = CompositeDictionaryProvider([a, b])
+
+        let s = await composite.suggest(prefix: "ap", limit: 10)
+        #expect(s == ["apple", "apply", "apricot"])   // apple 去重，a 的在前
+    }
+
+    @Test("suggest 尊重 limit")
+    func suggestLimit() async {
+        let a = FakeDict(entries: ["aa": "1", "ab": "2", "ac": "3"])
+        let composite = CompositeDictionaryProvider([a])
+        let s = await composite.suggest(prefix: "a", limit: 2)
+        #expect(s.count == 2)
+    }
+
+    @Test("空 providers 安全")
+    func empty() async {
+        let composite = CompositeDictionaryProvider([])
+        #expect(await composite.lookup("x") == nil)
+        #expect(await composite.suggest(prefix: "x", limit: 5).isEmpty)
+    }
+}
+
+// MARK: - DictionaryImporter Tests
+
+@Suite("DictionaryImporter")
+struct DictionaryImporterTests {
+
+    private func tmp(_ name: String) -> URL {
+        FileManager.default.temporaryDirectory
+            .appendingPathComponent("imp-\(UUID().uuidString)-\(name)")
+    }
+
+    @Test("CSV 解析：逗号/表头/音标列")
+    func parseCSVBasic() {
+        let raw = "word,definition,phonetic\napple,苹果,ˈæpl\nrun,跑\n"
+        let rows = DictionaryImporter.parseCSV(raw)
+        #expect(rows.count == 2)             // 表头被跳过
+        #expect(rows[0] == .init(word: "apple", definition: "苹果", phonetic: "ˈæpl"))
+        #expect(rows[1] == .init(word: "run", definition: "跑", phonetic: nil))
+    }
+
+    @Test("CSV 解析：制表符分隔 + 引号转义")
+    func parseCSVTabAndQuotes() {
+        let raw = "hello\t\"你好, 世界\"\n"
+        let rows = DictionaryImporter.parseCSV(raw)
+        #expect(rows.count == 1)
+        #expect(rows[0].word == "hello")
+        #expect(rows[0].definition == "你好, 世界")   // 逗号在引号内不拆列
+    }
+
+    @Test("CSV 导入后可经 GRDBDictionaryProvider 查询")
+    func importCSVQueryable() async throws {
+        let src = tmp("d.csv")
+        try "banana,香蕉,bəˈnænə\ncherry,樱桃\n".write(to: src, atomically: true, encoding: .utf8)
+        let dest = tmp("out.sqlite").path
+
+        let result = try DictionaryImporter.import(from: src, to: dest)
+        #expect(result.wordCount == 2)
+
+        let dict = try GRDBDictionaryProvider(dbPath: dest)
+        let r = await dict.lookup("banana")
+        #expect(r?.definition == "香蕉")
+        #expect(r?.phonetic == "bəˈnænə")
+        let s = await dict.suggest(prefix: "c", limit: 5)
+        #expect(s.contains("cherry"))
+    }
+
+    @Test("不支持的扩展名抛错")
+    func unsupportedExt() {
+        let src = tmp("x.mdx")
+        try? "x".write(to: src, atomically: true, encoding: .utf8)
+        #expect(throws: DictionaryImporter.ImportError.self) {
+            try DictionaryImporter.import(from: src, to: tmp("o.sqlite").path)
+        }
+    }
+
+    @Test("采用 ECDICT 结构的 SQLite")
+    func adoptSQLite() async throws {
+        // 造一个含 entries 的源库
+        let src = tmp("ecdict.sqlite")
+        let q = try DatabaseQueue(path: src.path)
+        try await q.write { db in
+            try DictionaryImporter.createSchema(db)
+            try db.execute(sql: "INSERT INTO entries (word, definition) VALUES ('zephyr', '和风')")
+        }
+        let dest = tmp("adopted.sqlite").path
+        let result = try DictionaryImporter.import(from: src, to: dest)
+        #expect(result.wordCount == 1)
+
+        let dict = try GRDBDictionaryProvider(dbPath: dest)
+        #expect(await dict.lookup("zephyr")?.definition == "和风")
+    }
+}
+
 // MARK: - SM2 Engine Tests
 
 @Suite("SM2Engine")

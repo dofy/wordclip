@@ -1103,6 +1103,142 @@
           }
         }
       }
+    },
+    "settings.section.dict": {
+      "comment": "Settings: dictionaries section",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionaries"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "词典"
+          }
+        }
+      }
+    },
+    "settings.dict.hint": {
+      "comment": "Settings: dictionary import hint",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supports CSV (word,definition[,phonetic]) and ECDICT-structured SQLite. Multiple dictionaries are queried in order, built-in first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支持 CSV（word,释义[,音标]）与 ECDICT 结构的 SQLite。多本词典按顺序叠加查询，内置优先。"
+          }
+        }
+      }
+    },
+    "dict.builtin.name": {
+      "comment": "Built-in dictionary name",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English–Chinese (ECDICT)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "英汉词典（ECDICT）"
+          }
+        }
+      }
+    },
+    "dict.builtin.badge": {
+      "comment": "Built-in badge",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Built-in"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内置"
+          }
+        }
+      }
+    },
+    "dict.import": {
+      "comment": "Import dictionary button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import Dictionary…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入词典…"
+          }
+        }
+      }
+    },
+    "dict.importing": {
+      "comment": "Importing progress",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入中…"
+          }
+        }
+      }
+    },
+    "dict.import.ok": {
+      "comment": "Import success",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary imported"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已导入词典"
+          }
+        }
+      }
+    },
+    "dict.delete": {
+      "comment": "Delete dictionary",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "删除"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

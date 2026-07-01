@@ -127,14 +127,17 @@ struct WordClipApp: App {
     private func setupCollector() {
         guard collectorBox.collector == nil else { return }
 
-        // 准备词典：从 Bundle 拷贝到 Application Support，只读打开。
-        let dictionary: DictionaryProvider
+        // 准备内置词典：从 Bundle 拷贝到 Application Support，只读打开。
+        let builtin: DictionaryProvider
         do {
             let path = try DictionarySetup.prepareDatabasePath()
-            dictionary = try GRDBDictionaryProvider(dbPath: path)
+            builtin = try GRDBDictionaryProvider(dbPath: path)
         } catch {
-            dictionary = NullDictionaryProvider()
+            builtin = NullDictionaryProvider()
         }
+        appState.builtinDictionary = builtin
+        // 组合词库：内置 + 用户导入的词库
+        let dictionary = DictionaryStore.shared.buildProvider(builtin: builtin)
 
         let collector = WordCollector(
             modelContext: modelContainer.mainContext,

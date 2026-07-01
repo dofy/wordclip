@@ -1065,6 +1065,10 @@ struct SettingsView: View {
                 Text(String(localized: "settings.section.reminder", defaultValue: "提醒"))
             }
 
+            // ── 词典（内置 + 导入）──────────────────────────
+            DictionarySettingsSection()
+                .environmentObject(appState)
+
             // ── 账户 ──────────────────────────────────────
             Section {
                 LabeledContent(

@@ -17,7 +17,8 @@ import AppKit
 final class WordCollector {
 
     private let modelContext: ModelContext
-    private let dictionary: DictionaryProvider
+    /// 可在运行时替换（导入/删除词典后重建组合词库）。
+    var dictionary: DictionaryProvider
 
     init(modelContext: ModelContext, dictionary: DictionaryProvider) {
         self.modelContext = modelContext
