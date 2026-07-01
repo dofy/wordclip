@@ -199,23 +199,38 @@ struct WordClipApp: App {
     }
 
     #if os(macOS)
-    /// 申请通知权限并设置 delegate（前台也能收通知）。
+    /// 仅设置通知 delegate（前台也能显示复习提醒）。
+    /// 不在启动时申请权限——收词反馈已改用 HUD，只有「每日复习提醒」需要通知，
+    /// 其权限在用户开启提醒时（NotificationService.scheduleReviewReminder）才按需申请。
     @MainActor
     private func requestNotificationPermission() async {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = NotificationDelegate.shared
-        _ = try? await center.requestAuthorization(options: [.alert, .sound])
+        UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
     }
 
-    /// 根据收录结果发送系统通知（app 未激活时也能看到）。
+    /// 用悬浮 HUD 反馈收录结果（app 未激活时也能在任意 App 上方看到，
+    /// 不进通知中心、无需权限、无声音）。
+    @MainActor
     private static func sendNotification(for outcome: WordCollector.CollectOutcome) {
         switch outcome {
         case .collected(let word, let found, let definition):
-            NotificationService.sendCollectNotification(word: word, definition: definition, found: found)
+            let sub = found
+                ? definition?.components(separatedBy: "\n").first
+                : String(localized: "notification.collect.nodef",
+                         defaultValue: "词典未收录该词，释义留空")
+            CollectHUD.shared.show(
+                symbol: found ? "checkmark.circle.fill" : "checkmark.circle",
+                tint: .green,
+                title: word,
+                subtitle: sub
+            )
         case .notTrusted:
-            NotificationService.sendErrorNotification(
-                message: String(localized: "collect.notrusted",
-                                defaultValue: "需要在系统设置中授予辅助功能权限")
+            CollectHUD.shared.show(
+                symbol: "exclamationmark.triangle.fill",
+                tint: .orange,
+                title: String(localized: "collect.notrusted",
+                              defaultValue: "需要在系统设置中授予辅助功能权限"),
+                subtitle: nil,
+                duration: 2.2
             )
         case .noSelection, .invalid:
             break
