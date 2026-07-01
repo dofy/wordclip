@@ -17,8 +17,10 @@ struct WordClipCommands: Commands {
             .keyboardShortcut(",", modifiers: .command)
         }
 
-        // 文件 → 查词典（⌘⇧F）
-        CommandGroup(after: .newItem) {
+        // 独立「词典」菜单（始终渲染，⌘⇧F 才能可靠注册）。
+        // 不放 File 菜单：App 层 replacing:.newItem 清空后 File 菜单不渲染，
+        // after:.newItem 的项与其快捷键都不会生效。
+        CommandMenu(String(localized: "menu.dictionary", defaultValue: "词典")) {
             Button(String(localized: "menu.lookup", defaultValue: "查词典…")) {
                 NotificationCenter.default.post(name: .showDictionaryLookup, object: nil)
                 NSApp.activate(ignoringOtherApps: true)

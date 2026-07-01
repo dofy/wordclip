@@ -1188,6 +1188,23 @@
           }
         }
       }
+    },
+    "menu.dictionary": {
+      "comment": "Top-level Dictionary menu title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "词典"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
