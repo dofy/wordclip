@@ -194,6 +194,13 @@ struct WordListView: View {
                 // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突。
                 // 仅宽屏（iPad/macOS）启用行级键盘导航。
                 .background((isRegularWidth && selectedWord == nil) ? listShortcuts : nil)
+                #if os(macOS)
+                // 列表获得键盘焦点时，删除键（⌫）由 List 消费，window 级 ⌘⌫ 收不到；
+                // .onDeleteCommand 专门处理「聚焦列表的删除命令」，此时才可靠。
+                .onDeleteCommand {
+                    if selectedWord == nil { requestDelete(selectedWords) }
+                }
+                #endif
                 .onAppear {
                     if isRegularWidth, selection.isEmpty, let first = filteredWords.first {
                         selection = [first.id]
