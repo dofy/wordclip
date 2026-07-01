@@ -71,9 +71,25 @@ struct WordListView: View {
     @State private var isBackfilling = false
     @FocusState private var searchFocused: Bool
 
-    /// 释义为空、且本会话尚未尝试补全的词。
+    /// 需要（重新）补全释义、且本会话尚未尝试过的词：
+    /// - 释义为空（收录时词典未就绪）
+    /// - 或释义是旧版「前缀 fallback」的残留 artifact，如 brought → "[broughton] …"
+    ///   （现已加入词形还原，重查会得到更准确的 "[bring] …"）
     private var backfillPending: [WordEntry] {
-        words.filter { ($0.definition?.isEmpty ?? true) && !backfillAttempted.contains($0.lemma) }
+        words.filter { word in
+            guard !backfillAttempted.contains(word.lemma) else { return false }
+            return (word.definition?.isEmpty ?? true)
+                || Self.isFallbackArtifact(word.definition)
+        }
+    }
+
+    /// 释义是否为「[英文原形] …」形式的 fallback 残留。
+    /// CJK 学科标记如「[计]」「[化]」内部非 ASCII 字母，不会被误判。
+    static func isFallbackArtifact(_ def: String?) -> Bool {
+        guard let def, def.hasPrefix("[") else { return false }
+        guard let close = def.firstIndex(of: "]") else { return false }
+        let inner = def[def.index(after: def.startIndex)..<close]
+        return !inner.isEmpty && inner.allSatisfy { $0.isASCII && ($0.isLetter || $0 == "-") }
     }
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -303,17 +319,20 @@ struct WordListView: View {
         selectedWord = word
     }
 
-    /// 词典就绪后静默补全空释义。仅处理尚未尝试过的词，查过即记入
-    /// backfillAttempted，词典真的没有的词只查一次、不反复重试。
+    /// 词典就绪后静默补全空释义 / 重查旧 fallback 残留。仅处理尚未尝试过的词，
+    /// 查过即记入 backfillAttempted，词典真的没有的词只查一次、不反复重试。
+    /// 用 actions.repair（逐条覆盖）而非 repairAll（只填空），以便刷新 artifact。
     private func backfillIfNeeded() async {
         guard !isBackfilling, appState.dictionary != nil else { return }
         let pending = backfillPending
         guard !pending.isEmpty else { return }
         isBackfilling = true
         defer { isBackfilling = false }
-        // 先标记，避免因释义仍为空（词典没有）而下一轮又被选中
+        // 先标记，避免因仍无更优结果而下一轮又被选中
         backfillAttempted.formUnion(pending.map(\.lemma))
-        _ = await actions.repairAll(pending)
+        for word in pending {
+            _ = await actions.repair(word)
+        }
     }
 
     /// ⌘K / ⌘F 定位到搜索框。隐藏按钮承载快捷键。
