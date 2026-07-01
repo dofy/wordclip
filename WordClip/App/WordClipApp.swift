@@ -44,8 +44,9 @@ struct WordClipApp: App {
 
     var body: some Scene {
         #if os(macOS)
-        // ── 主窗口 ───────────────────────────────────────
-        WindowGroup(id: "main") {
+        // ── 主窗口（单例 Window，非 WindowGroup）─────────────
+        // 用 Window 而非 WindowGroup：后者会为每个进来的 wordclip:// URL 开新窗口。
+        Window(String(localized: "app.name", defaultValue: "WordClip"), id: "main") {
             ContentView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
@@ -56,7 +57,6 @@ struct WordClipApp: App {
                 .task { await requestNotificationPermission() }
                 .task { setupCollector() }
         }
-        .handlesExternalEvents(matching: ["main"])  // URL 唤起时复用已有窗口
         .modelContainer(modelContainer)
         .commands {
             WordClipCommands()

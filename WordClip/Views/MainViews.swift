@@ -327,8 +327,18 @@ struct WordListView: View {
 
     private func requestDelete(_ targets: [WordEntry]) {
         guard !targets.isEmpty else { return }
+        #if os(iOS)
+        // iOS/iPad：滑动/点击删除是明确手势，直接删除不再二次确认
+        let deletedIDs = Set(targets.map(\.id))
+        actions.delete(targets)
+        if case .word(let id) = selectedItem, deletedIDs.contains(id) {
+            selectedItem = nil
+        }
+        #else
+        // macOS：⌘⌫/菜单删除，弹确认避免误删
         pendingDelete = targets
         showDeleteConfirm = true
+        #endif
     }
 
     // MARK: - 三栏布局
