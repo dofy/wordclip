@@ -395,12 +395,17 @@ struct WordListView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        // macOS：不加 contentShape，单击由 List 原生选中（鼠标可点，流畅）；
-        //        双击打开详情。iOS：整行可点，单击即开。
-        #if os(macOS)
-        .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
-        #else
         .contentShape(Rectangle())
+        #if os(macOS)
+        // 整行可点。双击打开详情；单击选中用 DragGesture(minDistance:0) 即时触发，
+        // 不走 List 原生选中（会被 contentShape 抢事件），也无双击超时延迟。
+        .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0).onEnded { _ in
+                if selection != [word.id] { selection = [word.id] }
+            }
+        )
+        #else
         .onTapGesture { open(word) }
         #endif
         .swipeActions(edge: .leading) {
