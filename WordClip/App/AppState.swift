@@ -126,13 +126,23 @@ final class AppState: ObservableObject {
         needsAccessibilityPrompt = false
     }
 
-    /// 根据当前 captureEnabled 状态注册/注销全局热键。
-    /// 修改快捷键后也应调用，以确保监听绑定到最新的快捷键。
+    /// 热键回调是否已注册（onKeyUp 只需注册一次，否则会叠加重复触发）。
+    private var hotkeyHandlerRegistered = false
+
+    /// 根据当前 captureEnabled 状态启用/停用全局热键。
+    /// 修改快捷键后也应调用。
     func refreshHotkeyRegistration() {
-        if captureEnabled {
+        // 回调只注册一次；开关状态用 enable/disable 切换。
+        // 之前每次开启都重复 onKeyUp，且 disable 后未 enable，
+        // 导致「关闭再打开」后快捷键失效。
+        if !hotkeyHandlerRegistered {
             KeyboardShortcuts.onKeyUp(for: .collectWord) { [weak self] in
                 self?.onCollect?()
             }
+            hotkeyHandlerRegistered = true
+        }
+        if captureEnabled {
+            KeyboardShortcuts.enable(.collectWord)
         } else {
             KeyboardShortcuts.disable(.collectWord)
         }

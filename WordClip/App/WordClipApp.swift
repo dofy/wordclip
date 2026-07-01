@@ -49,7 +49,10 @@ struct WordClipApp: App {
             ContentView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
-                .onOpenURL(perform: handleURL)
+                // macOS 的 collect scheme 由 AppDelegate 统一处理（见下方 onReceive）
+                .onReceive(NotificationCenter.default.publisher(for: .collectWordFromURL)) { note in
+                    if let word = note.object as? String { collectFromURL(word) }
+                }
                 .task { await requestNotificationPermission() }
                 .task { setupCollector() }
         }
@@ -86,11 +89,23 @@ struct WordClipApp: App {
             ContentView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
-                .onOpenURL(perform: handleURL)
+                .onOpenURL(perform: handleURL)   // iOS 无 handlesExternalEvents 冲突，直接处理
                 .task { setupCollector() }
         }
         .modelContainer(modelContainer)
         #endif
+    }
+
+    /// 收录来自 URL scheme 的单词（collector 未就绪则排队）。
+    @MainActor
+    private func collectFromURL(_ word: String) {
+        Task { @MainActor in
+            if let collector = collectorBox.collector {
+                await runCollect { await collector.collect(word: word) }
+            } else {
+                collectorBox.pendingWords.append(word)
+            }
+        }
     }
 
     // MARK: - URL Scheme Handler

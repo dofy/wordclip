@@ -3,7 +3,12 @@ import AppKit
 import SwiftUI
 import UserNotifications
 
-/// AppDelegate：只负责窗口生命周期管理。
+extension Notification.Name {
+    /// 通过 URL scheme 请求收录单词（object 为 word 字符串）。
+    static let collectWordFromURL = Notification.Name("collectWordFromURL")
+}
+
+/// AppDelegate：窗口生命周期 + URL scheme 路由。
 /// 通知 delegate 由 NotificationDelegate 单例负责，避免被 SwiftUI 场景覆盖。
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -16,6 +21,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return false
+    }
+
+    /// 在 AppDelegate 层处理 URL scheme：SwiftUI 的 onOpenURL + handlesExternalEvents
+    /// 会把非 "main" 的 URL 误路由到设置窗口，这里统一拦截，保证 collect 可靠。
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            guard url.scheme == "wordclip",
+                  let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            else { continue }
+            switch comps.host {
+            case "collect":
+                if let word = comps.queryItems?.first(where: { $0.name == "word" })?.value,
+                   !word.isEmpty {
+                    NotificationCenter.default.post(name: .collectWordFromURL, object: word)
+                }
+            default:
+                break
+            }
+        }
     }
 }
 

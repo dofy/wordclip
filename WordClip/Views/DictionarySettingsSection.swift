@@ -8,7 +8,8 @@ struct DictionarySettingsSection: View {
 
     @State private var showingImporter = false
     @State private var importing = false
-    @State private var message: String?
+    @State private var errorMessage: String?
+    @State private var showingError = false
 
     /// 允许导入的类型：CSV / 纯文本 / SQLite（用扩展名兜底 sqlite）。
     private var allowedTypes: [UTType] {
@@ -96,17 +97,14 @@ struct DictionarySettingsSection: View {
             guard case .success(let urls) = result, let url = urls.first else { return }
             Task { await runImport(url) }
         }
-        .overlay(alignment: .bottom) {
-            if let message {
-                Text(message)
-                    .font(.callout)
-                    .padding(.horizontal, 16).padding(.vertical, 10)
-                    .background(.regularMaterial, in: Capsule())
-                    .shadow(radius: 4, y: 2)
-                    .padding(.bottom, 16)
-            }
+        // 成功反馈：词典直接出现在上方列表（含词数）；失败才弹 alert。
+        .alert(String(localized: "dict.import.fail.title", defaultValue: "导入失败"),
+               isPresented: $showingError,
+               presenting: errorMessage) { _ in
+            Button(String(localized: "common.ok", defaultValue: "好"), role: .cancel) {}
+        } message: { msg in
+            Text(msg)
         }
-        .animation(.spring(duration: 0.3), value: message)
     }
 
     private func runImport(_ url: URL) async {
@@ -115,18 +113,9 @@ struct DictionarySettingsSection: View {
         do {
             try await store.importDictionary(from: url)
             appState.rebuildDictionary()
-            flash(String(localized: "dict.import.ok", defaultValue: "已导入词典"))
         } catch {
-            flash(String(localized: "dict.import.fail",
-                         defaultValue: "导入失败：\(error.localizedDescription)"))
-        }
-    }
-
-    private func flash(_ msg: String) {
-        message = msg
-        Task {
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
-            if message == msg { message = nil }
+            errorMessage = error.localizedDescription
+            showingError = true
         }
     }
 }

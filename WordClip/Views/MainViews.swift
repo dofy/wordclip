@@ -790,46 +790,48 @@ struct WordDetailPane: View {
     // MARK: 头部
 
     private var header: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 10) {
-                    Text(word.headword)
-                        .font(.largeTitle.bold())
-                    iconButton("speaker.wave.2.fill", tint: .accentColor) {
-                        Speaker.shared.speak(word.headword)
-                    }
-                    iconButton(word.isFavorite ? "star.fill" : "star",
-                               tint: word.isFavorite ? .yellow : .secondary) {
-                        word.isFavorite.toggle()
-                        try? modelContext.save()
-                    }
+        VStack(alignment: .leading, spacing: 8) {
+            // 单词独占整行、可换行、给足空间
+            Text(word.headword)
+                .font(.largeTitle.bold())
+                .lineLimit(2)
+                .minimumScaleFactor(0.6)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if let phonetic = word.phonetic, !phonetic.isEmpty {
+                Text("/\(phonetic)/")
+                    .font(.title3)
+                    .foregroundStyle(.secondary)
+            }
+
+            // 操作行：朗读 / 收藏 …… 熟悉度 …… 上一条/下一条
+            HStack(spacing: 14) {
+                iconButton("speaker.wave.2.fill", tint: .accentColor) {
+                    Speaker.shared.speak(word.headword)
                 }
-                if let phonetic = word.phonetic, !phonetic.isEmpty {
-                    Text("/\(phonetic)/")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
+                iconButton(word.isFavorite ? "star.fill" : "star",
+                           tint: word.isFavorite ? .yellow : .secondary) {
+                    word.isFavorite.toggle()
+                    try? modelContext.save()
                 }
                 FamiliarityBadge(familiarity: word.familiarity)
-            }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 8) {
+                Spacer()
                 if words.count > 1 {
-                    HStack(spacing: 6) {
-                        iconButton("chevron.up", tint: canPrev ? .secondary : Color.secondary.opacity(0.3)) {
-                            go(-1)
-                        }
-                        .disabled(!canPrev)
-                        iconButton("chevron.down", tint: canNext ? .secondary : Color.secondary.opacity(0.3)) {
-                            go(1)
-                        }
-                        .disabled(!canNext)
-                    }
                     if let i = index {
                         Text("\(i + 1) / \(words.count)")
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
                             .monospacedDigit()
                     }
+                    iconButton("chevron.up", tint: canPrev ? .secondary : Color.secondary.opacity(0.3)) {
+                        go(-1)
+                    }
+                    .disabled(!canPrev)
+                    iconButton("chevron.down", tint: canNext ? .secondary : Color.secondary.opacity(0.3)) {
+                        go(1)
+                    }
+                    .disabled(!canNext)
                 }
             }
         }
