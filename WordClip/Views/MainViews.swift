@@ -534,17 +534,15 @@ struct WordListView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
         #if os(macOS)
-        // 整行可点。双击打开详情；单击选中用 DragGesture(minDistance:0) 即时触发，
-        // 不走 List 原生选中（会被 contentShape 抢事件），也无双击超时延迟。
+        // 不加 contentShape：它会抢走 List 原生单击选中的事件，导致选中变灰、
+        // 键盘焦点不转入列表（方向键留在侧边栏）。List 本身已让整行可单击选中，
+        // 原生选中会把焦点转进来（蓝色高亮 + 方向键生效）。
+        // 双击打开用 simultaneousGesture(count:2)：只识别双击、不消费单击。
+        // 回车打开由 listShortcuts 兜底（聚焦列表后可用）。
         .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 0).onEnded { _ in
-                if selection != [word.id] { selection = [word.id] }
-            }
-        )
         #else
+        .contentShape(Rectangle())
         .onTapGesture { open(word) }
         #endif
         .swipeActions(edge: .leading) {
