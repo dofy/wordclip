@@ -4,6 +4,32 @@ import WordClipKit
 import UniformTypeIdentifiers
 #if os(macOS)
 import KeyboardShortcuts
+import AppKit
+
+/// 在视图存在期间安装本地 keyDown 监听，拦截 Esc 关闭窗口。
+/// 相比 .onExitCommand / keyboardShortcut(.escape)：本地监听在事件进入
+/// 响应链（NSTextView）之前触发，因此文本选中态下仍能可靠捕获 Esc。
+private struct EscapeToDismiss: ViewModifier {
+    let action: () -> Void
+    @State private var monitor: Any?
+
+    func body(content: Content) -> some View {
+        content
+            .onAppear {
+                monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+                    if event.keyCode == 53 {   // 53 = Escape
+                        action()
+                        return nil             // 消费事件，不再传给文本视图
+                    }
+                    return event
+                }
+            }
+            .onDisappear {
+                if let monitor { NSEvent.removeMonitor(monitor) }
+                monitor = nil
+            }
+    }
+}
 #endif
 
 /// macOS 侧边栏
@@ -472,10 +498,10 @@ struct WordDetailView: View {
         }
         .padding(24)
         .background(navShortcuts)
-        // Esc 关闭：文本选中态下 .onExitCommand 仍可靠触发（keyboardShortcut(.escape)
-        // 会被文本选择拦截）。
+        // Esc 关闭：文本选中态下 onExitCommand / keyboardShortcut(.escape) 会被
+        // NSTextView 抢先消费，改用本地事件监听在进入响应链前拦截 Esc。
         #if os(macOS)
-        .onExitCommand { dismiss() }
+        .modifier(EscapeToDismiss { dismiss() })
         .frame(width: 440, height: 400)
         #else
         .frame(maxWidth: 520)
