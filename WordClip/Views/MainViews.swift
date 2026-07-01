@@ -52,7 +52,52 @@ struct SidebarView: View {
     }
 }
 
-/// 词典列表页：支持查看详情、删除、修复释义（单条 + 批量）。
+/// 单词列表排序方式（含维度与升降序）。持久化用 rawValue。
+enum WordSort: String, CaseIterable, Identifiable {
+    case createdDesc, createdAsc
+    case alphaAsc, alphaDesc
+    case familiarityDesc, familiarityAsc
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .createdDesc:      return String(localized: "sort.created.desc", defaultValue: "最近收录")
+        case .createdAsc:       return String(localized: "sort.created.asc", defaultValue: "最早收录")
+        case .alphaAsc:         return String(localized: "sort.alpha.asc", defaultValue: "字母 A→Z")
+        case .alphaDesc:        return String(localized: "sort.alpha.desc", defaultValue: "字母 Z→A")
+        case .familiarityDesc:  return String(localized: "sort.familiarity.desc", defaultValue: "熟悉度 高→低")
+        case .familiarityAsc:   return String(localized: "sort.familiarity.asc", defaultValue: "熟悉度 低→高")
+        }
+    }
+
+    /// 排序比较器：返回 lhs 是否应排在 rhs 前面。
+    func areInOrder(_ a: WordEntry, _ b: WordEntry) -> Bool {
+        switch self {
+        case .createdDesc: return a.createdAt > b.createdAt
+        case .createdAsc:  return a.createdAt < b.createdAt
+        case .alphaAsc:
+            return a.headword.localizedCaseInsensitiveCompare(b.headword) == .orderedAscending
+        case .alphaDesc:
+            return a.headword.localizedCaseInsensitiveCompare(b.headword) == .orderedDescending
+        case .familiarityDesc:
+            return a.familiarity != b.familiarity
+                ? a.familiarity > b.familiarity
+                : a.headword.localizedCaseInsensitiveCompare(b.headword) == .orderedAscending
+        case .familiarityAsc:
+            return a.familiarity != b.familiarity
+                ? a.familiarity < b.familiarity
+                : a.headword.localizedCaseInsensitiveCompare(b.headword) == .orderedAscending
+        }
+    }
+
+    /// 分组：同维度的升降序放一组，菜单里用 Divider 隔开。
+    static var groups: [[WordSort]] {
+        [[.createdDesc, .createdAsc], [.alphaAsc, .alphaDesc], [.familiarityDesc, .familiarityAsc]]
+    }
+}
+
+/// 词典列表页：支持查看详情、删除、修复释义（单条 + 批量）、排序。
 struct WordListView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
@@ -67,7 +112,13 @@ struct WordListView: View {
     @State private var searchText = ""
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
+    @AppStorage("wordlist.sort") private var sortRaw = WordSort.createdDesc.rawValue
     @State private var backfillAttempted: Set<String> = []   // 已尝试补全的 lemma
+
+    private var sort: WordSort {
+        get { WordSort(rawValue: sortRaw) ?? .createdDesc }
+        nonmutating set { sortRaw = newValue.rawValue }
+    }
     @State private var isBackfilling = false
     @FocusState private var searchFocused: Bool
 
@@ -120,19 +171,21 @@ struct WordListView: View {
         #endif
     }
 
-    /// 按搜索词过滤：匹配单词或释义（不区分大小写），可叠加只看收藏。
+    /// 按搜索词过滤 + 排序：匹配单词或释义（不区分大小写），可叠加只看收藏。
     private var filteredWords: [WordEntry] {
         var result = words
         if showFavoritesOnly {
             result = result.filter { $0.isFavorite }
         }
         let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !q.isEmpty else { return result }
-        return result.filter { word in
-            word.headword.lowercased().contains(q)
-                || word.lemma.contains(q)
-                || (word.definition?.lowercased().contains(q) ?? false)
+        if !q.isEmpty {
+            result = result.filter { word in
+                word.headword.lowercased().contains(q)
+                    || word.lemma.contains(q)
+                    || (word.definition?.lowercased().contains(q) ?? false)
+            }
         }
+        return result.sorted(by: sort.areInOrder)
     }
 
     var body: some View {
@@ -247,6 +300,27 @@ struct WordListView: View {
                     }
                 }
                 .disabled(isRepairing || appState.dictionary == nil)
+
+                // 排序
+                Menu {
+                    ForEach(Array(WordSort.groups.enumerated()), id: \.offset) { idx, group in
+                        ForEach(group) { option in
+                            Button {
+                                sort = option
+                            } label: {
+                                if sort == option {
+                                    Label(option.label, systemImage: "checkmark")
+                                } else {
+                                    Text(option.label)
+                                }
+                            }
+                        }
+                        if idx < WordSort.groups.count - 1 { Divider() }
+                    }
+                } label: {
+                    Label(String(localized: "wordlist.toolbar.sort", defaultValue: "排序"),
+                          systemImage: "arrow.up.arrow.down")
+                }
 
                 // 只看收藏
                 Button {
