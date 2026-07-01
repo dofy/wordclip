@@ -8,6 +8,10 @@ import SwiftData
 @Model
 public final class WordEntry {
 
+    // 索引：lemma 用于收词去重查询（fetchEntry），createdAt 用于默认排序，
+    // 大词量下避免全表扫描。SwiftData #Index 编译为 SQLite 索引。
+    #Index<WordEntry>([\.lemma], [\.createdAt])
+
     public var id: UUID
     public var headword: String        // 用户收集时的原始形态
     public var lemma: String           // 归一化词元（小写，用于查词/去重）

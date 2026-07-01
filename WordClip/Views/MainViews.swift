@@ -110,10 +110,12 @@ struct WordListView: View {
     @State private var pendingDelete: [WordEntry] = []  // 待确认删除
     @State private var showDeleteConfirm = false
     @State private var searchText = ""
+    @State private var debouncedSearch = ""                  // 防抖后的搜索词
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
     @AppStorage("wordlist.sort") private var sortRaw = WordSort.createdDesc.rawValue
     @State private var backfillAttempted: Set<String> = []   // 已尝试补全的 lemma
+    @State private var displayWords: [WordEntry] = []        // 缓存的过滤+排序结果
 
     private var sort: WordSort {
         get { WordSort(rawValue: sortRaw) ?? .createdDesc }
@@ -171,13 +173,17 @@ struct WordListView: View {
         #endif
     }
 
-    /// 按搜索词过滤 + 排序：匹配单词或释义（不区分大小写），可叠加只看收藏。
-    private var filteredWords: [WordEntry] {
+    /// 展示用列表：缓存的过滤+排序结果。避免 body 多处引用时重复计算
+    /// （大词量下方向键/刷新会重排整表，导致黏滞）。仅在输入变化时 recompute。
+    private var filteredWords: [WordEntry] { displayWords }
+
+    /// 重新计算过滤 + 排序结果（纯函数式，写入缓存）。
+    private func recomputeDisplayWords() {
         var result = words
         if showFavoritesOnly {
             result = result.filter { $0.isFavorite }
         }
-        let q = searchText.trimmingCharacters(in: .whitespaces).lowercased()
+        let q = debouncedSearch.trimmingCharacters(in: .whitespaces).lowercased()
         if !q.isEmpty {
             result = result.filter { word in
                 word.headword.lowercased().contains(q)
@@ -185,7 +191,7 @@ struct WordListView: View {
                     || (word.definition?.lowercased().contains(q) ?? false)
             }
         }
-        return result.sorted(by: sort.areInOrder)
+        displayWords = result.sorted(by: sort.areInOrder)
     }
 
     var body: some View {
@@ -262,6 +268,19 @@ struct WordListView: View {
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
+        // 缓存重算：仅在数据源/过滤/排序变化时重排一次，body 其余刷新直接读缓存。
+        .onAppear { recomputeDisplayWords() }
+        .onChange(of: words) { _, _ in recomputeDisplayWords() }
+        .onChange(of: showFavoritesOnly) { _, _ in recomputeDisplayWords() }
+        .onChange(of: sortRaw) { _, _ in recomputeDisplayWords() }
+        .onChange(of: debouncedSearch) { _, _ in recomputeDisplayWords() }
+        // 搜索防抖：停顿 250ms 再过滤，避免每敲一键都重排整表。
+        .task(id: searchText) {
+            if searchText == debouncedSearch { return }
+            try? await Task.sleep(nanoseconds: 250_000_000)
+            guard !Task.isCancelled else { return }
+            debouncedSearch = searchText
+        }
         // 词典就绪后自动补全「收录时因词典未加载而漏填」的释义（静默，仅补空缺）。
         // 以「待补数 + 词典是否就绪」为 id：词条随 @Query 陆续加载时会重新触发，
         // 已尝试过的 lemma 记入 backfillAttempted，避免对词典真的没有的词反复查。
