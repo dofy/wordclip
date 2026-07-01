@@ -16,6 +16,7 @@ struct ContentView: View {
     @EnvironmentObject private var appState: AppState
 
     @State private var selection: SidebarItem? = .allWords
+    @State private var showingShortcuts = false
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -47,6 +48,23 @@ struct ContentView: View {
                 }
             }
             .animation(.spring(duration: 0.3), value: appState.lastCollectMessage)
+            #if os(iOS)
+            // iPad：隐藏按钮承载 ⌘/；macOS 走「帮助」菜单命令（见 WordClipCommands）
+            .background(
+                Button("") { showingShortcuts.toggle() }
+                    .keyboardShortcut("/", modifiers: .command)
+                    .opacity(0)
+                    .frame(width: 0, height: 0)
+                    .accessibilityHidden(true)
+            )
+            #else
+            .onReceive(NotificationCenter.default.publisher(for: .showShortcutCheatSheet)) { _ in
+                showingShortcuts = true
+            }
+            #endif
+            .sheet(isPresented: $showingShortcuts) {
+                ShortcutCheatSheet()
+            }
     }
 
     @ViewBuilder

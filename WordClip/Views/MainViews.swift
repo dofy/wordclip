@@ -42,6 +42,19 @@ struct WordListView: View {
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
     @FocusState private var searchFocused: Bool
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var hSizeClass
+    #endif
+
+    /// 是否为宽屏（iPad 侧边栏 / macOS）——决定是否启用列表键盘导航。
+    /// iPhone（compact）无外接键盘且单击即开，不需要行级快捷键与自动选中。
+    private var isRegularWidth: Bool {
+        #if os(iOS)
+        hSizeClass == .regular
+        #else
+        true
+        #endif
+    }
 
     private var actions: WordListActions {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
@@ -129,15 +142,14 @@ struct WordListView: View {
                         requestDelete(offsets.map { filteredWords[$0] })
                     }
                 }
-                #if os(macOS)
-                // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突
-                .background(selectedWord == nil ? listShortcuts : nil)
+                // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突。
+                // 仅宽屏（iPad/macOS）启用行级键盘导航。
+                .background((isRegularWidth && selectedWord == nil) ? listShortcuts : nil)
                 .onAppear {
-                    if selection.isEmpty, let first = filteredWords.first {
+                    if isRegularWidth, selection.isEmpty, let first = filteredWords.first {
                         selection = [first.id]
                     }
                 }
-                #endif
             }
         }
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "词典"))
@@ -190,6 +202,7 @@ struct WordListView: View {
                     Label(String(localized: "wordlist.toolbar.add", defaultValue: "添加单词"),
                           systemImage: "plus")
                 }
+                .keyboardShortcut("n", modifiers: .command)
             }
         }
         .sheet(isPresented: $showingAddWord) {
@@ -271,7 +284,6 @@ struct WordListView: View {
         return inSelection.isEmpty ? [] : inSelection
     }
 
-    #if os(macOS)
     /// 隐藏按钮承载列表级快捷键，作用于当前选中词条。
     /// 回车打开、⌘L 朗读、⌘D 收藏、⌘R 修复、⌘⌫ 删除。
     @ViewBuilder
@@ -313,7 +325,6 @@ struct WordListView: View {
         .focusable(false)
         .accessibilityHidden(true)
     }
-    #endif
 
     @ViewBuilder
     private func row(for word: WordEntry) -> some View {
@@ -345,9 +356,10 @@ struct WordListView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(Rectangle())
-        // 单击交给 List 选中；双击打开详情（iOS 单击即开，见下）
+        // macOS：单击由 List 原生选中（流畅），双击打开详情。
+        // 用 simultaneousGesture 让双击识别器与 List 选中并存，不抢单击事件。
         #if os(macOS)
-        .onTapGesture(count: 2) { open(word) }
+        .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
         #else
         .onTapGesture { open(word) }
         #endif

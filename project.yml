@@ -24,6 +24,10 @@ settings:
     CURRENT_PROJECT_VERSION: "1"
     DEVELOPMENT_TEAM: "5GS5X3MD6G"    # Apple Development 签名（需在 Xcode Accounts 里重新生成证书）
     DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+    # 让 Xcode「General」标签的 Display Name / App Category 正确显示。
+    # 实际注入仍由 Info.plist 中的同名键完成（手写 plist 时 INFOPLIST_KEY_* 不注入）。
+    INFOPLIST_KEY_CFBundleDisplayName: WordClip
+    INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.education"
 
 configs:
   Debug: debug
