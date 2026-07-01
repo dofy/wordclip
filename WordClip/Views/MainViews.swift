@@ -41,6 +41,7 @@ struct WordListView: View {
     @State private var searchText = ""
     @State private var showingAddWord = false
     @State private var showFavoritesOnly = false
+    @FocusState private var searchFocused: Bool
 
     private var actions: WordListActions {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
@@ -145,6 +146,8 @@ struct WordListView: View {
             placement: .toolbar,
             prompt: String(localized: "wordlist.search.prompt", defaultValue: "搜索单词或释义")
         )
+        .searchFocused($searchFocused)
+        .background(searchFocusShortcuts)
         .toolbar {
             ToolbarItemGroup {
                 if !selection.isEmpty {
@@ -246,6 +249,20 @@ struct WordListView: View {
     /// 打开词条详情（详情页内可继续上下切换）。
     private func open(_ word: WordEntry) {
         selectedWord = word
+    }
+
+    /// ⌘K / ⌘F 定位到搜索框。隐藏按钮承载快捷键。
+    @ViewBuilder
+    private var searchFocusShortcuts: some View {
+        Group {
+            Button("") { searchFocused = true }
+                .keyboardShortcut("k", modifiers: .command)
+            Button("") { searchFocused = true }
+                .keyboardShortcut("f", modifiers: .command)
+        }
+        .opacity(0)
+        .frame(width: 0, height: 0)
+        .accessibilityHidden(true)
     }
 
     /// 当前快捷键作用的目标：多选时取全部选中，否则取首个选中项。
