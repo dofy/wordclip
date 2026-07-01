@@ -4,32 +4,6 @@ import WordClipKit
 import UniformTypeIdentifiers
 #if os(macOS)
 import KeyboardShortcuts
-import AppKit
-
-/// 在视图存在期间安装本地 keyDown 监听，拦截 Esc 关闭窗口。
-/// 相比 .onExitCommand / keyboardShortcut(.escape)：本地监听在事件进入
-/// 响应链（NSTextView）之前触发，因此文本选中态下仍能可靠捕获 Esc。
-private struct EscapeToDismiss: ViewModifier {
-    let action: () -> Void
-    @State private var monitor: Any?
-
-    func body(content: Content) -> some View {
-        content
-            .onAppear {
-                monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-                    if event.keyCode == 53 {   // 53 = Escape
-                        action()
-                        return nil             // 消费事件，不再传给文本视图
-                    }
-                    return event
-                }
-            }
-            .onDisappear {
-                if let monitor { NSEvent.removeMonitor(monitor) }
-                monitor = nil
-            }
-    }
-}
 #endif
 
 /// macOS 侧边栏
@@ -97,14 +71,21 @@ enum WordSort: String, CaseIterable, Identifiable {
     }
 }
 
-/// 词典列表页：支持查看详情、删除、修复释义（单条 + 批量）、排序。
+/// 列表选中项：生词本已收录词，或词典库未收录词。三栏共用一个选中。
+enum WordSelection: Hashable {
+    case word(WordEntry.ID)
+    case dict(String)
+}
+
+/// 生词本页：三栏（导航→列表→详情）。单击即选中并在右侧显示详情，
+/// 无弹窗、无双击、无自定义手势——单击选中/焦点由 List 原生处理。
+/// iPhone（紧凑）降级为点击 push 详情。
 struct WordListView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
     @Query(sort: \WordEntry.createdAt, order: .reverse) private var words: [WordEntry]
 
-    @State private var selectedWord: WordEntry?      // 详情 sheet
-    @State private var selection = Set<WordEntry.ID>() // 多选
+    @State private var selectedItem: WordSelection?   // 三栏统一选中
     @State private var isRepairing = false
     @State private var repairMessage: String?
     @State private var pendingDelete: [WordEntry] = []  // 待确认删除
@@ -117,7 +98,6 @@ struct WordListView: View {
     @State private var backfillAttempted: Set<String> = []   // 已尝试补全的 lemma
     @State private var displayWords: [WordEntry] = []        // 缓存的过滤+排序结果
     @State private var dictSuggestions: [String] = []        // 词典库里匹配但未收录的词
-    @State private var dictPreview: DictionaryResult?        // 词典项详情预览 sheet
 
     private var sort: WordSort {
         get { WordSort(rawValue: sortRaw) ?? .createdDesc }
@@ -214,19 +194,7 @@ struct WordListView: View {
     }
 
     var body: some View {
-        Group {
-            if words.isEmpty && !isSearching {
-                ContentUnavailableView(
-                    String(localized: "wordlist.empty.title", defaultValue: "还没有收藏的单词"),
-                    systemImage: "books.vertical",
-                    description: Text(emptyDescription)
-                )
-            } else if filteredWords.isEmpty && dictSuggestions.isEmpty && isSearching {
-                ContentUnavailableView.search(text: searchText)
-            } else {
-                wordListContent
-            }
-        }
+        layout
         .navigationTitle(String(localized: "tab.wordlist", defaultValue: "生词本"))
         // 缓存重算：仅在数据源/过滤/排序变化时重排一次，body 其余刷新直接读缓存。
         .onAppear { recomputeDisplayWords() }
@@ -260,17 +228,6 @@ struct WordListView: View {
         .background(searchFocusShortcuts)
         .toolbar {
             ToolbarItemGroup {
-                if !selection.isEmpty {
-                    // 批量删除选中
-                    Button(role: .destructive) {
-                        let toDelete = words.filter { selection.contains($0.id) }
-                        requestDelete(toDelete)
-                    } label: {
-                        Label(String(localized: "wordlist.toolbar.delete.selected",
-                                     defaultValue: "删除选中 (\(selection.count))"),
-                              systemImage: "trash")
-                    }
-                }
                 // 批量修复无释义
                 Button {
                     Task { await repairAll() }
@@ -339,22 +296,18 @@ struct WordListView: View {
             }
         }
         .animation(.spring(duration: 0.3), value: repairMessage)
-        .sheet(item: $selectedWord) { word in
-            WordDetailView(
-                words: filteredWords,
-                current: $selectedWord,
-                fallback: word,
-                onRepair: { await repairOne($0) }
-            )
-        }
         .confirmationDialog(
             deleteConfirmTitle,
             isPresented: $showDeleteConfirm,
             titleVisibility: .visible
         ) {
             Button(String(localized: "delete.confirm", defaultValue: "删除"), role: .destructive) {
+                let deletedIDs = Set(pendingDelete.map(\.id))
                 actions.delete(pendingDelete)
-                selection.removeAll()
+                // 若当前选中项被删，清空右侧详情
+                if case .word(let id) = selectedItem, deletedIDs.contains(id) {
+                    selectedItem = nil
+                }
                 pendingDelete = []
             }
             Button(String(localized: "delete.cancel", defaultValue: "取消"), role: .cancel) {
@@ -378,17 +331,96 @@ struct WordListView: View {
         showDeleteConfirm = true
     }
 
-    // MARK: - 列表主体（生词本段 + 词典段）
+    // MARK: - 三栏布局
+
+    /// 宽屏（iPad/macOS）：列表 | 详情两栏；iPhone（紧凑）：单列表，点击 push 详情。
+    @ViewBuilder
+    private var layout: some View {
+        #if os(iOS)
+        if !isRegularWidth {
+            // 紧凑（iPhone）：单列表，选中即 push 详情（两级导航）
+            listPane
+                .navigationDestination(item: $selectedItem) { sel in
+                    compactDetail(for: sel)
+                }
+        } else {
+            splitLayout
+        }
+        #else
+        splitLayout
+        #endif
+    }
+
+    #if os(iOS)
+    /// iPhone push 目标：按选中类型渲染详情，铺满页面。
+    @ViewBuilder
+    private func compactDetail(for sel: WordSelection) -> some View {
+        switch sel {
+        case .word(let id):
+            if let word = filteredWords.first(where: { $0.id == id }) {
+                WordDetailPane(
+                    words: filteredWords,
+                    current: Binding(
+                        get: { currentWord },
+                        set: { selectedItem = $0.map { .word($0.id) } }
+                    ),
+                    fallback: word,
+                    onRepair: { await repairOne($0) }
+                )
+            }
+        case .dict(let term):
+            DictionaryPreviewPane(term: term) {
+                await appState.collect(word: term)
+                if let w = words.first(where: { $0.lemma == term.lowercased() }) {
+                    selectedItem = .word(w.id)
+                }
+            }
+        }
+    }
+    #endif
+
+    private var splitLayout: some View {
+        HStack(spacing: 0) {
+            listPane
+                #if os(macOS)
+                .frame(minWidth: 260, idealWidth: 320, maxWidth: 420)
+                #else
+                .frame(minWidth: 300, idealWidth: 360, maxWidth: 460)
+                #endif
+            Divider()
+            detailPane
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+
+    // MARK: - 左栏：列表（生词本段 + 词典段）
 
     @ViewBuilder
-    private var wordListContent: some View {
-        List(selection: $selection) {
-            // 生词本匹配（可选中/方向键/双击打开）
+    private var listPane: some View {
+        Group {
+            if words.isEmpty && !isSearching {
+                ContentUnavailableView(
+                    String(localized: "wordlist.empty.title", defaultValue: "还没有收藏的单词"),
+                    systemImage: "books.vertical",
+                    description: Text(emptyDescription)
+                )
+            } else if filteredWords.isEmpty && dictSuggestions.isEmpty && isSearching {
+                ContentUnavailableView.search(text: searchText)
+            } else {
+                wordList
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var wordList: some View {
+        List(selection: $selectedItem) {
+            // 生词本匹配
             if !filteredWords.isEmpty {
                 Section {
                     ForEach(filteredWords) { word in
                         row(for: word)
-                            .tag(word.id)
+                            .tag(WordSelection.word(word.id))
                             .contextMenu { rowContextMenu(word) }
                     }
                     .onDelete { offsets in
@@ -401,39 +433,71 @@ struct WordListView: View {
                 }
             }
 
-            // 词典库匹配、未收录（搜索态才显示；点击弹详情预览可收录）
+            // 词典库匹配、未收录（搜索态才显示）
             if isSearching && !dictSuggestions.isEmpty {
                 Section {
                     ForEach(dictSuggestions, id: \.self) { term in
                         dictSuggestionRow(term)
+                            .tag(WordSelection.dict(term))
                     }
                 } header: {
                     Text(String(localized: "wordlist.section.dict", defaultValue: "词典（未收录）"))
                 }
             }
         }
-        // 详情 sheet 打开时禁用列表级快捷键，避免与详情页 ⌘D/⌘R/⌘L 冲突。
-        // 仅宽屏（iPad/macOS）启用行级键盘导航。
-        .background((isRegularWidth && selectedWord == nil) ? listShortcuts : nil)
+        .background(isRegularWidth ? listShortcuts : nil)
         #if os(macOS)
-        // 列表获得键盘焦点时，删除键（⌫）由 List 消费，window 级 ⌘⌫ 收不到；
-        // .onDeleteCommand 专门处理「聚焦列表的删除命令」，此时才可靠。
         .onDeleteCommand {
-            if selectedWord == nil { requestDelete(selectedWords) }
+            if case .word(let id) = selectedItem,
+               let w = filteredWords.first(where: { $0.id == id }) {
+                requestDelete([w])
+            }
         }
         #endif
-        .onAppear {
-            if isRegularWidth, selection.isEmpty, let first = filteredWords.first {
-                selection = [first.id]
+    }
+
+    // MARK: - 右栏：详情
+
+    @ViewBuilder
+    private var detailPane: some View {
+        switch selectedItem {
+        case .word(let id):
+            if let word = filteredWords.first(where: { $0.id == id }) {
+                WordDetailPane(
+                    words: filteredWords,
+                    current: Binding(
+                        get: { currentWord },
+                        set: { selectedItem = $0.map { .word($0.id) } }
+                    ),
+                    fallback: word,
+                    onRepair: { await repairOne($0) }
+                )
+                .id(id)   // 切词时重建，重置滚动/状态
+            } else {
+                detailPlaceholder
             }
-        }
-        // 词典项详情预览（挂在列表子视图，与 body 级 sheet 分层，避免同层多 sheet 冲突）
-        .sheet(item: $dictPreview) { result in
-            DictionaryPreviewView(result: result) {
-                await appState.collect(word: result.word)
-                dictPreview = nil
+        case .dict(let term):
+            DictionaryPreviewPane(term: term) {
+                await appState.collect(word: term)
+                // 收录后：从词典段消失，转选中生词本里的该词
+                await refreshDictSuggestions()
+                if let w = words.first(where: { $0.lemma == term.lowercased() }) {
+                    selectedItem = .word(w.id)
+                }
             }
+            .id(term)
+        case .none:
+            detailPlaceholder
         }
+    }
+
+    private var detailPlaceholder: some View {
+        ContentUnavailableView(
+            String(localized: "detail.placeholder.title", defaultValue: "选择一个单词"),
+            systemImage: "sidebar.right",
+            description: Text(String(localized: "detail.placeholder.desc",
+                defaultValue: "从左侧选择单词查看释义，或搜索词典收录生词"))
+        )
     }
 
     @ViewBuilder
@@ -474,37 +538,22 @@ struct WordListView: View {
         }
     }
 
-    /// 词典建议行：单词 + 提示，点击弹详情预览（可在预览里收录）。
+    /// 词典建议行：单词 + 图标（选中由 List 处理，右栏显示预览）。
     @ViewBuilder
     private func dictSuggestionRow(_ term: String) -> some View {
-        Button {
-            Task { await previewDictWord(term) }
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "character.book.closed")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-                Text(term)
-                    .font(.body)
-                    .foregroundStyle(.primary)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-            }
-            .contentShape(Rectangle())
+        HStack(spacing: 8) {
+            Image(systemName: "character.book.closed")
+                .font(.caption)
+                .foregroundStyle(.tertiary)
+            Text(term)
+                .font(.body)
+            Spacer()
         }
-        .buttonStyle(.plain)
     }
 
-    private func previewDictWord(_ term: String) async {
-        guard let dict = appState.dictionary else { return }
-        dictPreview = await dict.lookup(term)
-    }
-
-    /// 打开词条详情（详情页内可继续上下切换）。
+    /// 选中某生词本词（供快捷键/程序化选中用）。
     private func open(_ word: WordEntry) {
-        selectedWord = word
+        selectedItem = .word(word.id)
     }
 
     /// 词典就绪后静默补全空释义 / 重查旧 fallback 残留。仅处理尚未尝试过的词，
@@ -537,45 +586,38 @@ struct WordListView: View {
         .accessibilityHidden(true)
     }
 
-    /// 当前快捷键作用的目标：多选时取全部选中，否则取首个选中项。
-    private var selectedWords: [WordEntry] {
-        let inSelection = filteredWords.filter { selection.contains($0.id) }
-        return inSelection.isEmpty ? [] : inSelection
+    /// 当前选中的生词本词条（词典项返回 nil）。
+    private var currentWord: WordEntry? {
+        if case .word(let id) = selectedItem {
+            return filteredWords.first { $0.id == id }
+        }
+        return nil
     }
 
     /// 隐藏按钮承载列表级快捷键，作用于当前选中词条。
-    /// 回车打开、⌘L 朗读、⌘D 收藏、⌘R 修复、⌘⌫ 删除。
+    /// ⌘L 朗读、⌘D 收藏、⌘R 修复、⌘⌫ 删除（选中即在右栏显示，无需回车打开）。
     @ViewBuilder
     private var listShortcuts: some View {
         Group {
             Button("") {
-                if let w = selectedWords.first { open(w) }
-            }
-            .keyboardShortcut(.return, modifiers: [])
-
-            Button("") {
-                if let w = selectedWords.first { Speaker.shared.speak(w.headword) }
+                if let w = currentWord { Speaker.shared.speak(w.headword) }
             }
             .keyboardShortcut("l", modifiers: .command)
 
             Button("") {
-                let targets = selectedWords
-                guard !targets.isEmpty else { return }
-                // 有任一未收藏 → 全部收藏；否则全部取消
-                let makeFav = targets.contains { !$0.isFavorite }
-                targets.forEach { $0.isFavorite = makeFav }
+                guard let w = currentWord else { return }
+                w.isFavorite.toggle()
                 try? modelContext.save()
             }
             .keyboardShortcut("d", modifiers: .command)
 
             Button("") {
-                let targets = selectedWords
-                Task { for w in targets { await repairOne(w) } }
+                if let w = currentWord { Task { await repairOne(w) } }
             }
             .keyboardShortcut("r", modifiers: .command)
 
             Button("") {
-                requestDelete(selectedWords)
+                if let w = currentWord { requestDelete([w]) }
             }
             .keyboardShortcut(.delete, modifiers: .command)
         }
@@ -646,17 +688,7 @@ struct WordListView: View {
             .layoutPriority(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        #if os(macOS)
-        // 不加 contentShape：它会抢走 List 原生单击选中的事件，导致选中变灰、
-        // 键盘焦点不转入列表（方向键留在侧边栏）。List 本身已让整行可单击选中，
-        // 原生选中会把焦点转进来（蓝色高亮 + 方向键生效）。
-        // 双击打开用 simultaneousGesture(count:2)：只识别双击、不消费单击。
-        // 回车打开由 listShortcuts 兜底（聚焦列表后可用）。
-        .simultaneousGesture(TapGesture(count: 2).onEnded { open(word) })
-        #else
-        .contentShape(Rectangle())
-        .onTapGesture { open(word) }
-        #endif
+        // 三栏布局：单击选中由 List 原生处理（右栏显示详情），无需任何自定义手势。
         .swipeActions(edge: .leading) {
             Button {
                 word.isFavorite.toggle()
@@ -701,15 +733,14 @@ struct WordListView: View {
     }
 }
 
-/// 单词详情：展示完整释义、音标、来源，并支持在列表内上下切换词条。
-struct WordDetailView: View {
+/// 单词详情（右栏内嵌）：展示完整释义、音标、来源，支持上下切换词条。
+struct WordDetailPane: View {
     let words: [WordEntry]
     @Binding var current: WordEntry?
-    /// 兜底：words 为空或找不到时显示的词条（sheet item 保证非 nil）。
+    /// 兜底：words 为空或找不到时显示的词条。
     let fallback: WordEntry
     var onRepair: (@MainActor (WordEntry) async -> Void)? = nil
 
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @State private var isRepairing = false
 
@@ -743,6 +774,7 @@ struct WordDetailView: View {
                     definition: word.definition,
                     definitionEn: word.definitionEn
                 )
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             Divider()
             footer
@@ -751,16 +783,8 @@ struct WordDetailView: View {
             #endif
         }
         .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(navShortcuts)
-        // Esc 关闭：文本选中态下 onExitCommand / keyboardShortcut(.escape) 会被
-        // NSTextView 抢先消费，改用本地事件监听在进入响应链前拦截 Esc。
-        #if os(macOS)
-        .modifier(EscapeToDismiss { dismiss() })
-        .frame(width: 440, height: 400)
-        #else
-        .frame(maxWidth: 520)
-        .presentationDetents([.medium, .large])
-        #endif
     }
 
     // MARK: 头部
@@ -789,9 +813,6 @@ struct WordDetailView: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 8) {
-                iconButton("xmark.circle.fill", font: .title2, tint: .secondary) {
-                    dismiss()
-                }
                 if words.count > 1 {
                     HStack(spacing: 6) {
                         iconButton("chevron.up", tint: canPrev ? .secondary : Color.secondary.opacity(0.3)) {
@@ -898,6 +919,74 @@ struct WordDetailView: View {
         .frame(width: 0, height: 0)
         .focusable(false)
         .accessibilityHidden(true)
+    }
+}
+
+/// 词典未收录词的详情预览（右栏内嵌）：查词 → 释义 + 「收录到生词本」。
+struct DictionaryPreviewPane: View {
+    let term: String
+    let onCollect: () async -> Void
+
+    @EnvironmentObject private var appState: AppState
+    @State private var result: DictionaryResult?
+    @State private var loading = true
+    @State private var isCollecting = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            if loading {
+                ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let result {
+                HStack(spacing: 10) {
+                    Text(result.word).font(.largeTitle.bold())
+                    if let ph = result.phonetic, !ph.isEmpty {
+                        Text("/\(ph)/").font(.title3).foregroundStyle(.secondary)
+                    }
+                    Button {
+                        Speaker.shared.speak(result.word)
+                    } label: {
+                        Image(systemName: "speaker.wave.2.fill").font(.title3).foregroundStyle(.tint)
+                    }
+                    .buttonStyle(.plain).focusable(false)
+                    Spacer()
+                }
+                Divider()
+                ScrollView {
+                    StructuredDefinitionView(definition: result.definition, definitionEn: result.definitionEn)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                Divider()
+                Button {
+                    Task { isCollecting = true; await onCollect(); isCollecting = false }
+                } label: {
+                    if isCollecting {
+                        ProgressView().controlSize(.small)
+                    } else {
+                        Label(String(localized: "lookup.collect", defaultValue: "收录到生词本"),
+                              systemImage: "plus.circle.fill")
+                            .font(.body.bold())
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 6)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isCollecting)
+                .keyboardShortcut(.return, modifiers: .command)
+            } else {
+                ContentUnavailableView(
+                    String(localized: "lookup.notfound.title", defaultValue: "未找到释义"),
+                    systemImage: "questionmark.circle",
+                    description: Text(term)
+                )
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .task(id: term) {
+            loading = true
+            result = await appState.dictionary?.lookup(term)
+            loading = false
+        }
     }
 }
 
