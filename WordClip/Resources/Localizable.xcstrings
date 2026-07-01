@@ -1154,6 +1154,40 @@
           }
         }
       }
+    },
+    "wordlist.status.new": {
+      "comment": "Wordlist row: new word badge",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新词"
+          }
+        }
+      }
+    },
+    "wordlist.status.due": {
+      "comment": "Wordlist row: due for review badge",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Due"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "待复习"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

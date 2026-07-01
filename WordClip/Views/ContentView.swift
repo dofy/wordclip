@@ -23,8 +23,14 @@ struct ContentView: View {
     @EnvironmentObject private var appState: AppState
 
     @State private var selection: SidebarItem? = .allWords
-    @State private var showingShortcuts = false
-    @State private var showingLookup = false
+    @State private var activeSheet: ActiveSheet?
+
+    /// 同层多个 .sheet(isPresented:) 在 SwiftUI 只有一个会生效，
+    /// 用单一 .sheet(item:) + 枚举区分要弹哪个。
+    private enum ActiveSheet: String, Identifiable {
+        case shortcuts, lookup
+        var id: String { rawValue }
+    }
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -60,9 +66,9 @@ struct ContentView: View {
             // iPad：隐藏按钮承载全局快捷键；macOS 走菜单命令（见 WordClipCommands）
             .background(
                 Group {
-                    Button("") { showingShortcuts.toggle() }
+                    Button("") { activeSheet = .shortcuts }
                         .keyboardShortcut("/", modifiers: .command)
-                    Button("") { showingLookup = true }
+                    Button("") { activeSheet = .lookup }
                         .keyboardShortcut("f", modifiers: [.command, .shift])
                 }
                 .opacity(0)
@@ -71,18 +77,20 @@ struct ContentView: View {
             )
             #else
             .onReceive(NotificationCenter.default.publisher(for: .showShortcutCheatSheet)) { _ in
-                showingShortcuts = true
+                activeSheet = .shortcuts
             }
             .onReceive(NotificationCenter.default.publisher(for: .showDictionaryLookup)) { _ in
-                showingLookup = true
+                activeSheet = .lookup
             }
             #endif
-            .sheet(isPresented: $showingShortcuts) {
-                ShortcutCheatSheet()
-            }
-            .sheet(isPresented: $showingLookup) {
-                DictionaryLookupView()
-                    .environmentObject(appState)
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .shortcuts:
+                    ShortcutCheatSheet()
+                case .lookup:
+                    DictionaryLookupView()
+                        .environmentObject(appState)
+                }
             }
     }
 

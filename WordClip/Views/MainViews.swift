@@ -505,33 +505,65 @@ struct WordListView: View {
         .accessibilityHidden(true)
     }
 
+    /// 右侧复习状态小徽标：新词 / 待复习（已到期）/ 已排期。
+    @ViewBuilder
+    private func reviewStatusBadge(for word: WordEntry) -> some View {
+        if word.repetitions == 0 && word.lastReviewedAt == nil {
+            statusTag(String(localized: "wordlist.status.new", defaultValue: "新词"), color: .green)
+        } else if let due = word.dueAt, due <= Date() {
+            statusTag(String(localized: "wordlist.status.due", defaultValue: "待复习"), color: .orange)
+        } else {
+            EmptyView()
+        }
+    }
+
+    private func statusTag(_ text: String, color: Color) -> some View {
+        Text(text)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(color)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(color.opacity(0.14), in: Capsule())
+    }
+
     @ViewBuilder
     private func row(for word: WordEntry) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 8) {
-                Text(word.headword)
-                    .font(.headline)
-                if let phonetic = word.phonetic, !phonetic.isEmpty {
-                    Text("/\(phonetic)/")
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 8) {
+                    Text(word.headword)
+                        .font(.headline)
+                    if let phonetic = word.phonetic, !phonetic.isEmpty {
+                        Text("/\(phonetic)/")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    if word.isFavorite {
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.yellow)
+                    }
+                }
+                if let definition = word.definition, !definition.isEmpty {
+                    Text(definition.components(separatedBy: "\n").first ?? definition)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                } else {
+                    Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
-                if word.isFavorite {
-                    Image(systemName: "star.fill")
-                        .font(.caption2)
-                        .foregroundStyle(.yellow)
-                }
             }
-            if let definition = word.definition, !definition.isEmpty {
-                Text(definition.components(separatedBy: "\n").first ?? definition)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
-            } else {
-                Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
+
+            Spacer(minLength: 8)
+
+            // 右侧：复习状态徽标 + 熟悉度点，利用留白展示学习进度
+            VStack(alignment: .trailing, spacing: 5) {
+                reviewStatusBadge(for: word)
+                FamiliarityBadge(familiarity: word.familiarity)
             }
+            .layoutPriority(1)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         #if os(macOS)
