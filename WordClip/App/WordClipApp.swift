@@ -73,11 +73,14 @@ struct WordClipApp: App {
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 520, height: 400)
+        // 永不响应外部 URL：否则 wordclip://collect 会被 SwiftUI 误路由到此窗口。
+        .handlesExternalEvents(matching: [])
 
         // ── 状态栏图标 ────────────────────────────────────
         MenuBarExtra {
             MenuBarMenuView()
                 .environmentObject(appState)
+                .modelContainer(modelContainer)
         } label: {
             // 自定义书签模板图，取词禁用时半透明提示
             Image("MenuBarIcon")
