@@ -47,6 +47,7 @@ targets:
           - "Resources/Info-macOS.plist"
           - "Resources/Info-iOS.plist"
           - "Resources/*.entitlements"
+          - "Resources/*.storekit"   # 由 scheme 引用，不打包/不编译
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
@@ -76,6 +77,7 @@ targets:
           - "Resources/Info-macOS.plist"
           - "Resources/Info-iOS.plist"
           - "Resources/*.entitlements"
+          - "Resources/*.storekit"   # 由 scheme 引用，不打包/不编译
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
@@ -97,6 +99,8 @@ schemes:
         WordClip-macOS: all
     run:
       config: Debug
+      # 本地 StoreKit 配置：无付费账号也能跑通完整购买/恢复流程（仅 Debug 运行时生效）
+      storeKitConfiguration: WordClip/Resources/WordClip.storekit
     test:
       config: Debug
       targets: []     # App 层无 XCTest；Kit 测试由 swift test 跑
@@ -109,6 +113,7 @@ schemes:
         WordClip-iOS: all
     run:
       config: Debug
+      storeKitConfiguration: WordClip/Resources/WordClip.storekit
     test:
       config: Debug
     archive:

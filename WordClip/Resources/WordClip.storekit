@@ -1,0 +1,39 @@
+{
+  "identifier" : "WordClipStoreKitConfig",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "28.00",
+      "familyShareable" : false,
+      "internalID" : "6F0A0001",
+      "localizations" : [
+        {
+          "description" : "终身解锁 iCloud 同步与导入/导出功能",
+          "displayName" : "WordClip Pro（终身买断）",
+          "locale" : "zh_CN"
+        },
+        {
+          "description" : "Unlock iCloud sync and import/export forever",
+          "displayName" : "WordClip Pro (Lifetime)",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "xyz.phpz.WordClip.pro.lifetime",
+      "referenceName" : "WordClip Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "0",
+    "_developerTeamID" : "5GS5X3MD6G",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "zh_CN",
+    "_storefront" : "CHN",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

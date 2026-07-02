@@ -1020,6 +1020,12 @@ struct SettingsView: View {
     @State private var exportDocument: WordBackupDocument?
     @State private var backupMessage: String?
 
+    // 付费墙
+    @State private var showingPaywall = false
+
+    // iCloud 同步（先预留 UI，功能待付费开发者账号）
+    @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = false
+
     private var backup: BackupService {
         BackupService(modelContext: modelContext)
     }
@@ -1086,11 +1092,44 @@ struct SettingsView: View {
                 LabeledContent(
                     String(localized: "settings.plan", defaultValue: "当前方案"),
                     value: entitlement.isPro
-                        ? String(localized: "settings.plan.pro", defaultValue: "Pro")
+                        ? String(localized: "settings.plan.pro", defaultValue: "Pro（终身）")
                         : String(localized: "settings.plan.free", defaultValue: "免费版")
                 )
+                if !entitlement.isPro {
+                    Button {
+                        showingPaywall = true
+                    } label: {
+                        Label(String(localized: "settings.upgrade", defaultValue: "升级 WordClip Pro"),
+                              systemImage: "sparkles")
+                    }
+                }
             } header: {
                 Text(String(localized: "settings.account", defaultValue: "账户"))
+            } footer: {
+                if !entitlement.isPro {
+                    Text(String(localized: "settings.account.hint",
+                        defaultValue: "一次性购买，终身解锁 iCloud 同步与导入/导出功能。"))
+                    .foregroundStyle(.secondary)
+                }
+            }
+
+            // ── iCloud 同步（预留 UI，功能待开发者账号）──────────
+            Section {
+                Toggle(isOn: $iCloudSyncEnabled) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "settings.icloud.toggle", defaultValue: "iCloud 同步"))
+                        Text(String(localized: "settings.icloud.soon", defaultValue: "即将推出"))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .disabled(true)   // 预留 UI：真实同步待 CloudKit + 付费账号
+            } header: {
+                Text(String(localized: "settings.section.icloud", defaultValue: "同步"))
+            } footer: {
+                Text(String(localized: "settings.icloud.hint",
+                    defaultValue: "Pro 功能：词典与学习进度跨设备自动同步。开发中，敬请期待。"))
+                .foregroundStyle(.secondary)
             }
 
             // ── 数据（导出/导入）──────────────────────────
@@ -1102,16 +1141,31 @@ struct SettingsView: View {
                           systemImage: "square.and.arrow.up")
                 }
                 Button {
-                    showingImporter = true
+                    if entitlement.isPro {
+                        showingImporter = true
+                    } else {
+                        showingPaywall = true
+                    }
                 } label: {
-                    Label(String(localized: "settings.import", defaultValue: "导入词库"),
-                          systemImage: "square.and.arrow.down")
+                    HStack {
+                        Label(String(localized: "settings.import", defaultValue: "导入词库"),
+                              systemImage: "square.and.arrow.down")
+                        if !entitlement.isPro {
+                            Spacer()
+                            Image(systemName: "lock.fill")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             } header: {
                 Text(String(localized: "settings.section.data", defaultValue: "数据"))
             } footer: {
-                Text(String(localized: "settings.data.hint",
-                    defaultValue: "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。"))
+                Text(entitlement.isPro
+                    ? String(localized: "settings.data.hint",
+                        defaultValue: "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。")
+                    : String(localized: "settings.data.hint.free",
+                        defaultValue: "免费版可导出备份；导入为 Pro 功能。导入按单词智能合并，不会覆盖已有的学习进度。"))
                 .foregroundStyle(.secondary)
             }
 
@@ -1149,6 +1203,10 @@ struct SettingsView: View {
             allowsMultipleSelection: false
         ) { result in
             handleImport(result)
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+                .environmentObject(entitlement)
         }
         .overlay(alignment: .bottom) {
             if let msg = backupMessage {

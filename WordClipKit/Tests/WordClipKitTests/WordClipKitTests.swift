@@ -327,18 +327,16 @@ struct MockEntitlementTests {
     @Test("purchase 后 isPro 变为 true")
     func purchaseSetsIsPro() async throws {
         let mock = MockEntitlement()
-        try await mock.purchase(.yearly)
+        try await mock.purchase(.lifetime)
         #expect(mock.isPro)
     }
 
-    @Test("products 返回三个档位")
-    func productsReturnThreePlans() async {
+    @Test("products 只返回终身买断一档")
+    func productsReturnLifetimeOnly() async {
         let mock = MockEntitlement()
         let products = await mock.products()
-        #expect(products.count == 3)
-        #expect(products.contains { $0.plan == .monthly })
-        #expect(products.contains { $0.plan == .yearly })
-        #expect(products.contains { $0.plan == .lifetime })
+        #expect(products.count == 1)
+        #expect(products.allSatisfy { $0.product == .lifetime })
     }
 }
 

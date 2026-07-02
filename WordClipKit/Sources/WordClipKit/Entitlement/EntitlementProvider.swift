@@ -1,51 +1,48 @@
 import Foundation
 import Combine
 
-// MARK: - SubscriptionPlan
+// MARK: - ProProduct
 
-public enum SubscriptionPlan: String, Sendable, CaseIterable {
-    case monthly   // 月订阅
-    case yearly    // 年订阅（主推）
-    case lifetime  // 终身买断
+/// 收费政策：一次性购买、终身买断，**不做订阅**。
+/// 目前只有一个终身买断商品；保留 enum 以便未来扩展（如家庭版）。
+public enum ProProduct: String, Sendable, CaseIterable {
+    case lifetime  // 终身买断（Non-Consumable 内购）
 }
 
 // MARK: - PlanProduct
 
 public struct PlanProduct: Sendable {
-    public let plan: SubscriptionPlan
+    public let product: ProProduct
     public let localizedTitle: String
-    public let localizedPrice: String  // 格式化后的价格字符串，如 "¥18/月"
-    public let isPopular: Bool         // 是否主推（年订阅标注）
+    public let localizedPrice: String  // 格式化后的价格字符串，如 "¥198"
 
     public init(
-        plan: SubscriptionPlan,
+        product: ProProduct,
         localizedTitle: String,
-        localizedPrice: String,
-        isPopular: Bool = false
+        localizedPrice: String
     ) {
-        self.plan = plan
+        self.product = product
         self.localizedTitle = localizedTitle
         self.localizedPrice = localizedPrice
-        self.isPopular = isPopular
     }
 }
 
 // MARK: - EntitlementProvider
 
-/// 订阅权益协议。UI 层统一走 isPro，不直接碰 StoreKit。
+/// 权益协议。UI 层统一走 isPro，不直接碰 StoreKit。
 /// 开发期用 MockEntitlement，账号就绪后换 StoreKitEntitlement，UI 不变。
 @MainActor
 public protocol EntitlementProvider: AnyObject {
-    /// 当前是否已订阅 Pro
+    /// 当前是否已解锁 Pro（一次买断即永久 true）
     var isPro: Bool { get }
 
     /// 权益状态变化时发出通知（用于 UI 实时响应）
     var isProPublisher: AnyPublisher<Bool, Never> { get }
 
     /// 发起购买
-    func purchase(_ plan: SubscriptionPlan) async throws
+    func purchase(_ product: ProProduct) async throws
 
-    /// 恢复购买
+    /// 恢复购买（换设备 / 重装）
     func restore() async throws
 
     /// 获取商品列表（含价格）
@@ -54,7 +51,7 @@ public protocol EntitlementProvider: AnyObject {
 
 // MARK: - MockEntitlement
 
-/// 开发期占位，通过 `overridePro` 开关模拟已订阅/未订阅状态。
+/// 开发期占位，通过 `overridePro` 开关模拟已购买/未购买状态。
 @MainActor
 public final class MockEntitlement: EntitlementProvider, ObservableObject {
 
@@ -64,12 +61,12 @@ public final class MockEntitlement: EntitlementProvider, ObservableObject {
         $isPro.eraseToAnyPublisher()
     }
 
-    /// true = 模拟「已订阅 Pro」；false = 模拟「免费用户」
+    /// true = 模拟「已购买 Pro」；false = 模拟「免费用户」
     public init(overridePro: Bool = false) {
         self.isPro = overridePro
     }
 
-    public func purchase(_ plan: SubscriptionPlan) async throws {
+    public func purchase(_ product: ProProduct) async throws {
         // Mock：直接切换为 Pro
         isPro = true
     }
@@ -80,9 +77,7 @@ public final class MockEntitlement: EntitlementProvider, ObservableObject {
 
     public func products() async -> [PlanProduct] {
         [
-            PlanProduct(plan: .monthly,  localizedTitle: "月度订阅",  localizedPrice: "¥18/月"),
-            PlanProduct(plan: .yearly,   localizedTitle: "年度订阅",  localizedPrice: "¥98/年", isPopular: true),
-            PlanProduct(plan: .lifetime, localizedTitle: "终身买断",  localizedPrice: "¥198"),
+            PlanProduct(product: .lifetime, localizedTitle: "终身买断", localizedPrice: "¥198"),
         ]
     }
 }
