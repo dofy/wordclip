@@ -104,7 +104,8 @@ protocol DictionaryProvider {
 
 - **词形还原**:`GRDBDictionaryProvider` 利用 ECDICT `exchange` 列,把变形词(`brought`)回退到原型(`bring`)查询。
 - **复合词库**:`CompositeDictionaryProvider` 按优先级串联「内置 + 用户导入」的多个 Provider,lookup 取首个命中,suggest 合并去重。
-- **自定义导入**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。
+- **自定义导入(本地,已实现)**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。
+- **在线词典服务(Pro,计划中)**:目标是通过在线服务**直接检索/导入**扩展词典,而非仅导入本地准备好的文件。设计上仍复用 `DictionaryProvider` / `CompositeDictionaryProvider` 抽象——在线词典作为又一个 Provider 叠加,或由服务端下发我们的 `entries` 结构包再落地为本地库。**待定**:后端形态(自建最小服务 vs 现成开放词典 API)、词源合规(同上,只提供用户有权使用的词库)、离线缓存策略。本地文件导入作为兜底保留。
 
 ### 3.4 复习引擎
 
@@ -163,27 +164,29 @@ protocol AIProvider {
 - `WordClipKit` 中若有面向用户的字符串，也在 Package 内建自己的本地化资源（`defaultLocalization` + `.process` 资源），不把文案泄露到 UI 层。
 - 词库释义本身的语言（如英译中 vs 英英）属于「学习内容」，由词库数据决定，与界面语言无关。
 
-### 3.8 订阅与权益抽象（EntitlementProvider）
+### 3.8 权益抽象（EntitlementProvider）
 
-收费功能由一层抽象隔离，开发期可用 mock 跑通整套 paywall/Pro 边界，账号就绪后只换实现：
+**收费政策:一次性购买、终身买断,不做订阅**(见 PLAN §5)。收费功能由一层抽象隔离，开发期可用 mock 跑通整套 paywall/Pro 边界，账号就绪后只换实现：
 
 ```swift
-enum SubscriptionPlan { case monthly, yearly, lifetime }
+// 只有一个终身买断商品（非订阅），保留 enum 以便未来扩展
+enum ProProduct { case lifetime }
 
 protocol EntitlementProvider {
-    var isPro: Bool { get }                       // 是否解锁 Pro
+    var isPro: Bool { get }                       // 是否解锁 Pro（一次买断即永久 true）
     var statePublisher: AnyPublisher<Bool, Never> { get }
-    func purchase(_ plan: SubscriptionPlan) async throws
-    func restore() async throws
+    func purchase(_ product: ProProduct) async throws
+    func restore() async throws                   // 恢复购买（换设备/重装）
     func products() async -> [PlanProduct]        // 价格/本地化标题
 }
 
-struct MockEntitlement: EntitlementProvider { ... }      // 开发期：开关即「已订阅」
-// 账号就绪后：StoreKitEntitlement / RevenueCatEntitlement，UI 不变
+struct MockEntitlement: EntitlementProvider { ... }      // 开发期：开关即「已购买」
+// 账号就绪后：StoreKitEntitlement（StoreKit 2 一次性内购），UI 不变
 ```
 
 - **功能闸门**统一走 `entitlement.isPro`，业务代码不直接碰 StoreKit。
-- 免费/Pro 边界见 PLAN「收费计划」一节。
+- **Pro 三大权益**:iCloud 同步 / 导入导出 / 在线词典功能(见 PLAN §5)。
+- StoreKit 2 用 `.storekit` Configuration File 可在无付费账号时本地跑通完整购买流程。
 
 ---
 
@@ -208,16 +211,17 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 
 ## 4.5 收费与同步选型（决策：Apple 生态内起步）
 
-**已确认路线：StoreKit 2（+ RevenueCat）做订阅 + CloudKit 做同步，零自建后端。** 权益判断在本地完成，跨设备权益与数据同步都交给 Apple 生态。未来若需网页端购买/跨平台账号，再引入自建后端——核心逻辑已沉淀在 `WordClipKit`，可平滑扩展。
+**已确认路线：StoreKit 2 做一次性买断内购 + CloudKit 做同步，零自建后端。** 收费政策为**一次性购买、终身制**(非订阅,见 PLAN §5)。权益判断在本地完成，跨设备权益与数据同步都交给 Apple 生态。未来若需网页端购买/跨平台账号,再引入自建后端——核心逻辑已沉淀在 `WordClipKit`,可平滑扩展。
 
 | 关注点 | 选择 | 备注 |
 |--------|------|------|
-| 收费渠道 | **StoreKit 2 内购**（数字订阅强制走 IAP） | 起步可纯 StoreKit；引入 RevenueCat 省掉收据校验/跨设备权益同步 |
+| 收费渠道 | **StoreKit 2 一次性内购(Non-Consumable)** | 数字商品强制走 IAP;终身买断即一次性非消耗型商品 |
 | 抽成 | 申请 **Small Business Program** → 15% | 年收入 < $100 万适用 |
-| 同步 | **CloudKit 私有库** | 与 SwiftData 集成，见 §4 |
-| 后端 | **暂不自建** | Apple 生态内一切由 StoreKit + CloudKit 托管 |
+| 同步 | **CloudKit 私有库** | 与 SwiftData 集成，见 §4;Pro 权益 |
+| 在线词典 | **在线服务检索/导入** | Pro 权益,后端/词源待定(合规见 §3.3) |
+| 后端 | **词典服务需最小后端;其余暂不自建** | 购买/同步由 StoreKit + CloudKit 托管;在线词典按需引入服务 |
 
-**红线提醒**：iOS 上数字商品/订阅不得用 Stripe/微信支付等外部渠道在 App 内完成交易，否则下架。这也是选 StoreKit 的根本原因。
+**红线提醒**：iOS 上数字商品不得用 Stripe/微信支付等外部渠道在 App 内完成交易，否则下架。这也是选 StoreKit 的根本原因。
 
 > 前置条件：以上全部需要 Apple 付费开发者账号（$99/年）。当前用 `MockEntitlement`（见 §3.8）跑通 Pro 边界，账号就绪后换真实现。
 

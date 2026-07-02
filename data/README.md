@@ -45,6 +45,17 @@ python3 verify_dictionary.py
 
 建议 App 默认打包 top 5–10 万词，完整词库可按需下载。
 
+## 作为「自定义词典」导入 App
+
+脚本产出的 SQLite 就是 App 导入器认的 `entries` 表结构，可直接在 **设置 → 词典 → 导入词典…** 里选中导入，叠加在内置 5 万词之上：
+
+```bash
+python3 build_dictionary.py --output ecdict-full.sqlite      # 全量 ~77 万词
+python3 build_dictionary.py --top 100000 --output ecdict-100k.sqlite   # 或高频 10 万词（体积更小，适合 iOS）
+```
+
+> ⚠️ ECDICT **原生** 的 `ecdict.db`（表名 `stardict`、中文在 `translation` 列）**不能**直接被 App 导入，必须先经本脚本转成 `entries` 结构。
+
 ## 添加新语言
 
 新增一个 `build_dictionary_ja.py`（日语，使用 JMdict），遵循相同的 SQLite schema 输出 `dictionary-ja.sqlite`，即可配合 `LanguagePack` 协议接入 App。

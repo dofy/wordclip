@@ -46,9 +46,12 @@
 
 ## 计划中功能
 
-- **付费墙(Pro)**:Paywall UI + `isPro` 功能闸门 + 免费上限(权益抽象层 `EntitlementProvider` / `MockEntitlement` 骨架已就位)。
-- **iCloud 同步**:SwiftData + CloudKit,多设备自动同步(需 Apple 付费开发者账号)。
-- **真实订阅**:StoreKit 2 内购,替换 mock 权益实现。
+> **收费政策(已定)**:一次性购买 · 终身买断(不做订阅)。**WordClip Pro** 三大权益:iCloud 同步、导入/导出、在线词典功能。收集与基础查词永久免费。详见 [PLAN.md](docs/PLAN.md#5-收费政策已定)。
+
+- **付费墙(Pro)**:Paywall UI(单档终身买断)+ `isPro` 功能闸门(权益抽象层 `EntitlementProvider` / `MockEntitlement` 骨架已就位)。
+- **iCloud 同步**:SwiftData + CloudKit 多设备自动同步(先预留设置页 UI,真实同步待 Apple 付费开发者账号)。
+- **真实内购**:StoreKit 2 一次性内购,替换 mock 权益实现。
+- **在线词典服务**:通过在线服务直接检索/导入扩展词典(不止导入本地文件);本地 CSV / SQLite 导入作为兜底保留。
 - **iOS Share Extension**:从系统分享菜单收词。
 - **更多复习模式**:中→英拼写、听音辨义等(当前为翻卡认识/不认识)。
 - **AI 增强**:释义 / 例句 / 词根讲解(`AIProvider` 协议已预留,当前为占位实现)。

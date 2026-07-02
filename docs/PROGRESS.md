@@ -55,15 +55,22 @@
 ## 计划中功能
 
 ### 付费墙(骨架,不需账号)
-- Paywall UI(月 / 年 / 终身三档展示)。
+- **收费政策已定**:一次性购买 · 终身买断(不做订阅)。Pro 权益 = iCloud 同步 + 导入导出 + 在线词典功能。详见 [PLAN.md §5](PLAN.md)。
+- Paywall UI(**单档「终身买断」**展示)。
 - 免费 / Pro 功能闸门统一走 `entitlement.isPro`(`EntitlementProvider` / `MockEntitlement` 已就位)。
-- 免费上限逻辑(如收藏词上限提示)。
+- StoreKit 2 `.storekit` Configuration File 本地跑通购买流程(无需付费账号)。
 
-### iCloud 同步 + 真实订阅(待 Apple 付费开发者账号)
-- 配置 CloudKit 容器,开启 SwiftData CloudKit 集成(主要改 `ModelConfiguration`)。
-- 多设备同步与冲突处理(复习进度取更靠前者)。
-- StoreKit 2 接入,`StoreKitEntitlement` 替换 mock,UI 不变。
+### iCloud 同步(先预留 UI,功能待账号)
+- 设置页放置同步开关 / 状态占位 UI(无账号阶段不落地真实同步)。
+- 待账号:配置 CloudKit 容器,开启 SwiftData CloudKit 集成(主要改 `ModelConfiguration`),多设备同步与冲突处理(复习进度取更靠前者)。
+
+### 真实内购(待 Apple 付费开发者账号)
+- StoreKit 2 一次性内购(Non-Consumable),`StoreKitEntitlement` 替换 mock,UI 不变。
 - 申请 Small Business Program(15% 抽成)、真机与沙盒购买测试。
+
+### 在线词典服务(Pro)
+- 通过在线服务直接检索 / 导入扩展词典,而非仅导入本地准备好的文件。
+- 复用 `DictionaryProvider` / `CompositeDictionaryProvider` 抽象叠加;待定后端形态与词源合规,本地文件导入作为兜底保留。
 
 ### 收集增强
 - iOS Share Extension:从系统分享菜单收词。

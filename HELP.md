@@ -73,8 +73,15 @@ serendipity,n. 意外发现珍宝的运气,ˌserənˈdɪpɪti
 ephemeral,a. 短暂的,ɪˈfem(ə)rəl
 ```
 
-### 2. ECDICT 结构的 SQLite
-含 `entries(word, definition, ...)` 表的 SQLite 文件(如 ECDICT 完整版 340 万词)可直接导入。
+### 2. SQLite(entries 表结构)
+含 `entries(word, definition, ...)` 表的 SQLite 文件可直接导入。
+
+> ECDICT **原生** SQLite(表名 `stardict`、中文在 `translation` 列)**不能直接导入**,需先转换成本 App 的 `entries` 结构。仓库 `data/build_dictionary.py` 就是干这个的:
+> ```bash
+> cd data && python3 build_dictionary.py --output ecdict-full.sqlite      # 全量 ~77 万词
+> python3 build_dictionary.py --top 100000 --output ecdict-100k.sqlite    # 或只取高频 10 万词
+> ```
+> 生成的 `.sqlite` 即可在此处导入。ECDICT 为 MIT 协议。
 
 **多本词典按顺序叠加查询,内置词典优先。** 每本可单独启用/停用/删除。
 
