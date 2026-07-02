@@ -1,120 +1,76 @@
 # WordClip 开发进度
 
-> 按里程碑倒序记录，最新在上。规划详见 [PLAN.md](PLAN.md)。
-> 版本号与 git tag 对应关系见[设计文档](superpowers/specs/2026-06-29-progress-tracking-design.md)。
+> 记录当前已实现的功能与计划中的开发。产品规划见 [PLAN.md](PLAN.md),架构决策见 [ARCHITECTURE.md](ARCHITECTURE.md),用户用法见 [../HELP.md](../HELP.md)。
 
 ---
 
-## [M0] 项目骨架 + i18n 基建
+## 已实现功能
 
-**状态**：✅ 完成
-**完成日期**：2026-06-29
-**对应 git tag**：v0.1.0
+### 工程与基建
+- 多平台 Xcode 工程(macOS + iOS/iPadOS),xcodegen 管理,可跨机器重新生成。
+- `WordClipKit` Swift Package 承载平台无关核心:模型、词库、复习算法、导入导出、统计。
+- SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
+- String Catalog(`Localizable.xcstrings`)zh-Hans + en,界面文案全部走 `String(localized:)`。
+- App 分类与显示名已配置。
+- `WordClipKit` 单元测试 44 条,GitHub Actions CI 跑 `swift test`。
 
-### 完成内容
+### 收集
+- **macOS 全局取词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
+- 取词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
+- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、开始复习、启用/停用取词、打开主窗口 / 设置。
+- **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
+- **收录去重**:按归一化词元合并,记录来源与时间。
+- iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
 
-- 搭建多平台 Xcode 工程（macOS + iOS），使用 xcodegen 管理，可跨机器重新生成
-- 抽出 `WordClipKit` Swift Package，分离核心逻辑与 UI
-- SwiftData 数据模型：`WordEntry`、`CollectSource`、`ReviewLog`，纯本地配置，预留 CloudKit 切换接口
-- 实现 `SM2Engine` 间隔重复算法（ReviewEngine 协议）
-- 实现 `GRDBDictionaryProvider` 离线词库接口（DictionaryProvider 协议）
-- 实现 `EnglishPack` 语言包（LanguagePack 协议）
-- 实现 `EntitlementProvider` 协议 + `MockEntitlement`（Pro 开关）
-- 实现 `AIProvider` 协议 + `NoopAIProvider` 预留接口
-- 建立 String Catalog（`Localizable.xcstrings`），配置 zh-Hans + en，覆盖所有界面文案
-- 搭基础导航骨架：macOS NavigationSplitView / iOS TabView
-- 空状态视图、设置页骨架、Debug 下 Pro 开关
-- GitHub Actions CI：`swift test` 自动跑单元测试
-- 单元测试 12 条，全部通过（SM2Engine 4 条 / EnglishPack 3 条 / MockEntitlement 4 条）
+### 词典与查词
+- 内置 ECDICT 约 5 万词离线库,`GRDBDictionaryProvider`(GRDB SQLite),首启从 bundle 拷到 App Support 只读打开。
+- **词形还原**:利用 ECDICT `exchange` 列把变形词(如 `brought`)回退到原型查询。
+- **复合词库**(`CompositeDictionaryProvider`):内置 + 用户导入,按优先级 lookup,suggest 合并去重。
+- **自定义词典导入**(`DictionaryImporter` + `DictionaryStore`):CSV(逗号/制表符、引号转义)与 ECDICT 结构 SQLite,叠加共存,元数据存 UserDefaults、文件存 App Support,可启用/停用/删除/排序。
+- **释义结构化**(`DefinitionFormatter`):按词性分行、学科标记、中英分区,卡片与详情共用。
 
-### 当前停在
+### 生词本
+- 三栏布局(macOS / iPad):导航 → 列表 → 详情,`WordSelection` 统一选中态,原生单击选中、双击/回车打开。
+- **搜索**:输入防抖 + `#Index` + 结果缓存;生词本匹配优先,下方列出词典中未收录的匹配词,点击预览释义并一键收录。
+- **排序**:收录时间 / 字母 / 熟悉度,工具栏菜单切换,`AppStorage` 记忆。
+- 收藏、TTS 朗读(`Speaker` / `AVSpeechSynthesizer`)、释义修复(重新查词回填)、删除。
+- 新收录词若词典未就绪导致释义缺失,进入生词本自动补全。
+- **键盘快捷键**(macOS / 接键盘的 iPad):`⌘1–4` 切换导航、`⌘F`/`⌘K` 搜索、`⌘N` 添加、`⌘L` 朗读、`⌘D` 收藏、`⌘R` 修复、`⌘⌫` 删除、`↑/↓` 切换词条、`⌘/` 速查表(`ShortcutCheatSheet`)。
+- 去除所有默认蓝色焦点框。
+- iOS/iPad 滑动 + 点击删除免确认弹窗。
 
-> M0 完成。`WordClip.xcodeproj` 已可在 Xcode 打开，iOS/macOS 模拟器均可运行空壳 App。
-> 词库查词（M1）尚未接入，`GRDBDictionaryProvider` 已写好但 SQLite 文件需要打包进 App bundle。
+### 复习
+- SM-2 间隔重复(`SM2Engine`,封装为 `ReviewEngine` 协议可换 FSRS),`StudySession` 驱动。
+- 翻卡看释义,`空格` 翻面、`←`不认识 / `→`认识,翻面不可逆。
+- 生词本徽标区分新词(绿)/ 待复习(橙)。
+- 本地通知每日复习提醒(`NotificationService`,按需申请权限)。
+- 状态栏"开始复习"可切到复习页并自动开一轮。
 
-### 下一步（M1 启动清单）
-
-1. 在 `data/` 运行 `python3 build_dictionary.py --no-download --top 50000` 重新生成 `dictionary-en.sqlite`
-2. 将 `dictionary-en.sqlite` 拖入 Xcode 工程的 Resources（macOS + iOS target 都勾选）
-3. 在 `WordClipApp.swift` 初始化 `GRDBDictionaryProvider`，通过 environment 注入
-4. 实现查词 UI：搜索栏 + 结果卡片（音标 / 释义 / TTS 朗读按钮）
-5. 接入 `AVSpeechSynthesizer` TTS 朗读
-6. `WordListView` 点击词条跳详情页，详情页展示词库查询结果
-
-### 备注
-
-- `*.xcodeproj/` 不入库，换电脑后运行 `xcodegen generate` 重新生成（需先 `brew install xcodegen`）
-- GRDB 7.5.0 已通过 `Package.resolved` 锁定版本
-- macOS entitlement 暂只开 App Sandbox + 文件读写；Accessibility 权限 M2 再启用
-
----
-
-## [Pre-M0] 项目初始化 + 词库构建
-
-**状态**：✅ 完成
-**完成日期**：2026-06-29
-**对应 git tag**：—
-
-### 完成内容
-
-- 创建 GitHub 仓库 `dofy/wordclip`
-- 确立技术栈与架构决策（详见 ARCHITECTURE.md）
-- 确定收费方案：Freemium + StoreKit 2，免费/Pro 功能边界
-- 编写词库构建脚本 `data/build_dictionary.py`：ECDICT → SQLite，50,000 词 / 11 MB
-- 建立文档体系：PLAN.md / ARCHITECTURE.md / PROGRESS.md
-
-### 当前停在
-
-> 已完成，进入 M0。
+### 统计与数据
+- 统计面板(`StatsCalculator` + `StatsView`):总词数、待复习、新词、掌握率。
+- JSON 备份导入 / 导出(`BackupService` + `WordBackup` + `WordBackupDocument`),按单词智能合并、不覆盖学习进度。
 
 ---
 
-<!-- 后续里程碑在此上方追加 -->
+## 计划中功能
 
+### 付费墙(骨架,不需账号)
+- Paywall UI(月 / 年 / 终身三档展示)。
+- 免费 / Pro 功能闸门统一走 `entitlement.isPro`(`EntitlementProvider` / `MockEntitlement` 已就位)。
+- 免费上限逻辑(如收藏词上限提示)。
 
-> 按里程碑倒序记录，最新在上。规划详见 [PLAN.md](PLAN.md)。
-> 版本号与 git tag 对应关系见[设计文档](superpowers/specs/2026-06-29-progress-tracking-design.md)。
+### iCloud 同步 + 真实订阅(待 Apple 付费开发者账号)
+- 配置 CloudKit 容器,开启 SwiftData CloudKit 集成(主要改 `ModelConfiguration`)。
+- 多设备同步与冲突处理(复习进度取更靠前者)。
+- StoreKit 2 接入,`StoreKitEntitlement` 替换 mock,UI 不变。
+- 申请 Small Business Program(15% 抽成)、真机与沙盒购买测试。
 
----
+### 收集增强
+- iOS Share Extension:从系统分享菜单收词。
 
-## [Pre-M0] 项目初始化 + 词库构建
+### 复习增强
+- 更多测试模式:中→英拼写、听音辨义。
 
-**状态**：✅ 完成
-**完成日期**：2026-06-29
-**对应 git tag**：— （正式里程碑从 M0 开始打 tag）
-
-### 完成内容
-
-- 创建私有 GitHub 仓库 `dofy/wordclip`
-- 确立技术栈：SwiftUI 多平台 + SwiftData + CloudKit + `WordClipKit` Swift Package
-- 确定收费方案：Freemium + StoreKit 2 订阅，Apple 生态内起步，零自建后端
-- 制定免费 / Pro 功能边界（收集查词永久免费，同步/无限/AI 为付费点）
-- 完成所有关键技术决策并落入 `docs/ARCHITECTURE.md`
-- 编写 `data/build_dictionary.py`：ECDICT → 精简 SQLite，支持 `--top N` 按词频截取
-- 验证词库构建：50,000 词 / 11 MB，词频排序正确（`the`=rank1，`apple`=rank2446）
-- 建立文档体系：PLAN.md（规划）+ ARCHITECTURE.md（架构决策）+ PROGRESS.md（本文件）
-
-### 当前停在
-
-> 文档与词库构建脚本已就绪。**Xcode 正在下载中**，下载完成后进入 M0。
-
-### 下一步（M0 启动清单）
-
-1. 确认 Xcode 安装完成（`xcodebuild -version` 验证）
-2. 在 `wordclip/` 根目录创建 Xcode 多平台工程（macOS + iOS 双 target）
-3. 新建 `WordClipKit` Swift Package，放在工程内或同级目录
-4. 定义 SwiftData 模型（`WordEntry`、`CollectSource`、`ReviewLog`），纯本地配置
-5. 建立 String Catalog（`.xcstrings`），配置 `zh-Hans` + `en`
-6. 搭基础导航骨架（TabView / NavigationSplitView）
-7. 配置 GitHub Actions CI（`swift test` 跑 Kit 单测）
-8. 模拟器运行验证，切换系统语言检查 i18n
-
-### 备注
-
-- 暂无 Apple 付费开发者账号，CloudKit 相关 entitlement 暂不配置
-- `data/ecdict.db`（源库）和 `data/dictionary-en.sqlite`（产物）在本地，不入 git
-- 下次开发前运行 `python3 data/build_dictionary.py --no-download --top 50000` 可重新生成词库
-
----
-
-<!-- 后续里程碑在此上方追加 -->
+### 未来
+- **AI 增强**:释义 / 例句 / 词根讲解(`AIProvider` 协议已定义,当前为 `NoopAIProvider` 占位)。
+- **多语言学习内容**:把英语专用逻辑(分词、词库、TTS、复习参数)收敛进 `LanguagePack`,用日语跑通最小验证,通过 build configuration 产出语言变体。

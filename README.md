@@ -1,50 +1,70 @@
 # WordClip
 
-随时随地收集单词、离线查词、间隔重复测试的多平台单词学习工具。当前面向英语，架构上支持扩展到任意语言。
+随时随地收集单词、离线查词、间隔重复复习的多平台单词学习工具。当前面向英语,架构上支持扩展到任意语言。
+
+**平台**:macOS · iOS · iPadOS
+**技术栈**:SwiftUI(多平台单一代码库)· SwiftData · Swift Package(`WordClipKit` 共享核心)· GRDB(离线词库)
 
 ---
 
-## 当前状态
+## 已实现功能
 
-✅ **M0 · 项目骨架完成** — 可在 Xcode 模拟器运行，单测 12/12 通过
-🚧 **进行中：M1 · 离线词库 + 查词**
+### 收集
+- **macOS 全局取词**:任意 App 中选中单词,按快捷键(默认 `⌥⌘C`)一键收录,屏幕弹出 HUD 提示,不打断当前 App。基于 Accessibility 直读选中文本,不改动剪贴板。
+- **状态栏图标**:快速启用/停用取词、打开主窗口/设置、开始复习、查看今日概览。
+- **URL Scheme**:`wordclip://collect?word=<单词>`,可从快捷指令、脚本、其他 App 调用收词。
+- **iOS / iPadOS**:手动输入或从剪贴板粘贴添加单词。
 
-**下一步**：将 `dictionary-en.sqlite` 打包进 App bundle，接入查词 UI
+### 词典与查词
+- **内置离线词库**:ECDICT 精简版约 5 万词(音标 + 中英释义),GRDB SQLite,随包分发。
+- **词形还原**:`brought → bring` 等变形自动归一到原型查词。
+- **自定义词典导入**:支持 CSV 和 ECDICT 结构的 SQLite,多本词典按优先级叠加查询,可单独启用/停用/删除/排序。
+- **释义结构化**:按词性分行、学科标记(`[计]`/`[化]`)灰字、中英释义分区展示。
 
-→ 完整进度见 [docs/PROGRESS.md](docs/PROGRESS.md)
+### 生词本
+- **三栏布局**(macOS / iPad):导航 → 列表 → 详情。
+- **搜索**:生词本匹配词优先,下方列出词典中未收录的匹配词,点击预览并一键收录。
+- **排序**:按收录时间 / 字母 / 熟悉度,记忆上次选择。
+- 收藏、TTS 朗读、释义修复、删除。
+- **全套键盘快捷键**(macOS / 接键盘的 iPad):导航切换、搜索定位、增删、朗读、收藏等。
+
+### 复习
+- **SM-2 间隔重复算法**:翻卡看释义,标记"认识/不认识",自动排程下次复习。
+- 翻面不可逆(防误触),学习时 `空格` 翻面、`←/→` 评分。
+- 生词本徽标区分"新词 / 待复习"。
+- **本地通知**每日复习提醒。
+
+### 统计与数据
+- 统计面板:总词数、待复习、新词、掌握率。
+- **JSON 备份导入/导出**:按单词智能合并,不覆盖已有学习进度。
+
+### 其他
+- **界面多语言**:中文 / 英文(String Catalog),界面语言与学习语言相互独立。
+- `WordClipKit` 单元测试 44 条覆盖算法 / 词库 / 导入 / 统计。
 
 ---
 
-## 平台
+## 计划中功能
 
-- **macOS** —— 全局快捷键，一键将任意 App 中选中的单词收录到词典
-- **iOS / iPadOS** —— 通过系统分享菜单（Share Extension）收集单词
-- 数据通过 **iCloud（CloudKit）** 在设备间自动同步
+- **付费墙(Pro)**:Paywall UI + `isPro` 功能闸门 + 免费上限(权益抽象层 `EntitlementProvider` / `MockEntitlement` 骨架已就位)。
+- **iCloud 同步**:SwiftData + CloudKit,多设备自动同步(需 Apple 付费开发者账号)。
+- **真实订阅**:StoreKit 2 内购,替换 mock 权益实现。
+- **iOS Share Extension**:从系统分享菜单收词。
+- **更多复习模式**:中→英拼写、听音辨义等(当前为翻卡认识/不认识)。
+- **AI 增强**:释义 / 例句 / 词根讲解(`AIProvider` 协议已预留,当前为占位实现)。
+- **多语言学习内容**:日语等(当前收词逻辑面向英语)。
 
-## 核心特性
-
-- 📥 **快速收集**：桌面全局快捷键 / 移动端分享菜单
-- 📖 **离线词库**：内置开源词库（英语用 ECDICT），含音标、释义；读音用系统 TTS
-- 🔁 **间隔重复测试**：基于 SM-2 的熟悉度评定（5 级），多种测试模式
-- ☁️ **iCloud 同步** + 手动 CSV/JSON 导入导出
-- 🌍 **多语言可扩展**：语言包机制，可构建出日语等其他语言的版本
-- 🤖 **AI 接口预留**：`AIProvider` 协议先行，未来接入释义/例句/讲解
-
-## 技术栈
-
-SwiftUI（多平台）· SwiftData + CloudKit · Swift Package（`WordClipKit` 共享核心）
+---
 
 ## 文档
 
-- [开发进度](docs/PROGRESS.md) — 当前状态、每个里程碑完成内容、下一步
-- [开发计划](docs/PLAN.md) — 里程碑规划、功能边界、收费方案
+- [使用帮助](HELP.md) — 面向用户的用法说明、快捷键、词典导入、URL scheme
+- [开发进度](docs/PROGRESS.md) — 已实现功能与开发计划
+- [开发计划](docs/PLAN.md) — 产品目标、功能边界、收费方案
 - [架构与关键技术决策](docs/ARCHITECTURE.md)
 
-## 开发环境要求
+## 开发环境
 
-- macOS + **完整版 Xcode**（仅装 Command Line Tools 无法构建 App）
-- Apple Developer 账号（CloudKit / 真机调试 / 上架）
-
-## 状态
-
-🚧 M1 进行中。详见 [docs/PROGRESS.md](docs/PROGRESS.md)。
+- macOS + **完整版 Xcode**(仅装 Command Line Tools 无法构建 App)
+- `brew install xcodegen`;`*.xcodeproj` 不入库,克隆后运行 `xcodegen generate` 生成工程
+- 上架 / iCloud / 真机调试需 Apple Developer 账号

@@ -3,21 +3,26 @@
 ## 1. 整体结构
 
 ```
-WordClip/                      # Xcode 工程
-├── WordClipKit/               # Swift Package —— 平台无关核心
-│   ├── Models/                # SwiftData 模型
-│   ├── Dictionary/            # 词库 Provider 协议与 SQLite 实现
-│   ├── Review/                # 复习算法引擎（SM-2 / 可换 FSRS）
-│   ├── Language/              # LanguagePack 协议与英语实现
-│   ├── AI/                    # AIProvider 协议（预留）
-│   └── ImportExport/          # CSV / JSON
-├── Apps/
-│   ├── macOS/                 # macOS App target（全局快捷键、状态栏）
-│   ├── iOS/                   # iOS/iPad App target
-│   └── ShareExtension/        # iOS 分享扩展
-├── data/                      # 词库构建脚本（不入库原始大文件）
+wordclip/                          # 仓库根（project.yml → xcodegen 生成 *.xcodeproj）
+├── WordClip/                      # App target（macOS + iOS 共用，#if 分平台）
+│   ├── App/                       # 入口、AppDelegate、AppState、命令、热键名
+│   ├── Views/                     # SwiftUI 界面（列表/详情/复习/统计/设置…）
+│   ├── Services/                  # 取词、HUD、朗读、复习会话、词典库、备份、通知
+│   └── Resources/                 # 词库 SQLite、图标、Localizable.xcstrings
+├── WordClipKit/Sources/WordClipKit/   # Swift Package —— 平台无关核心
+│   ├── Models/                    # SwiftData 模型
+│   ├── Dictionary/                # Provider 协议、GRDB 实现、复合库、导入器、释义解析
+│   ├── Review/                    # 复习算法引擎（SM-2 / 可换 FSRS）
+│   ├── Language/                  # LanguagePack 协议与英语实现
+│   ├── Stats/                     # 统计计算
+│   ├── Sync/                      # 备份数据结构（JSON 导入导出）
+│   ├── Entitlement/               # EntitlementProvider 协议 + MockEntitlement
+│   └── AI/                        # AIProvider 协议（预留）
+├── data/                          # 词库构建脚本（不入库原始大文件）
 └── docs/
 ```
+
+> iOS Share Extension 尚未创建（见 PLAN「计划中方向」）。
 
 **原则**：UI 层薄，业务逻辑全部在 `WordClipKit` 中并可被单元测试。这样未来要做 Web 端时，算法与数据 schema 可移植。
 
@@ -69,15 +74,17 @@ CloudKit 要求：所有属性有默认值或可选、关系可选、不可用�
 
 ### 3.1 macOS 全局快捷键 + 捕获选中文本
 
-三选一，按「上架友好度」排序，M2 前定：
+**当前实现:方案 C —— 全局热键(`KeyboardShortcuts`)+ Accessibility API 直读选中文本(`AXUIElement`),不改动剪贴板。** 首次使用引导用户在「系统设置 → 隐私与安全性 → 辅助功能」授权。
+
+早期评估过的三种方案:
 
 | 方案 | 捕获方式 | 优点 | 缺点 |
 |------|---------|------|------|
-| **A. Services 菜单**（推荐起步） | 注册系统 Service，用户在选中文本上右键/快捷键触发 | 完全合规、可上架、无需特殊权限 | 需用户在系统设置里启用一次 |
-| **B. 全局热键 + 模拟复制** | `Carbon RegisterEventHotKey` 或 `CGEvent` 热键 → 发送 ⌘C → 读剪贴板 | 真·全局快捷键体验 | 需 Accessibility 权限；会改动剪贴板（可保存后还原） |
-| **C. Accessibility API 直读** | `AXUIElement` 读取聚焦元素选中文本 | 不动剪贴板 | 权限要求高，部分 App 不支持 |
+| A. Services 菜单 | 注册系统 Service,用户在选中文本上右键/快捷键触发 | 完全合规、无需特殊权限 | 非全局快捷键体验,需系统设置里启用 |
+| B. 全局热键 + 模拟复制 | 热键 → 发送 ⌘C → 读剪贴板 | 真·全局体验 | 需 Accessibility 权限;会改动剪贴板 |
+| **C. 全局热键 + Accessibility 直读**(已采用) | 热键 → `AXUIElement` 读聚焦元素选中文本 | 全局体验且不动剪贴板 | 需 Accessibility 权限,个别 App 不支持 |
 
-建议：**A 作为合规基线，B 作为「随处可用」增强**，给用户开关选择。
+> 上架时需在审核说明中解释辅助功能权限用途(读取选中文本以收词)。
 
 ### 3.2 读音
 
@@ -94,6 +101,10 @@ protocol DictionaryProvider {
     func suggest(prefix: String, limit: Int) async -> [String]
 }
 ```
+
+- **词形还原**:`GRDBDictionaryProvider` 利用 ECDICT `exchange` 列,把变形词(`brought`)回退到原型(`bring`)查询。
+- **复合词库**:`CompositeDictionaryProvider` 按优先级串联「内置 + 用户导入」的多个 Provider,lookup 取首个命中,suggest 合并去重。
+- **自定义导入**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。
 
 ### 3.4 复习引擎
 
@@ -178,7 +189,7 @@ struct MockEntitlement: EntitlementProvider { ... }      // 开发期：开关�
 
 ## 4. 同步策略：本地优先，云端后置
 
-当前无付费开发者账号，**MVP 全程本地 SwiftData**，CloudKit 推迟（见 PLAN M5）。设计上预留平滑切换：
+当前无付费开发者账号，**全程本地 SwiftData**，CloudKit 推迟（见 PLAN「计划中方向」）。设计上预留平滑切换：
 
 ```swift
 // 本地阶段
@@ -208,7 +219,7 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 
 **红线提醒**：iOS 上数字商品/订阅不得用 Stripe/微信支付等外部渠道在 App 内完成交易，否则下架。这也是选 StoreKit 的根本原因。
 
-> 前置条件：以上全部需要 Apple 付费开发者账号（$99/年）。开发阶段先用 `MockEntitlement`（见 §3.8）跑通，账号就绪后换真实现。
+> 前置条件：以上全部需要 Apple 付费开发者账号（$99/年）。当前用 `MockEntitlement`（见 §3.8）跑通 Pro 边界，账号就绪后换真实现。
 
 ---
 
@@ -223,7 +234,8 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 
 ## 6. 导入导出
 
-- `ImportExport` 模块，CSV（headword, lemma, definition, phonetic, tags, familiarity, dueAt…）与 JSON（全量含来源/日志）。导入做字段映射与去重。
+- **当前实现**:`WordClipKit/Sync/WordBackup` 提供全量 JSON 备份(含单词、来源、复习进度),App 侧 `BackupService` + `WordBackupDocument` 负责导入/导出;导入按单词智能合并,不覆盖已有学习进度。
+- 词典导入是另一条路径:`WordClipKit/Dictionary/DictionaryImporter` 把 CSV / ECDICT SQLite 转成可查词库(见 §3.3),与个人词库备份互不相关。
 - 同步策略见上文 §4。
 
 ---
