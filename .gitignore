@@ -37,6 +37,7 @@ xcuserdata/
 .build-ios/
 .build-xcode/
 .build-xcode-ios/
+.build-release/
 # Package.resolved 入库，确保跨机器构建使用相同依赖版本
 
 # Provisioning / secrets

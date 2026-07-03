@@ -23,22 +23,46 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
-    /// 在 AppDelegate 层处理 URL scheme：SwiftUI 的 onOpenURL + handlesExternalEvents
-    /// 会把非 "main" 的 URL 误路由到设置窗口，这里统一拦截，保证 collect 可靠。
+    /// 抢先接管 GURL Apple Event。
+    ///
+    /// 仅靠 `application(_:open:)` 不够：SwiftUI 的 scene 系统也会收到同一个 URL 事件，
+    /// 由于主/设置窗口都未“认领”该 scheme，SwiftUI 会临时新建一个空白窗口去处理再关掉，
+    /// 表现为收词时窗口一闪。这里在 SwiftUI 装好 handler *之后* 再覆盖它，
+    /// 使 URL 只走这条路径、不进入 scene 路由，从根上消除闪烁。
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSAppleEventManager.shared().setEventHandler(
+            self,
+            andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
+            forEventClass: AEEventClass(kInternetEventClass),
+            andEventID: AEEventID(kAEGetURL)
+        )
+    }
+
+    @objc private func handleGetURLEvent(_ event: NSAppleEventDescriptor,
+                                         withReplyEvent reply: NSAppleEventDescriptor) {
+        guard let string = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+              let url = URL(string: string) else { return }
+        route(url)
+    }
+
+    /// 兜底：某些投递路径仍会走 NSApplication 的 open urls。
     func application(_ application: NSApplication, open urls: [URL]) {
-        for url in urls {
-            guard url.scheme == "wordclip",
-                  let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
-            else { continue }
-            switch comps.host {
-            case "collect":
-                if let word = comps.queryItems?.first(where: { $0.name == "word" })?.value,
-                   !word.isEmpty {
-                    NotificationCenter.default.post(name: .collectWordFromURL, object: word)
-                }
-            default:
-                break
+        urls.forEach(route)
+    }
+
+    /// 解析并分发 wordclip:// URL。
+    private func route(_ url: URL) {
+        guard url.scheme == "wordclip",
+              let comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        else { return }
+        switch comps.host {
+        case "collect":
+            if let word = comps.queryItems?.first(where: { $0.name == "word" })?.value,
+               !word.isEmpty {
+                NotificationCenter.default.post(name: .collectWordFromURL, object: word)
             }
+        default:
+            break
         }
     }
 }
