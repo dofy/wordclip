@@ -4,6 +4,8 @@ import WordClipKit
 extension Notification.Name {
     /// 请求显示键盘快捷键速查表。
     static let showShortcutCheatSheet = Notification.Name("showShortcutCheatSheet")
+    /// 请求显示使用帮助面板。
+    static let showHelp = Notification.Name("showHelp")
     /// 从状态栏菜单请求开始复习。
     static let startReviewFromMenuBar = Notification.Name("startReviewFromMenuBar")
 }
@@ -26,6 +28,7 @@ struct ContentView: View {
 
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
+    @State private var showingHelp = false
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -78,6 +81,13 @@ struct ContentView: View {
             #endif
             .sheet(isPresented: $showingShortcuts) {
                 ShortcutCheatSheet()
+            }
+            .sheet(isPresented: $showingHelp) {
+                HelpView()
+            }
+            // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
+            .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in
+                showingHelp = true
             }
             // 状态栏「开始复习」：切到复习页（StudyView 自身监听同一通知开始）
             .onReceive(NotificationCenter.default.publisher(for: .startReviewFromMenuBar)) { _ in

@@ -17,8 +17,12 @@ struct WordClipCommands: Commands {
             .keyboardShortcut(",", modifiers: .command)
         }
 
-        // 帮助 → 键盘快捷键（⌘/）
+        // 帮助 → 使用帮助 + 键盘快捷键（⌘/）
         CommandGroup(replacing: .help) {
+            Button(String(localized: "help.open", defaultValue: "使用帮助")) {
+                NotificationCenter.default.post(name: .showHelp, object: nil)
+                NSApp.activate(ignoringOtherApps: true)
+            }
             Button(String(localized: "shortcuts.title", defaultValue: "键盘快捷键")) {
                 NotificationCenter.default.post(name: .showShortcutCheatSheet, object: nil)
                 NSApp.activate(ignoringOtherApps: true)

@@ -76,6 +76,23 @@ struct StudyView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+
+                VStack(spacing: 6) {
+                    Text(String(localized: "study.principle.hint",
+                                defaultValue: "认识 → 下次间隔拉长；不认识 → 打回明天重来（SM-2 间隔重复）"))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                    Button {
+                        NotificationCenter.default.post(name: .showHelp, object: nil)
+                    } label: {
+                        Text(String(localized: "study.principle.more", defaultValue: "了解更多"))
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.tint)
+                }
+                .padding(.horizontal, 20)
             }
 
             Spacer()

@@ -1196,6 +1196,16 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
 
+            // ── 帮助 ──────────────────────────────────────
+            Section {
+                Button {
+                    NotificationCenter.default.post(name: .showHelp, object: nil)
+                } label: {
+                    Label(String(localized: "help.open", defaultValue: "使用帮助"),
+                          systemImage: "questionmark.circle")
+                }
+            }
+
             #if DEBUG
             Section {
                 Toggle(

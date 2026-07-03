@@ -1256,6 +1256,664 @@
           }
         }
       }
+    },
+    "study.principle.hint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Know it → next interval grows; Don’t → back to tomorrow (SM-2 spaced repetition)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "认识 → 下次间隔拉长；不认识 → 打回明天重来（SM-2 间隔重复）"
+          }
+        }
+      }
+    },
+    "study.principle.more": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn more"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "了解更多"
+          }
+        }
+      }
+    },
+    "help.title": {
+      "comment": "Help panel title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用帮助"
+          }
+        }
+      }
+    },
+    "help.open": {
+      "comment": "Menu / settings entry to open help",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用帮助"
+          }
+        }
+      }
+    },
+    "help.done": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完成"
+          }
+        }
+      }
+    },
+    "help.section.concepts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basics"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "核心概念"
+          }
+        }
+      }
+    },
+    "help.section.collect": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture (macOS)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收词（macOS）"
+          }
+        }
+      }
+    },
+    "help.section.add": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add & Look Up"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "添加与查词"
+          }
+        }
+      }
+    },
+    "help.section.review": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How Review Works"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "复习原理"
+          }
+        }
+      }
+    },
+    "help.section.data": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data & Pro"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据与 Pro"
+          }
+        }
+      }
+    },
+    "help.section.faq": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FAQ"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常见问题"
+          }
+        }
+      }
+    },
+    "help.concepts.wordlist.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Word List"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生词本"
+          }
+        }
+      }
+    },
+    "help.concepts.wordlist.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The words you’ve saved to study, with familiarity and review progress."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "你收录、要学习的单词，带熟悉度与复习进度。"
+          }
+        }
+      }
+    },
+    "help.concepts.dictionary.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dictionary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "词典"
+          }
+        }
+      }
+    },
+    "help.concepts.dictionary.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The reference lexicon for lookups — 50k built-in ECDICT words, importable for more."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于查询的参考词库，内置 ECDICT 5 万词，可导入更多。"
+          }
+        }
+      }
+    },
+    "help.collect.selection.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select to Capture · ⌥⌘C"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选中收词 · ⌥⌘C"
+          }
+        }
+      }
+    },
+    "help.collect.selection.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a word in any app and press the hotkey — a HUD confirms, the clipboard is untouched. Grant Accessibility on first use."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "任意 App 中选中英文单词按快捷键，弹 HUD 提示、不改剪贴板。首次需在系统设置授权「辅助功能」。"
+          }
+        }
+      }
+    },
+    "help.collect.ocr.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR Capture · ⌥⌘O (Pro)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR 收词 · ⌥⌘O（Pro）"
+          }
+        }
+      }
+    },
+    "help.collect.ocr.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drag to select any screen region and recognize its words — works on images, PDFs, non-selectable text. Grant Screen Recording on first use."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "框选屏幕任意区域识别单词，适用于图片 / PDF / 不可选文本。首次需授权「屏幕录制」。"
+          }
+        }
+      }
+    },
+    "help.collect.url.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL Scheme"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL Scheme"
+          }
+        }
+      }
+    },
+    "help.collect.url.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wordclip://collect?word=<word> — capture from Shortcuts or scripts."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词。"
+          }
+        }
+      }
+    },
+    "help.collect.menubar.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu Bar Icon"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "状态栏图标"
+          }
+        }
+      }
+    },
+    "help.collect.menubar.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toggle capture, see today’s overview, start a review, or open the main window / settings."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "快速启用/停用收词、查看今日概览、开始复习、打开主窗口或设置。"
+          }
+        }
+      }
+    },
+    "help.add.manual.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Manually (iOS)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动添加（iOS）"
+          }
+        }
+      }
+    },
+    "help.add.manual.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap “+” in the word list to type or paste from the clipboard."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "生词本右上角「+」，手动输入或从剪贴板粘贴。"
+          }
+        }
+      }
+    },
+    "help.add.search.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search & Save · ⌘F"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索并收录 · ⌘F"
+          }
+        }
+      }
+    },
+    "help.add.search.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matches in your list show on top; dictionary words you haven’t saved show below — tap to preview and save."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上方显示生词本匹配词，下方显示词典中未收录的词，点击可预览释义并一键收录。"
+          }
+        }
+      }
+    },
+    "help.review.states.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three States"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "三种状态"
+          }
+        }
+      }
+    },
+    "help.review.states.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New (green, never answered right) · Due (orange, time to review) · Fresh (no badge, next review still far off)."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新词（绿，还没答对过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。"
+          }
+        }
+      }
+    },
+    "help.review.sm2.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SM-2 Spaced Repetition"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SM-2 间隔重复"
+          }
+        }
+      }
+    },
+    "help.review.sm2.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Right → the interval keeps growing (1d→6d→…); Wrong → reset to tomorrow. A word you keep missing stays “New”."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "答对 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；答错 → 重置回明天重新巩固。一直答「不认识」的词会停留在「新词」。"
+          }
+        }
+      }
+    },
+    "help.data.backup.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup Import / Export"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "备份导入 / 导出"
+          }
+        }
+      }
+    },
+    "help.data.backup.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export a JSON backup (free, includes progress); import to restore on a new device (Pro), merged per word without overwriting progress."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出 JSON 备份（免费，含学习进度）；在新设备导入恢复（Pro），按单词智能合并、不覆盖进度。"
+          }
+        }
+      }
+    },
+    "help.data.pro.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WordClip Pro"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WordClip Pro"
+          }
+        }
+      }
+    },
+    "help.data.pro.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One-time purchase, lifetime unlock: OCR capture, iCloud sync, import/export. Collecting and basic lookup are always free."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一次性买断、终身解锁：OCR 收词、iCloud 同步、词库导入/导出。收集与基础查词永久免费。"
+          }
+        }
+      }
+    },
+    "help.faq.hotkey.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capture hotkey does nothing?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收词快捷键没反应？"
+          }
+        }
+      }
+    },
+    "help.faq.hotkey.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check that Accessibility is granted in System Settings, and that “Enable global capture” is on under Settings → Capture."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "检查系统设置是否授权「辅助功能」，以及设置 → 收词 里「启用全局收词」是否打开。"
+          }
+        }
+      }
+    },
+    "help.faq.nodef.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A word shows “No definition”?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "某个词「暂无释义」？"
+          }
+        }
+      }
+    },
+    "help.faq.nodef.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The dictionary may not have been ready when it was saved. It auto-fills in the word list, or press ⌘R to repair."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。"
+          }
+        }
+      }
+    },
+    "help.faq.import.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported dictionary not working?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入的词典没生效？"
+          }
+        }
+      }
+    },
+    "help.faq.import.body": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make sure the dictionary is toggled on under Settings → Dictionaries."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认在 设置 → 词典 里该词典的开关是打开的。"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
