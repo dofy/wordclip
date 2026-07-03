@@ -181,6 +181,15 @@ struct WordClipApp: App {
                 Self.sendNotification(for: outcome)
             }
         }
+
+        // OCR 取词回调：自带 Pro 闸门，免费用户弹付费墙。
+        appState.onCollectOCR = { [weak appState] in
+            guard let appState else { return }
+            guard entitlement.isPro else { appState.presentPaywall(); return }
+            Task { @MainActor in
+                await Self.runOCRCapture(collector: collector, appState: appState)
+            }
+        }
         appState.refreshHotkeyRegistration()
         #endif
 
@@ -220,6 +229,80 @@ struct WordClipApp: App {
     }
 
     #if os(macOS)
+    // MARK: - OCR 取词流程
+
+    /// 框选屏幕 → 截图 → OCR → 弹选词面板。
+    @MainActor
+    private static func runOCRCapture(collector: WordCollector, appState: AppState) async {
+        guard let selection = await RegionSelector().selectRegion() else {
+            return   // 取消 / 选区过小：静默
+        }
+
+        let image: CGImage
+        do {
+            image = try await ScreenCapturer.capture(rect: selection.rect, on: selection.screen)
+        } catch ScreenCapturer.CaptureError.permissionDenied {
+            CollectHUD.shared.show(
+                symbol: "exclamationmark.triangle.fill", tint: .orange,
+                title: String(localized: "ocr.permission.denied",
+                              defaultValue: "需要在系统设置中授予「屏幕录制」权限"),
+                subtitle: nil, duration: 2.4
+            )
+            return
+        } catch {
+            CollectHUD.shared.show(
+                symbol: "exclamationmark.triangle.fill", tint: .orange,
+                title: String(localized: "ocr.capture.failed", defaultValue: "截屏失败，请重试"),
+                subtitle: nil, duration: 2.0
+            )
+            return
+        }
+
+        let recognized = await ScreenOCR.recognizeWords(in: image)
+
+        // 词典校验：只保留词典里真实存在的英文词，滤掉音标/噪声（如 maigreit、FREI）。
+        // 额外滤掉「全大写且 ≤4 字母」的碎片（如 UPD/DEF/FAX/MP），这类多为词典 UI/缩写噪声。
+        var words: [String] = []
+        for word in recognized {
+            let isShortAcronym = word.count <= 4 && word == word.uppercased()
+            if isShortAcronym { continue }
+            if await collector.dictionary.lookup(word.lowercased()) != nil {
+                words.append(word)
+            }
+        }
+
+        guard !words.isEmpty else {
+            CollectHUD.shared.show(
+                symbol: "text.viewfinder", tint: .orange,
+                title: String(localized: "ocr.notext", defaultValue: "未识别到英文单词"),
+                subtitle: nil, duration: 1.8
+            )
+            return
+        }
+
+        OCRWordPicker.shared.present(words: words) { picked in
+            Task { @MainActor in
+                await Self.collectOCRWords(picked, collector: collector, appState: appState)
+            }
+        }
+    }
+
+    /// 收录用户在选词面板里选中的词，HUD 汇总反馈。
+    @MainActor
+    private static func collectOCRWords(_ words: [String], collector: WordCollector, appState: AppState) async {
+        var count = 0
+        for word in words {
+            let outcome = await collector.collect(word: word, sourceAppName: "OCR")
+            if case .collected = outcome { count += 1 }
+        }
+        guard count > 0 else { return }
+        CollectHUD.shared.show(
+            symbol: "checkmark.circle.fill", tint: .green,
+            title: String(localized: "ocr.captured", defaultValue: "已收录 \(count) 个词"),
+            subtitle: nil
+        )
+    }
+
     /// 仅设置通知 delegate（前台也能显示复习提醒）。
     /// 不在启动时申请权限——收词反馈已改用 HUD，只有「每日复习提醒」需要通知，
     /// 其权限在用户开启提醒时（NotificationService.scheduleReviewReminder）才按需申请。

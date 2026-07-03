@@ -42,13 +42,15 @@ final class WordCollector {
         #endif
     }
 
-    /// 直接按单词收录（手动输入 / 粘贴 / URL scheme / 分享）。
-    func collect(word: String) async -> CollectOutcome {
+    /// 直接按单词收录（手动输入 / 粘贴 / URL scheme / 分享 / OCR）。
+    /// - Parameter sourceAppName: 来源标识（如 "OCR"）；默认 nil。
+    func collect(word: String, sourceAppName: String? = nil) async -> CollectOutcome {
         guard let extracted = Self.extractWord(from: word) else { return .invalid }
         let headword = Self.normalizeCase(extracted)
         let lemma = headword.lowercased()
         let result = await dictionary.lookup(lemma)
-        upsert(headword: headword, lemma: lemma, dict: result, sourceApp: nil)
+        let source = sourceAppName.map { SourceApp(name: $0, bundleIdentifier: nil) }
+        upsert(headword: headword, lemma: lemma, dict: result, sourceApp: source)
         return .collected(word: headword, found: result != nil, definition: result?.definition)
     }
 

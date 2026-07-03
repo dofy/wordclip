@@ -43,6 +43,9 @@ final class AppState: ObservableObject {
     /// 是否需要引导用户授予辅助功能权限。
     @Published var needsAccessibilityPrompt: Bool = false
 
+    /// 免费用户触发 OCR 取词时，请求呈现付费墙（由 ContentView 观察并弹 sheet）。
+    @Published var showingOCRPaywall: Bool = false
+
     /// 展示一条短暂的收录反馈，几秒后自动清除。
     func flashCollectMessage(_ message: String) {
         lastCollectMessage = message
@@ -109,6 +112,17 @@ final class AppState: ObservableObject {
 
     // MARK: - 收词回调（由 App 层注入真实逻辑）
     var onCollect: (() -> Void)?
+    /// OCR 取词回调（由 App 层注入；内部自带 Pro 闸门）。
+    var onCollectOCR: (() -> Void)?
+
+    /// 请求呈现付费墙：先把 app 与主窗口前置（OCR 快捷键可能在后台触发），再置标志。
+    func presentPaywall() {
+        NSApp.activate(ignoringOtherApps: true)
+        for window in NSApp.windows where window.identifier?.rawValue == "main" {
+            window.makeKeyAndOrderFront(nil)
+        }
+        showingOCRPaywall = true
+    }
 
     init() {
         // 读取 SMAppService 真实状态初始化，避免与系统状态不同步
@@ -128,6 +142,8 @@ final class AppState: ObservableObject {
 
     /// 热键回调是否已注册（onKeyUp 只需注册一次，否则会叠加重复触发）。
     private var hotkeyHandlerRegistered = false
+    /// OCR 热键回调是否已注册。
+    private var ocrHotkeyHandlerRegistered = false
 
     /// 根据当前 captureEnabled 状态启用/停用全局热键。
     /// 修改快捷键后也应调用。
@@ -146,6 +162,16 @@ final class AppState: ObservableObject {
         } else {
             KeyboardShortcuts.disable(.collectWord)
         }
+
+        // OCR 取词：独立于 captureEnabled（那个开关只管选中取词），始终启用。
+        // Pro 闸门在回调内部判断（免费用户按下会弹付费墙而非截屏）。
+        if !ocrHotkeyHandlerRegistered {
+            KeyboardShortcuts.onKeyUp(for: .collectWordOCR) { [weak self] in
+                self?.onCollectOCR?()
+            }
+            ocrHotkeyHandlerRegistered = true
+        }
+        KeyboardShortcuts.enable(.collectWordOCR)
     }
 
     #else

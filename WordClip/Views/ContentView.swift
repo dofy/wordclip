@@ -1,4 +1,5 @@
 import SwiftUI
+import WordClipKit
 
 extension Notification.Name {
     /// 请求显示键盘快捷键速查表。
@@ -21,6 +22,7 @@ enum SidebarItem: Hashable, CaseIterable {
 struct ContentView: View {
 
     @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private var entitlement: MockEntitlement
 
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
@@ -40,6 +42,11 @@ struct ContentView: View {
             .onAppear {
                 // 启动时就检测权限，不等用户按快捷键才发现
                 appState.checkAccessibilityStatus()
+            }
+            // OCR 免费用户闸门：快捷键在视图外触发，经 AppState 标志弹付费墙
+            .sheet(isPresented: $appState.showingOCRPaywall) {
+                PaywallView()
+                    .environmentObject(entitlement)
             }
             #endif
             .overlay(alignment: .top) {

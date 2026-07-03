@@ -54,6 +54,8 @@ targets:
       - package: WordClipKit
       - package: KeyboardShortcuts
       - sdk: ServiceManagement.framework
+      - sdk: Vision.framework            # OCR 取词：文字识别
+      - sdk: ScreenCaptureKit.framework  # OCR 取词：屏幕区域截图
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: xyz.phpz.WordClip.macOS

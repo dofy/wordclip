@@ -314,12 +314,14 @@ struct MockEntitlementTests {
 
     @Test("默认非 Pro")
     func defaultIsNotPro() {
+        UserDefaults.standard.removeObject(forKey: "mock.isPro")
         let mock = MockEntitlement()
         #expect(!mock.isPro)
     }
 
     @Test("overridePro=true 时 isPro 为 true")
     func overrideProIsTrue() {
+        UserDefaults.standard.removeObject(forKey: "mock.isPro")
         let mock = MockEntitlement(overridePro: true)
         #expect(mock.isPro)
     }
@@ -337,6 +339,50 @@ struct MockEntitlementTests {
         let products = await mock.products()
         #expect(products.count == 1)
         #expect(products.allSatisfy { $0.product == .lifetime })
+    }
+}
+
+// MARK: - WordTokenizer Tests
+
+@Suite("WordTokenizer")
+struct WordTokenizerTests {
+
+    @Test("按空白/标点拆分并去掉首尾标点")
+    func splitsAndTrimsPunctuation() {
+        let words = WordTokenizer.extractWords(from: "Hello, world! (foo) \"bar\"")
+        #expect(words == ["Hello", "world", "foo", "bar"])
+    }
+
+    @Test("滤掉纯中文与混杂非拉丁字母")
+    func dropsCJK() {
+        let words = WordTokenizer.extractWords(from: "学习 english 单词 vocabulary")
+        #expect(words == ["english", "vocabulary"])
+    }
+
+    @Test("保留连字符与撇号词")
+    func keepsHyphenAndApostrophe() {
+        let words = WordTokenizer.extractWords(from: "well-being it's mother-in-law")
+        #expect(words.contains("well-being"))
+        #expect(words.contains("it's"))
+        #expect(words.contains("mother-in-law"))
+    }
+
+    @Test("大小写不敏感去重且保序")
+    func dedupesCaseInsensitivePreservingOrder() {
+        let words = WordTokenizer.extractWords(from: "The the THE apple Apple")
+        #expect(words == ["The", "apple"])
+    }
+
+    @Test("minLength 默认丢单字母")
+    func dropsSingleLettersByDefault() {
+        let words = WordTokenizer.extractWords(from: "a I go to")
+        #expect(words == ["go", "to"])
+    }
+
+    @Test("空串返回空数组")
+    func emptyReturnsEmpty() {
+        #expect(WordTokenizer.extractWords(from: "").isEmpty)
+        #expect(WordTokenizer.extractWords(from: "   \n  123 !!! 你好").isEmpty)
     }
 }
 

@@ -1012,6 +1012,7 @@ struct SettingsView: View {
     // macOS 26+ 上 name 式 Recorder 失效，改用 binding 式录制器，
     // 在 onChange 中把快捷键写回 .collectWord 名称的存储，保证全局监听照常生效。
     @State private var collectShortcut: KeyboardShortcuts.Shortcut? = KeyboardShortcuts.getShortcut(for: .collectWord)
+    @State private var ocrShortcut: KeyboardShortcuts.Shortcut? = KeyboardShortcuts.getShortcut(for: .collectWordOCR)
     #endif
 
     // 备份导出/导入
@@ -1036,22 +1037,48 @@ struct SettingsView: View {
             // ── 取词（仅 macOS）──────────────────────────────
             Section {
                 Toggle(
-                    String(localized: "settings.capture.enabled", defaultValue: "启用全局取词"),
+                    String(localized: "settings.capture.enabled", defaultValue: "启用全局收词"),
                     isOn: $appState.captureEnabled
                 )
 
-                LabeledContent(String(localized: "settings.capture.shortcut", defaultValue: "取词快捷键")) {
+                LabeledContent(String(localized: "settings.capture.shortcut", defaultValue: "收词快捷键")) {
                     ShortcutRecorderField(shortcut: $collectShortcut)
                 }
                 .onChange(of: collectShortcut) { _, newValue in
                     KeyboardShortcuts.setShortcut(newValue, for: .collectWord)
                     appState.refreshHotkeyRegistration()
                 }
+
+                // OCR 取词快捷键（Pro）：免费用户显示锁，点击弹付费墙
+                if entitlement.isPro {
+                    LabeledContent(String(localized: "settings.capture.ocr.shortcut",
+                                          defaultValue: "OCR 收词快捷键")) {
+                        ShortcutRecorderField(shortcut: $ocrShortcut)
+                    }
+                    .onChange(of: ocrShortcut) { _, newValue in
+                        KeyboardShortcuts.setShortcut(newValue, for: .collectWordOCR)
+                        appState.refreshHotkeyRegistration()
+                    }
+                } else {
+                    Button {
+                        showingPaywall = true
+                    } label: {
+                        HStack {
+                            Label(String(localized: "settings.capture.ocr.shortcut",
+                                        defaultValue: "OCR 收词快捷键"),
+                                  systemImage: "text.viewfinder")
+                            Spacer()
+                            Image(systemName: "lock.fill")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
             } header: {
-                Text(String(localized: "settings.section.capture", defaultValue: "取词"))
+                Text(String(localized: "settings.section.capture", defaultValue: "收词"))
             } footer: {
                 Text(String(localized: "settings.capture.hint",
-                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip"))
+                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。OCR 收词（Pro）可框选屏幕区域识别其中的英文单词。"))
                 .foregroundStyle(.secondary)
             }
 
@@ -1108,7 +1135,7 @@ struct SettingsView: View {
             } footer: {
                 if !entitlement.isPro {
                     Text(String(localized: "settings.account.hint",
-                        defaultValue: "一次性购买，终身解锁 iCloud 同步与导入/导出功能。"))
+                        defaultValue: "一次性购买，终身解锁 OCR 收词、iCloud 同步与导入/导出功能。"))
                     .foregroundStyle(.secondary)
                 }
             }

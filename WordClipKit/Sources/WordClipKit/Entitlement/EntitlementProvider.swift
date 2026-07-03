@@ -55,15 +55,24 @@ public protocol EntitlementProvider: AnyObject {
 @MainActor
 public final class MockEntitlement: EntitlementProvider, ObservableObject {
 
-    @Published public var isPro: Bool
+    private static let storageKey = "mock.isPro"
+
+    @Published public var isPro: Bool {
+        didSet { UserDefaults.standard.set(isPro, forKey: Self.storageKey) }
+    }
 
     public var isProPublisher: AnyPublisher<Bool, Never> {
         $isPro.eraseToAnyPublisher()
     }
 
-    /// true = 模拟「已购买 Pro」；false = 模拟「免费用户」
+    /// true = 模拟「已购买 Pro」；false = 模拟「免费用户」。
+    /// 开发期持久化到 UserDefaults，避免每次重启都丢失「模拟 Pro」开关状态。
     public init(overridePro: Bool = false) {
-        self.isPro = overridePro
+        if UserDefaults.standard.object(forKey: Self.storageKey) != nil {
+            self.isPro = UserDefaults.standard.bool(forKey: Self.storageKey)
+        } else {
+            self.isPro = overridePro
+        }
     }
 
     public func purchase(_ product: ProProduct) async throws {
