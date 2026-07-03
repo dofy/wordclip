@@ -55,6 +55,22 @@ public final class WordEntry {
     }
 }
 
+// MARK: - WordEntry 复习状态（新词 / 待复习判定的唯一口径）
+
+extension WordEntry {
+    /// 是否为新词：从未复习过。答错只会重置熟悉度，不会让词退回「新词」，
+    /// 所以判定看 `lastReviewedAt` 而非 `familiarity`。
+    public var isNew: Bool {
+        lastReviewedAt == nil
+    }
+
+    /// 是否到期待复习：已复习过（非新词）且 `dueAt` 已到。
+    public func isDue(asOf now: Date = Date()) -> Bool {
+        guard !isNew, let due = dueAt else { return false }
+        return due <= now
+    }
+}
+
 // MARK: - CollectSource
 
 /// 单次收集事件：记录在哪里、什么时候收集到了这个词。

@@ -136,7 +136,7 @@ struct StudyView: View {
                 Spacer()
 
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text("\(session.sessionCount) / \(session.stats.total)")
+                    Text("\(session.sessionCount) / \(session.roundTotal)")
                         .font(.caption.bold())
                         .foregroundStyle(.secondary)
                     coverageBar
@@ -185,8 +185,9 @@ struct StudyView: View {
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 Capsule().fill(Color.secondary.opacity(0.15))
-                let ratio = session.stats.total > 0
-                    ? Double(session.stats.total - session.stats.newWords) / Double(session.stats.total)
+                // 本轮进度：已评分数 / 本轮总数
+                let ratio = session.roundTotal > 0
+                    ? Double(session.sessionCount) / Double(session.roundTotal)
                     : 0.0
                 Capsule()
                     .fill(Color.green.opacity(0.7))
@@ -196,9 +197,10 @@ struct StudyView: View {
         }
     }
 
+    /// 认识 / 不认识始终可用（正面未翻也能评分）；正面额外提示可翻面看释义。
     @ViewBuilder
     private var gradeButtons: some View {
-        if session.phase == .back {
+        VStack(spacing: 10) {
             HStack(spacing: 20) {
                 Button {
                     session.grade(correct: false)
@@ -226,11 +228,14 @@ struct StudyView: View {
                 .tint(.green)
                 .keyboardShortcut(.rightArrow, modifiers: [])
             }
-        } else {
-            Text(String(localized: "study.flip.hint", defaultValue: "点击卡片或按空格键翻转"))
+
+            // 正面时提示可翻面（不强制）；背面留白保持布局稳定。
+            Text(session.phase == .front
+                 ? String(localized: "study.flip.hint", defaultValue: "点击卡片或按空格键看释义")
+                 : " ")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
-                .frame(height: 52)
+                .frame(height: 16)
         }
     }
 

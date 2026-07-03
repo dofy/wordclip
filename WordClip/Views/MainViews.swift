@@ -640,9 +640,9 @@ struct WordListView: View {
     /// 右侧复习状态小徽标：新词 / 待复习（已到期）/ 已排期。
     @ViewBuilder
     private func reviewStatusBadge(for word: WordEntry) -> some View {
-        if word.repetitions == 0 && word.lastReviewedAt == nil {
+        if word.isNew {
             statusTag(String(localized: "wordlist.status.new", defaultValue: "新词"), color: .green)
-        } else if let due = word.dueAt, due <= Date() {
+        } else if word.isDue() {
             statusTag(String(localized: "wordlist.status.due", defaultValue: "待复习"), color: .orange)
         } else {
             EmptyView()
@@ -1027,6 +1027,10 @@ struct SettingsView: View {
     // iCloud 同步（先预留 UI，功能待付费开发者账号）
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled = false
 
+    // 每轮学习词数（StudySession 读同一 UserDefaults 键）
+    @AppStorage("study.roundSize") private var roundSize = 20
+    private let roundSizeOptions = [10, 20, 30, 50]
+
     private var backup: BackupService {
         BackupService(modelContext: modelContext)
     }
@@ -1092,6 +1096,24 @@ struct SettingsView: View {
                 Text(String(localized: "settings.section.general", defaultValue: "通用"))
             }
             #endif
+
+            // ── 学习（跨平台）────────────────────────────────
+            Section {
+                Picker(
+                    String(localized: "settings.study.roundsize", defaultValue: "每轮学习词数"),
+                    selection: $roundSize
+                ) {
+                    ForEach(roundSizeOptions, id: \.self) { n in
+                        Text("\(n)").tag(n)
+                    }
+                }
+            } header: {
+                Text(String(localized: "settings.section.study", defaultValue: "学习"))
+            } footer: {
+                Text(String(localized: "settings.study.roundsize.hint",
+                    defaultValue: "每一轮固定学习的单词数，兼顾到期复习词与新词，学完自动结束。词量不足时学实际数量。"))
+                .foregroundStyle(.secondary)
+            }
 
             // ── 复习提醒（跨平台）────────────────────────────
             Section {

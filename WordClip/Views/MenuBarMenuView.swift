@@ -80,8 +80,8 @@ struct MenuBarMenuView: View {
         let all = (try? modelContext.fetch(FetchDescriptor<WordEntry>())) ?? []
         let now = Date()
         total = all.count
-        due = all.filter { ($0.dueAt ?? .distantPast) <= now && $0.familiarity > 0 }.count
-        newWords = all.filter { $0.familiarity == 0 }.count
+        due = all.filter { $0.isDue(asOf: now) }.count
+        newWords = all.filter { $0.isNew }.count
     }
 }
 #endif

@@ -2,15 +2,19 @@ import Foundation
 import SwiftData
 import WordClipKit
 
-/// 学习会话：管理选词策略、SM-2 评分、进度统计。
+/// 学习会话：每轮固定数量，兼顾「学习」（新词）与「复习」（到期词），学完一轮自动结束。
 ///
-/// 选词优先级：
-///   1. dueAt <= now 的到期词
-///   2. familiarity == 0 的新词
-///   3. 其余词按 familiarity 升序，各组内随机打散
-/// 同一 session 内已出现过的词不重复，所有词过一遍后循环。
+/// 一轮选词（共 roundSize 个）：
+///   1. 到期复习词（dueAt <= now 且 familiarity > 0）优先入选
+///   2. 剩余名额用新词（familiarity == 0）填满
+///   3. 仍不足则用未到期的老词按 familiarity 升序补齐
+/// 入选后把「复习词」与「新词」交错排列，避免前半全是复习、后半全是新词。
+/// 词量不足 roundSize 时，本轮就学实际数量。队列走完即结束（不再循环）。
 @MainActor
 final class StudySession: ObservableObject {
+
+    /// 每轮默认词数；设置页可改（UserDefaults 键 study.roundSize）。
+    static let defaultRoundSize = 20
 
     // MARK: - Phase
 
@@ -27,6 +31,8 @@ final class StudySession: ObservableObject {
     @Published var current: WordEntry?
     @Published var sessionCount: Int = 0
     @Published var sessionCorrect: Int = 0
+    /// 本轮实际词数（可能小于 roundSize，若词量不足）。
+    @Published var roundTotal: Int = 0
 
     struct Stats {
         var total: Int = 0
@@ -39,8 +45,13 @@ final class StudySession: ObservableObject {
 
     private var modelContext: ModelContext?
     private let engine: any ReviewEngine
-    private var sessionSeen: Set<PersistentIdentifier> = []
     private var queue: [WordEntry] = []
+
+    /// 每轮词数：读设置，回退到默认值。
+    private var roundSize: Int {
+        let v = UserDefaults.standard.integer(forKey: "study.roundSize")
+        return v > 0 ? v : Self.defaultRoundSize
+    }
 
     init(engine: any ReviewEngine = SM2Engine()) {
         self.engine = engine
@@ -59,16 +70,16 @@ final class StudySession: ObservableObject {
         let now = Date()
         stats = Stats(
             total: all.count,
-            due: all.filter { ($0.dueAt ?? .distantPast) <= now && $0.familiarity > 0 }.count,
-            newWords: all.filter { $0.familiarity == 0 }.count
+            due: all.filter { $0.isDue(asOf: now) }.count,
+            newWords: all.filter { $0.isNew }.count
         )
     }
 
     func start() {
         sessionCount = 0
         sessionCorrect = 0
-        sessionSeen = []
-        queue = buildQueue()
+        queue = buildRound()
+        roundTotal = queue.count
         advance()
     }
 
@@ -83,9 +94,10 @@ final class StudySession: ObservableObject {
         phase = .back
     }
 
-    /// 评分：true = 认识(grade 4)，false = 不认识(grade 1)
+    /// 评分：true = 认识(grade 4)，false = 不认识(grade 1)。
+    /// 正面（未翻）或背面均可评分——不认识时通常想直接翻面看释义，认识则可不翻直接过。
     func grade(correct: Bool) {
-        guard let entry = current, phase == .back else { return }
+        guard let entry = current, phase == .front || phase == .back else { return }
 
         let g = correct ? 4 : 1
         let state = ReviewState(
@@ -119,38 +131,59 @@ final class StudySession: ObservableObject {
 
     // MARK: - Private
 
+    /// 取下一张卡；队列空即本轮结束（不再循环）。
     private func advance() {
-        if queue.isEmpty {
-            let remaining = fetchAll().filter { !sessionSeen.contains($0.persistentModelID) }
-            if remaining.isEmpty {
-                // 全部学完，循环
-                sessionSeen = []
-                queue = buildQueue()
-                guard !queue.isEmpty else { phase = .finished; current = nil; return }
-            } else {
-                queue = sortByPriority(remaining)
-            }
-        }
-
         guard !queue.isEmpty else { phase = .finished; current = nil; return }
-
-        let next = queue.removeFirst()
-        sessionSeen.insert(next.persistentModelID)
-        current = next
+        current = queue.removeFirst()
         phase = .front
     }
 
-    private func buildQueue() -> [WordEntry] {
-        sortByPriority(fetchAll().filter { !sessionSeen.contains($0.persistentModelID) })
+    /// 构建一轮（至多 roundSize 个）：复习优先、新词填充、老词兜底，再把复习与新词交错。
+    private func buildRound() -> [WordEntry] {
+        let all = fetchAll()
+        let now = Date()
+
+        let due    = all.filter { $0.isDue(asOf: now) }.shuffled()
+        let newW   = all.filter { $0.isNew }.shuffled()
+        // 已复习过但未到期的老词（兜底填充，最接近到期者优先）
+        let others = all.filter { !$0.isNew && !$0.isDue(asOf: now) }
+                        .sorted { ($0.dueAt ?? .distantFuture) < ($1.dueAt ?? .distantFuture) }
+
+        let cap = roundSize
+        // 到期复习词全部优先入选（至多占满本轮）
+        let pickedDue = Array(due.prefix(cap))
+        // 剩余名额用新词填满
+        let remainAfterDue = cap - pickedDue.count
+        let pickedNew = Array(newW.prefix(max(0, remainAfterDue)))
+        // 仍不足则用未到期老词（最接近到期者优先）兜底
+        let remainAfterNew = cap - pickedDue.count - pickedNew.count
+        let pickedOthers = Array(others.prefix(max(0, remainAfterNew)))
+
+        return interleave(review: pickedDue + pickedOthers, fresh: pickedNew)
     }
 
-    private func sortByPriority(_ words: [WordEntry]) -> [WordEntry] {
-        let now = Date()
-        let due    = words.filter { ($0.dueAt ?? .distantPast) <= now && $0.familiarity > 0 }.shuffled()
-        let newW   = words.filter { $0.familiarity == 0 }.shuffled()
-        let others = words.filter { ($0.dueAt ?? .distantPast) > now  && $0.familiarity > 0 }
-                         .sorted { $0.familiarity < $1.familiarity }
-        return due + newW + others
+    /// 把「复习词」与「新词」按比例交错，避免前半全复习、后半全新词。
+    private func interleave(review: [WordEntry], fresh: [WordEntry]) -> [WordEntry] {
+        guard !review.isEmpty else { return fresh }
+        guard !fresh.isEmpty else { return review }
+
+        var result: [WordEntry] = []
+        result.reserveCapacity(review.count + fresh.count)
+        let total = review.count + fresh.count
+        var ri = 0, fi = 0
+        // 用分数累加决定每一步取复习还是新词，两者按各自占比均匀铺开。
+        for step in 0..<total {
+            let reviewShare = Double(review.count) / Double(total)
+            let wantReview = Double(ri) < reviewShare * Double(step + 1)
+            if wantReview && ri < review.count {
+                result.append(review[ri]); ri += 1
+            } else if fi < fresh.count {
+                result.append(fresh[fi]); fi += 1
+            } else if ri < review.count {
+                result.append(review[ri]); ri += 1
+            }
+        }
+        return result
     }
 
     private func fetchAll() -> [WordEntry] {
