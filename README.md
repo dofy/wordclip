@@ -38,9 +38,16 @@
 - 统计面板:总词数、待复习、新词、掌握率。
 - **JSON 备份导入/导出**:按单词智能合并,不覆盖已有学习进度。
 
+### 付费(骨架)
+- **WordClip Pro 付费墙**:单档「终身买断」页面(权益:iCloud 同步、导入/导出)。
+- **功能闸门**:免费/Pro 边界统一走 `entitlement.isPro`;当前用 `MockEntitlement`,可在设置「模拟 Pro」调试。
+- **StoreKit 2 骨架**:`StoreKitEntitlement`(一次性内购)+ 本地 `.storekit` 配置,Xcode Run 即可测购买流程,无需付费账号。
+- **免费**:收集 + 基础离线查词 + 生词本 + 复习 + 统计 + 导出。**Pro**:iCloud 同步、导入。
+
 ### 其他
 - **界面多语言**:中文 / 英文(String Catalog),界面语言与学习语言相互独立。
-- `WordClipKit` 单元测试 44 条覆盖算法 / 词库 / 导入 / 统计。
+- **iCloud 同步预留 UI**:设置页占位开关(真实同步待 Apple 付费开发者账号)。
+- `WordClipKit` 单元测试 44 条覆盖算法 / 词库 / 导入 / 统计 / 权益。
 
 ---
 
