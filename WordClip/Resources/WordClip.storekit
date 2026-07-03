@@ -8,12 +8,12 @@
       "internalID" : "6F0A0001",
       "localizations" : [
         {
-          "description" : "终身解锁 iCloud 同步与导入/导出功能",
+          "description" : "终身解锁 OCR 收词、iCloud 同步与导入/导出功能",
           "displayName" : "WordClip Pro（终身买断）",
           "locale" : "zh_CN"
         },
         {
-          "description" : "Unlock iCloud sync and import/export forever",
+          "description" : "Unlock OCR capture, iCloud sync, and import/export forever",
           "displayName" : "WordClip Pro (Lifetime)",
           "locale" : "en_US"
         }

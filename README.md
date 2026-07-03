@@ -10,8 +10,9 @@
 ## 已实现功能
 
 ### 收集
-- **macOS 全局取词**:任意 App 中选中单词,按快捷键(默认 `⌥⌘C`)一键收录,屏幕弹出 HUD 提示,不打断当前 App。基于 Accessibility 直读选中文本,不改动剪贴板。
-- **状态栏图标**:快速启用/停用取词、打开主窗口/设置、开始复习、查看今日概览。
+- **macOS 全局收词**:任意 App 中选中单词,按快捷键(默认 `⌥⌘C`)一键收录,屏幕弹出 HUD 提示,不打断当前 App。基于 Accessibility 直读选中文本,不改动剪贴板。
+- **OCR 收词(Pro)**:按快捷键(默认 `⌥⌘O`)框选屏幕区域,Vision 识别其中单词,经内置词典校验后弹选词面板多选收录。适用于图片 / PDF / 不可选文本。
+- **状态栏图标**:快速启用/停用收词、打开主窗口/设置、开始复习、查看今日概览。
 - **URL Scheme**:`wordclip://collect?word=<单词>`,可从快捷指令、脚本、其他 App 调用收词。
 - **iOS / iPadOS**:手动输入或从剪贴板粘贴添加单词。
 
@@ -39,7 +40,7 @@
 - **JSON 备份导入/导出**:按单词智能合并,不覆盖已有学习进度。
 
 ### 付费(骨架)
-- **WordClip Pro 付费墙**:单档「终身买断」页面(权益:iCloud 同步、导入/导出)。
+- **WordClip Pro 付费墙**:单档「终身买断」页面(权益:OCR 收词、iCloud 同步、导入/导出)。
 - **功能闸门**:免费/Pro 边界统一走 `entitlement.isPro`;当前用 `MockEntitlement`,可在设置「模拟 Pro」调试。
 - **StoreKit 2 骨架**:`StoreKitEntitlement`(一次性内购)+ 本地 `.storekit` 配置,Xcode Run 即可测购买流程,无需付费账号。
 - **免费**:收集 + 基础离线查词 + 生词本 + 复习 + 统计 + 导出。**Pro**:iCloud 同步、导入。
@@ -53,7 +54,7 @@
 
 ## 计划中功能
 
-> **收费政策(已定)**:一次性购买 · 终身买断(不做订阅)。**WordClip Pro** 三大权益:iCloud 同步、导入/导出、在线词典功能。收集与基础查词永久免费。详见 [PLAN.md](docs/PLAN.md#5-收费政策已定)。
+> **收费政策(已定)**:一次性购买 · 终身买断(不做订阅)。**WordClip Pro** 权益:OCR 收词、iCloud 同步、导入/导出(及未来在线词典)。收集与基础查词永久免费。详见 [PLAN.md](docs/PLAN.md#5-收费政策已定)。
 
 - **付费墙(Pro)**:Paywall UI(单档终身买断)+ `isPro` 功能闸门(权益抽象层 `EntitlementProvider` / `MockEntitlement` 骨架已就位)。
 - **iCloud 同步**:SwiftData + CloudKit 多设备自动同步(先预留设置页 UI,真实同步待 Apple 付费开发者账号)。

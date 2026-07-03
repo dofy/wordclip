@@ -15,9 +15,10 @@
 - `WordClipKit` 单元测试 44 条,GitHub Actions CI 跑 `swift test`。
 
 ### 收集
-- **macOS 全局取词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
-- 取词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
-- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、开始复习、启用/停用取词、打开主窗口 / 设置。
+- **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
+- **OCR 收词(Pro,macOS)**:独立热键(默认 `⌥⌘O`)→ 全屏框选(`RegionSelector`)→ ScreenCaptureKit 截图(`ScreenCapturer`)→ Vision 识别(`ScreenOCR`)→ 内置词典校验 + 滤除短大写噪声 → 选词面板(`OCRWordPicker`)多选收录。分词纯逻辑 `WordTokenizer` 在 Kit 内并单测。
+- 收词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
+- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、开始复习、启用/停用收词、打开主窗口 / 设置。
 - **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。

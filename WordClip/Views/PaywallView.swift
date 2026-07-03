@@ -24,6 +24,12 @@ struct PaywallView: View {
     private var benefits: [Benefit] {
         [
             Benefit(
+                symbol: "text.viewfinder",
+                title: String(localized: "paywall.benefit.ocr.title", defaultValue: "OCR 收词"),
+                detail: String(localized: "paywall.benefit.ocr.detail",
+                               defaultValue: "框选屏幕任意区域，识别其中的单词并收录")
+            ),
+            Benefit(
                 symbol: "arrow.triangle.2.circlepath.icloud",
                 title: String(localized: "paywall.benefit.sync.title", defaultValue: "iCloud 同步"),
                 detail: String(localized: "paywall.benefit.sync.detail",

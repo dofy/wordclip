@@ -42,7 +42,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "停用取词"
+            "value": "停用收词"
           }
         }
       }
@@ -59,7 +59,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用取词"
+            "value": "启用收词"
           }
         }
       }
@@ -197,7 +197,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用全局取词"
+            "value": "启用全局收词"
           }
         }
       }
@@ -231,7 +231,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "取词快捷键"
+            "value": "收词快捷键"
           }
         }
       }
@@ -334,7 +334,7 @@
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "取词"
+            "value": "收词"
           }
         }
       }

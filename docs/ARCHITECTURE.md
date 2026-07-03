@@ -7,7 +7,7 @@ wordclip/                          # 仓库根（project.yml → xcodegen 生成
 ├── WordClip/                      # App target（macOS + iOS 共用，#if 分平台）
 │   ├── App/                       # 入口、AppDelegate、AppState、命令、热键名
 │   ├── Views/                     # SwiftUI 界面（列表/详情/复习/统计/设置…）
-│   ├── Services/                  # 取词、HUD、朗读、复习会话、词典库、备份、通知
+│   ├── Services/                  # 收词、HUD、朗读、复习会话、词典库、备份、通知
 │   └── Resources/                 # 词库 SQLite、图标、Localizable.xcstrings
 ├── WordClipKit/Sources/WordClipKit/   # Swift Package —— 平台无关核心
 │   ├── Models/                    # SwiftData 模型
