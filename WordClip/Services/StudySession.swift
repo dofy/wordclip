@@ -94,12 +94,20 @@ final class StudySession: ObservableObject {
         phase = .back
     }
 
-    /// 评分：true = 认识(grade 4)，false = 不认识(grade 1)。
+    /// 评分：认识 / 不认识。
+    /// - 翻面「前」就认识（没看释义）→ grade 5，记得最牢，间隔拉最长
+    /// - 翻面「后」才确认认识（看过释义）→ grade 4，正常间隔
+    /// - 不认识 → grade 1
     /// 正面（未翻）或背面均可评分——不认识时通常想直接翻面看释义，认识则可不翻直接过。
     func grade(correct: Bool) {
         guard let entry = current, phase == .front || phase == .back else { return }
 
-        let g = correct ? 4 : 1
+        let g: Int
+        if correct {
+            g = (phase == .front) ? 5 : 4
+        } else {
+            g = 1
+        }
         let state = ReviewState(
             familiarity: entry.familiarity,
             easeFactor: entry.easeFactor,
