@@ -40,26 +40,39 @@ public protocol ReviewEngine: Sendable {
 // MARK: - SM2Engine
 
 /// 标准 SuperMemo SM-2 算法实现。
+///
+/// 与教科书 SM-2 的一处差异：标记「不认识」（grade < 3）时，下次到期不是
+/// 「1 天后」而是 `relearnInterval`（默认 10 分钟）后，让刚没记住的词能在
+/// 当轮 / 当天很快重现、反复巩固；同时它会立刻回到「待复习」，符合直觉。
 public struct SM2Engine: ReviewEngine {
 
-    public init() {}
+    /// 「不认识」后的重学间隔（秒）。默认 10 分钟。
+    public let relearnInterval: TimeInterval
+
+    public init(relearnInterval: TimeInterval = 10 * 60) {
+        self.relearnInterval = relearnInterval
+    }
 
     public func schedule(_ state: ReviewState, grade: Int, now: Date) -> (ReviewState, Date) {
         let g = max(0, min(5, grade))
         var s = state
+        let dueAt: Date
 
         if g < 3 {
-            // 答错：重置重复次数，间隔回到 1 天
+            // 不认识：重置重复次数与间隔天数（供下次答对时重新起步），
+            // 但下次到期用分钟级短间隔，让它当轮很快重现。
             s.repetitions = 0
             s.interval = 1
+            dueAt = now.addingTimeInterval(relearnInterval)
         } else {
-            // 答对
+            // 认识
             switch s.repetitions {
             case 0:  s.interval = 1
             case 1:  s.interval = 6
             default: s.interval = max(1, Int((Double(s.interval) * s.easeFactor).rounded()))
             }
             s.repetitions += 1
+            dueAt = Calendar.current.date(byAdding: .day, value: s.interval, to: now) ?? now
         }
 
         // 更新 EF（最小 1.3）
@@ -68,10 +81,6 @@ public struct SM2Engine: ReviewEngine {
 
         // 熟悉度：连续答对次数映射到 0–5 级
         s.familiarity = min(5, s.repetitions)
-
-        let dueAt = Calendar.current.date(
-            byAdding: .day, value: s.interval, to: now
-        ) ?? now
 
         return (s, dueAt)
     }

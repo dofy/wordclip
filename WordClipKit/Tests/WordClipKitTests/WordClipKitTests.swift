@@ -272,6 +272,15 @@ struct SM2EngineTests {
         let diff = abs(dueAt.timeIntervalSince(expectedDue))
         #expect(diff < 1)  // 误差 < 1 秒
     }
+
+    @Test("不认识（grade < 3）用分钟级短间隔当轮重现")
+    func wrongAnswerUsesShortInterval() {
+        let engine = SM2Engine(relearnInterval: 10 * 60)
+        let (_, dueAt) = engine.schedule(.initial, grade: 1, now: now)
+        let diff = dueAt.timeIntervalSince(now)
+        #expect(abs(diff - 600) < 1)          // 约 10 分钟后到期
+        #expect(diff < 60 * 60)               // 远小于 1 天
+    }
 }
 
 // MARK: - EnglishPack Tests
