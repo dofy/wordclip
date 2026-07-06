@@ -3,13 +3,20 @@ import WordClipKit
 
 /// 可翻转的单词卡片。
 /// 正面：单词 + 音标；背面：释义。
-/// 点击卡片或按空格翻转。
+/// - macOS：点击卡片翻转（评分用按钮 / 方向键）。
+/// - iOS：单击翻转，左划=不认识、右划=认识（`onGrade`）。
 struct FlashCardView: View {
     let entry: WordEntry
     let isFlipped: Bool
     let onFlip: () -> Void
+    /// iOS 滑动评分回调：true=认识、false=不认识。macOS 传 nil，不启用滑动。
+    var onGrade: ((Bool) -> Void)? = nil
 
     @State private var rotation: Double = 0
+    @State private var dragOffset: CGFloat = 0
+
+    /// 触发评分的水平滑动阈值（pt）。
+    private let swipeThreshold: CGFloat = 100
 
     var body: some View {
         ZStack {
@@ -21,15 +28,71 @@ struct FlashCardView: View {
         .frame(maxWidth: 600)
         .aspectRatio(1.55, contentMode: .fit)
         .frame(maxHeight: 400)
-        // 仅正面可点击翻面；翻面不可逆，背面点击无反应（防误触）。
         .contentShape(Rectangle())
+        #if os(iOS)
+        .offset(x: dragOffset)
+        .rotationEffect(.degrees(Double(dragOffset) / 22))
+        .overlay { swipeHint }
+        #endif
         .onTapGesture { flip() }
+        #if os(iOS)
+        .gesture(swipeGesture)
+        .onChange(of: entry.id) { _, _ in dragOffset = 0 }
+        #endif
         .onChange(of: isFlipped) { _, flipped in
             withAnimation(.spring(duration: 0.45)) {
                 rotation = flipped ? 180 : 0
             }
         }
     }
+
+    // MARK: - iOS 滑动手势
+
+    #if os(iOS)
+    private var swipeGesture: some Gesture {
+        DragGesture(minimumDistance: 24)
+            .onChanged { value in
+                // 只跟随水平位移，忽略竖向（保留背面释义滚动）。
+                guard abs(value.translation.width) > abs(value.translation.height) else { return }
+                dragOffset = value.translation.width
+            }
+            .onEnded { value in
+                if value.translation.width > swipeThreshold {
+                    onGrade?(true)          // 右划 = 认识
+                    dragOffset = 0
+                } else if value.translation.width < -swipeThreshold {
+                    onGrade?(false)         // 左划 = 不认识
+                    dragOffset = 0
+                } else {
+                    withAnimation(.spring(duration: 0.3)) { dragOffset = 0 }
+                }
+            }
+    }
+
+    /// 拖动时在对应方向淡入「认识 / 不认识」提示。
+    @ViewBuilder
+    private var swipeHint: some View {
+        let progress = min(1, abs(dragOffset) / swipeThreshold)
+        ZStack {
+            hintBadge(text: String(localized: "study.grade.correct", defaultValue: "认识"),
+                      systemImage: "checkmark", color: .green)
+                .opacity(dragOffset > 12 ? progress : 0)
+            hintBadge(text: String(localized: "study.grade.wrong", defaultValue: "不认识"),
+                      systemImage: "xmark", color: .red)
+                .opacity(dragOffset < -12 ? progress : 0)
+        }
+        .allowsHitTesting(false)
+    }
+
+    private func hintBadge(text: String, systemImage: String, color: Color) -> some View {
+        Label(text, systemImage: systemImage)
+            .font(.title3.bold())
+            .foregroundStyle(.white)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 10)
+            .background(color, in: Capsule())
+    }
+    #endif
 
     // MARK: 正面 — 单词居中
 

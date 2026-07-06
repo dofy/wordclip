@@ -153,7 +153,8 @@ struct StudyView: View {
                 FlashCardView(
                     entry: entry,
                     isFlipped: session.phase == .back,
-                    onFlip: { session.flip() }
+                    onFlip: { session.flip() },
+                    onGrade: { correct in session.grade(correct: correct) }
                 )
                 .padding(.horizontal, 24)
                 .frame(maxWidth: .infinity)
