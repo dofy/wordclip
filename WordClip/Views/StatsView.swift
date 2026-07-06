@@ -3,7 +3,7 @@ import SwiftData
 import Charts
 import WordClipKit
 
-/// 统计页：收录趋势、熟悉度分布、复习正确率。
+/// 统计页：收录趋势、熟悉度分布、复习认识率。
 struct StatsView: View {
     @Query private var words: [WordEntry]
     @Query(sort: \ReviewLog.date) private var logs: [ReviewLog]
@@ -71,7 +71,7 @@ struct StatsView: View {
                         label: String(localized: "stats.learning", defaultValue: "学习中"), color: .orange)
             if let acc = summary.overallAccuracy {
                 summaryCard(value: "\(Int(acc * 100))%",
-                            label: String(localized: "stats.accuracy", defaultValue: "正确率"), color: .purple)
+                            label: String(localized: "stats.accuracy", defaultValue: "认识率"), color: .purple)
             }
         }
     }
@@ -130,11 +130,11 @@ struct StatsView: View {
         }
     }
 
-    // MARK: - 复习正确率
+    // MARK: - 复习认识率
 
     private var reviewAccuracySection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionTitle(String(localized: "stats.review.title", defaultValue: "复习正确率"))
+            sectionTitle(String(localized: "stats.review.title", defaultValue: "复习认识率"))
             Chart(reviewTrend.filter { $0.total > 0 }) { day in
                 LineMark(
                     x: .value("Date", day.date),

@@ -255,7 +255,7 @@ struct StudyView: View {
                     ? Int(Double(session.sessionCorrect) / Double(session.sessionCount) * 100)
                     : 0
                 Text(String(localized: "study.finished.score",
-                            defaultValue: "答对 \(session.sessionCorrect) / \(session.sessionCount)（\(pct)%）"))
+                            defaultValue: "认识 \(session.sessionCorrect) / \(session.sessionCount)（\(pct)%）"))
                     .foregroundStyle(.secondary)
             }
 

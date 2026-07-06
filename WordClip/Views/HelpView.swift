@@ -146,11 +146,11 @@ struct HelpView: View {
                 Item(symbol: "circle.fill",
                      heading: String(localized: "help.review.states.title", defaultValue: "三种状态"),
                      body: String(localized: "help.review.states.body",
-                                  defaultValue: "新词（绿，还没答对过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。")),
+                                  defaultValue: "新词（绿，还没复习过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。")),
                 Item(symbol: "arrow.up.right",
                      heading: String(localized: "help.review.sm2.title", defaultValue: "SM-2 间隔重复"),
                      body: String(localized: "help.review.sm2.body",
-                                  defaultValue: "答对 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；答错 → 重置回明天重新巩固。一直答「不认识」的词会停留在「新词」。")),
+                                  defaultValue: "认识 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；不认识 → 重置回明天重新巩固。一直标记「不认识」的词会停留在「新词」。")),
             ]),
             Section(title: String(localized: "help.section.data", defaultValue: "数据与 Pro"), items: [
                 Item(symbol: "square.and.arrow.up",
