@@ -356,23 +356,6 @@
         }
       }
     },
-    "sidebar.settings": {
-      "comment": "macOS sidebar: settings item",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置"
-          }
-        }
-      }
-    },
     "tab.review": {
       "comment": "Tab bar / sidebar: review",
       "localizations": {

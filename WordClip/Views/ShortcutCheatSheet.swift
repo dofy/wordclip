@@ -74,7 +74,7 @@ struct ShortcutCheatSheet: View {
                 Item(desc: String(localized: "sidebar.allwords", defaultValue: "生词本"), keys: ["⌘1"]),
                 Item(desc: String(localized: "sidebar.review", defaultValue: "复习"), keys: ["⌘2"]),
                 Item(desc: String(localized: "sidebar.stats", defaultValue: "统计"), keys: ["⌘3"]),
-                Item(desc: String(localized: "sidebar.settings", defaultValue: "设置"), keys: ["⌘4"]),
+                Item(desc: String(localized: "tab.settings", defaultValue: "设置"), keys: ["⌘,"]),
             ]),
             Group(title: String(localized: "shortcuts.group.wordlist", defaultValue: "词典"), items: [
                 Item(desc: String(localized: "shortcuts.add", defaultValue: "添加单词"), keys: ["⌘N"]),
