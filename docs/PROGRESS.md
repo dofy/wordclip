@@ -9,10 +9,10 @@
 ### 工程与基建
 - 多平台 Xcode 工程(macOS + iOS/iPadOS),xcodegen 管理,可跨机器重新生成。
 - `WordClipKit` Swift Package 承载平台无关核心:模型、词库、复习算法、导入导出、统计。
-- SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
+- SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog` / `WordGroup`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
 - String Catalog(`Localizable.xcstrings`)zh-Hans + en,界面文案全部走 `String(localized:)`。
 - App 分类与显示名已配置。
-- `WordClipKit` 单元测试 44 条,GitHub Actions CI 跑 `swift test`。
+- `WordClipKit` 单元测试 57 条,GitHub Actions CI 跑 `swift test`。
 
 ### 收集
 - **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
@@ -22,6 +22,12 @@
 - **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
+
+### 词包(懒人包)
+- **两类离线词包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/程序员/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
+- **文件夹式分组隔离**:`WordGroup`(kind=manual/pack)。词条单一归属,去重按「分组 + lemma」;手动/OCR 收录归入「手动收录」组,导入包归入各自包组。`WordPackStore` 幂等导入(重复导入只补差集),导入词按「全新词」入队。存量老词(group=nil)启动时一次性迁移到手动组。
+- **分组学习**:`StudySession.selectedGroupID` 按分组过滤候选集(nil=全部混学),复习页顶部 `GroupPicker` 切换;SM-2 算法与选词规则不变。
+- **入口**:首启空库自动弹词包引导(仅一次);状态栏菜单「词包…」/ 复习页工具栏长驻入口随时补导入。全部免费。
 
 ### 词典与查词
 - 内置 ECDICT 约 5 万词离线库,`GRDBDictionaryProvider`(GRDB SQLite),首启从 bundle 拷到 App Support 只读打开。
