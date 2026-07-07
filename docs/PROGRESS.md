@@ -33,7 +33,7 @@
 - 内置 ECDICT 约 5 万词离线库,`GRDBDictionaryProvider`(GRDB SQLite),首启从 bundle 拷到 App Support 只读打开。
 - **词形还原**:利用 ECDICT `exchange` 列把变形词(如 `brought`)回退到原型查询。
 - **复合词库**(`CompositeDictionaryProvider`):内置 + 用户导入,按优先级 lookup,suggest 合并去重。
-- **自定义词典导入**(`DictionaryImporter` + `DictionaryStore`):CSV(逗号/制表符、引号转义)与 ECDICT 结构 SQLite,叠加共存,元数据存 UserDefaults、文件存 App Support,可启用/停用/删除/排序。
+- **自定义词典导入**(`DictionaryImporter` + `DictionaryStore`):CSV(逗号/制表符、引号转义)与 ECDICT 结构 SQLite,叠加共存,元数据存 UserDefaults、文件存 App Support,可启用/停用/删除/排序;App 内「如何导入词典」说明页(`DictionaryImportGuideView`)讲清用途与格式。
 - **释义结构化**(`DefinitionFormatter`):按词性分行、学科标记、中英分区,卡片与详情共用。
 
 ### 生词本

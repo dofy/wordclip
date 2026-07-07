@@ -1127,13 +1127,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Supports CSV (word,definition[,phonetic]) and ECDICT-structured SQLite. Multiple dictionaries are queried in order, built-in first."
+            "value": "Imported dictionaries add extra definitions when looking up words (they don't add words to your list). Multiple dictionaries stack in order; built-in takes priority."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "支持 CSV（word,释义[,音标]）与 ECDICT 结构的 SQLite。多本词典按顺序叠加查询，内置优先。"
+            "value": "导入词典可在查词时提供额外释义（不会往生词本加词）。多本按顺序叠加，内置优先。"
           }
         }
       }
@@ -1959,6 +1959,312 @@
           "stringUnit": {
             "state": "translated",
             "value": "每一轮固定学习的单词数，兼顾到期复习词与新词，学完自动结束。词量不足时学实际数量。"
+          }
+        }
+      }
+    },
+    "dictguide.title": {
+      "comment": "Dict import guide: page title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to Import a Dictionary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "如何导入词典"
+          }
+        }
+      }
+    },
+    "dictguide.section.what": {
+      "comment": "Dict import guide: section 'what'",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What This Is"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "这是什么"
+          }
+        }
+      }
+    },
+    "dictguide.what.title": {
+      "comment": "Dict import guide: what title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Extra sources for lookups"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扩充查词的释义来源"
+          }
+        }
+      }
+    },
+    "dictguide.what.body": {
+      "comment": "Dict import guide: what body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported dictionaries only add extra definitions when you look up a word (e.g. specialized terms, other languages). They do not add words to your word list — use Word Packs for that."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入的词典只在你查词时提供额外释义(如专业术语、其他语言),不会往生词本加词。想批量添加学习词条,请用「词包」。"
+          }
+        }
+      }
+    },
+    "dictguide.section.when": {
+      "comment": "Dict import guide: section 'when'",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When You Need It"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "什么时候需要"
+          }
+        }
+      }
+    },
+    "dictguide.when.title": {
+      "comment": "Dict import guide: when title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Most people don't need this"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "多数人无需导入"
+          }
+        }
+      }
+    },
+    "dictguide.when.body": {
+      "comment": "Dict import guide: when body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The built-in ECDICT (50k words) already covers everyday English. Useful when you want a specialized dictionary (medical / legal / tech), definitions into another language, or you have your own word list."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "内置 ECDICT 5 万词已覆盖日常英语。适合这些情况:查专业领域词库(医学 / 法律 / 计算机)、需要英→其他语言释义、已有自制词表。"
+          }
+        }
+      }
+    },
+    "dictguide.section.format": {
+      "comment": "Dict import guide: section 'format'",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supported Formats"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支持的格式"
+          }
+        }
+      }
+    },
+    "dictguide.csv.title": {
+      "comment": "Dict import guide: CSV title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV table"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CSV 表格"
+          }
+        }
+      }
+    },
+    "dictguide.csv.body": {
+      "comment": "Dict import guide: CSV body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Three columns per row: word, definition, phonetic (phonetic optional). Comma- or tab-separated; header row optional; wrap a definition in double quotes if it contains a comma."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每行三列:单词、释义、音标(音标可省)。逗号或制表符分隔;首行表头可选;释义含逗号时用双引号包裹。"
+          }
+        }
+      }
+    },
+    "dictguide.sqlite.title": {
+      "comment": "Dict import guide: SQLite title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SQLite database"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SQLite 词库"
+          }
+        }
+      }
+    },
+    "dictguide.sqlite.body": {
+      "comment": "Dict import guide: SQLite body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Must contain an `entries` table with `word` and `definition` columns (ECDICT structure); adopted directly on import."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需含 entries 表,且有 word、definition 列(即 ECDICT 结构),导入时直接采用。"
+          }
+        }
+      }
+    },
+    "dictguide.section.prepare": {
+      "comment": "Dict import guide: section 'prepare'",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to Prepare One"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "怎么自己准备"
+          }
+        }
+      }
+    },
+    "dictguide.prepare.excel.title": {
+      "comment": "Dict import guide: prepare excel title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Make a CSV in a spreadsheet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用表格软件做 CSV"
+          }
+        }
+      }
+    },
+    "dictguide.prepare.excel.body": {
+      "comment": "Dict import guide: prepare excel body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fill three columns in Excel / Numbers / Google Sheets, then Save As / Export as CSV (UTF-8)."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 Excel / Numbers / Google 表格里填三列,「另存为 / 导出」时选 CSV(UTF-8)即可。"
+          }
+        }
+      }
+    },
+    "dictguide.prepare.sqlite.title": {
+      "comment": "Dict import guide: prepare sqlite title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Advanced: build a SQLite file"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "进阶:自制 SQLite"
+          }
+        }
+      }
+    },
+    "dictguide.prepare.sqlite.body": {
+      "comment": "Dict import guide: prepare sqlite body",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build one from open dictionary data. For example, this app's built-in dictionary comes from ECDICT (MIT-licensed)."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可用开源词典数据自制。例如本 App 内置词库即来自 ECDICT(MIT 开源)。"
+          }
+        }
+      }
+    },
+    "settings.dict.learnmore": {
+      "comment": "Settings: dictionary learn-more link",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learn how to import ›"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "了解如何导入 ›"
           }
         }
       }

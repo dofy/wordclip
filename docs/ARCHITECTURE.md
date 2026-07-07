@@ -115,7 +115,7 @@ protocol DictionaryProvider {
 
 - **词形还原**:`GRDBDictionaryProvider` 利用 ECDICT `exchange` 列,把变形词(`brought`)回退到原型(`bring`)查询。
 - **复合词库**:`CompositeDictionaryProvider` 按优先级串联「内置 + 用户导入」的多个 Provider,lookup 取首个命中,suggest 合并去重。
-- **自定义导入(本地,已实现)**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。
+- **自定义导入(本地,已实现)**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。新增 App 内说明页 `DictionaryImportGuideView`(用途 / 何时需要 / 格式示例 / 怎么准备),仅从设置页词典分区 footer 唤起。
 - **在线词典服务(Pro,计划中)**:目标是通过在线服务**直接检索/导入**扩展词典,而非仅导入本地准备好的文件。设计上仍复用 `DictionaryProvider` / `CompositeDictionaryProvider` 抽象——在线词典作为又一个 Provider 叠加,或由服务端下发我们的 `entries` 结构包再落地为本地库。**待定**:后端形态(自建最小服务 vs 现成开放词典 API)、词源合规(同上,只提供用户有权使用的词库)、离线缓存策略。本地文件导入作为兜底保留。
 
 ### 3.3b 词包(懒人包)与分组隔离
