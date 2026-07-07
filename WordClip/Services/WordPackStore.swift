@@ -21,6 +21,20 @@ final class WordPackStore {
         return g
     }
 
+    /// 一次性迁移:把 group == nil 的存量老词归入「手动收录」组。
+    /// 幂等:没有 nil 词时不写入、返回 0。分支引入 group 字段前收录的词迁移后为 nil,
+    /// 本方法让它们进入手动组,使「== 手动组id」的查询谓词对存量词也成立。
+    @discardableResult
+    func migrateOrphansToManualGroup() -> Int {
+        let descriptor = FetchDescriptor<WordEntry>(predicate: #Predicate { $0.group == nil })
+        let orphans = (try? modelContext.fetch(descriptor)) ?? []
+        guard !orphans.isEmpty else { return 0 }
+        let group = manualGroup()
+        for entry in orphans { entry.group = group }
+        try? modelContext.save()
+        return orphans.count
+    }
+
     func isImported(slug: String) -> Bool { importedCount(slug: slug) > 0 }
 
     func importedCount(slug: String) -> Int {

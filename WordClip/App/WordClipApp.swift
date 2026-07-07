@@ -145,6 +145,9 @@ struct WordClipApp: App {
     private func setupCollector() {
         guard collectorBox.collector == nil else { return }
 
+        // 一次性迁移:存量 nil-group 老词归入手动组(见 Task 6b)。幂等,无 nil 词时空操作。
+        WordPackStore(modelContext: modelContainer.mainContext).migrateOrphansToManualGroup()
+
         // 准备内置词典：从 Bundle 拷贝到 Application Support，只读打开。
         let builtin: DictionaryProvider
         do {
