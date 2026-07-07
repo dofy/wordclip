@@ -11,6 +11,8 @@ extension Notification.Name {
     static let startReviewFromMenuBar = Notification.Name("startReviewFromMenuBar")
     /// 请求打开词包浏览(长驻入口)。
     static let showWordPacks = Notification.Name("showWordPacks")
+    /// 请求显示「导入词典」说明页。
+    static let showDictionaryImportGuide = Notification.Name("showDictionaryImportGuide")
 }
 
 /// 侧边栏导航目标
@@ -33,6 +35,7 @@ struct ContentView: View {
     @State private var showingShortcuts = false
     @State private var showingHelp = false
     @State private var showingWordPacks = false
+    @State private var showingDictImportGuide = false
 
     // 首启词包引导：库为空且未展示过时弹出。
     @AppStorage("packs.onboarded") private var packsOnboarded = false
@@ -93,6 +96,12 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
+            }
+            .sheet(isPresented: $showingDictImportGuide) {
+                DictionaryImportGuideView()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .showDictionaryImportGuide)) { _ in
+                showingDictImportGuide = true
             }
             // 长驻词包入口:菜单栏 / 复习页工具栏均经此通知唤出,补导入未导入的包。
             .sheet(isPresented: $showingWordPacks) {

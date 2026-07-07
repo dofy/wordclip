@@ -85,8 +85,16 @@ struct DictionarySettingsSection: View {
         } header: {
             Text(String(localized: "settings.section.dict", defaultValue: "词典"))
         } footer: {
-            Text(String(localized: "settings.dict.hint",
-                defaultValue: "支持 CSV（word,释义[,音标]）与 ECDICT 结构的 SQLite。多本词典按顺序叠加查询，内置优先。"))
+            VStack(alignment: .leading, spacing: 6) {
+                Text(String(localized: "settings.dict.hint",
+                    defaultValue: "导入词典可在查词时提供额外释义（不会往生词本加词）。多本按顺序叠加，内置优先。"))
+                Button(String(localized: "settings.dict.learnmore", defaultValue: "了解如何导入 ›")) {
+                    NotificationCenter.default.post(name: .showDictionaryImportGuide, object: nil)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.tint)
+                .focusable(false)
+            }
             .foregroundStyle(.secondary)
         }
         .fileImporter(
