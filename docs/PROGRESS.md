@@ -23,11 +23,11 @@
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
 
-### 词包(懒人包)
-- **两类离线词包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/技术/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
+### 懒人包
+- **两类离线懒人包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/技术/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
 - **文件夹式分组隔离**:`WordGroup`(kind=manual/pack)。词条单一归属,去重按「分组 + lemma」;手动/OCR 收录归入「手动收录」组,导入包归入各自包组。`WordPackStore` 幂等导入(重复导入只补差集),导入词按「全新词」入队。存量老词(group=nil)启动时一次性迁移到手动组。
 - **分组学习**:`StudySession.selectedGroupID` 按分组过滤候选集(nil=全部混学),复习页顶部 `GroupPicker` 切换;SM-2 算法与选词规则不变。
-- **入口**:首启空库自动弹词包引导(仅一次);状态栏菜单「词包…」/ 复习页工具栏长驻入口随时补导入。全部免费。
+- **入口**:首启空库自动弹懒人包引导(仅一次);状态栏菜单「懒人包…」/ 复习页工具栏长驻入口随时补导入。全部免费。
 
 ### 词典与查词
 - 内置 ECDICT 约 5 万词离线库,`GRDBDictionaryProvider`(GRDB SQLite),首启从 bundle 拷到 App Support 只读打开。
@@ -39,7 +39,7 @@
 ### 生词本
 - 三栏布局(macOS / iPad):导航 → 列表 → 详情,`WordSelection` 统一选中态,原生单击选中、双击/回车打开。
 - **搜索**:输入防抖 + `#Index` + 结果缓存;生词本匹配优先,下方列出词典中未收录的匹配词,点击预览释义并一键收录。
-- **按词包过滤 + 移除词包**:已导入词包后工具栏出现 `GroupPicker`(全部/手动收录/各词包);过滤到某个词包组时,工具栏出现「移除此词包」→ 确认弹窗(显示待删词数)→ 删该组词条 + 复习日志(`WordPackRemover`,Kit 内单测)+ 分组本身,词包恢复「未导入」可再导入。手动组不可移除。
+- **按懒人包过滤 + 移除懒人包**:已导入懒人包后工具栏出现 `GroupPicker`(全部/手动收录/各懒人包);过滤到某个懒人包组时,工具栏出现「移除此懒人包」→ 确认弹窗(显示待删词数)→ 删该组词条 + 复习日志(`WordPackRemover`,Kit 内单测)+ 分组本身,懒人包恢复「未导入」可再导入。手动组不可移除。
 - **排序**:收录时间 / 字母 / 熟悉度,工具栏菜单切换,`AppStorage` 记忆。
 - 收藏、TTS 朗读(`Speaker` / `AVSpeechSynthesizer`)、释义修复(重新查词回填)、删除。
 - 新收录词若词典未就绪导致释义缺失,进入生词本自动补全。
@@ -56,7 +56,7 @@
 
 ### 统计与数据
 - 统计面板(`StatsCalculator` + `StatsView`):总词数、待复习、新词、掌握率。
-- JSON 备份导入 / 导出(`BackupService` + `WordBackup` + `WordBackupDocument`):只导出**手动收录**组的词(词包词可重新导入、不进备份),导入固定归入手动组、按单词智能合并、不覆盖学习进度。两端语义对称,避免备份往返展平分组。
+- JSON 备份导入 / 导出(`BackupService` + `WordBackup` + `WordBackupDocument`):只导出**手动收录**组的词(懒人包词可重新导入、不进备份),导入固定归入手动组、按单词智能合并、不覆盖学习进度。两端语义对称,避免备份往返展平分组。
 
 ### 帮助与说明
 - **App 内使用帮助**(`HelpView`):原生分区面板(核心概念 / 收词 / 添加查词 / 复习原理 / 数据与 Pro / FAQ),中英双语。macOS 从「帮助」菜单、两端从设置页「使用帮助」唤出;复用 `ShortcutCheatSheet` 的通知 + sheet 模式。
