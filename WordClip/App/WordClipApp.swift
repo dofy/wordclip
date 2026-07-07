@@ -22,6 +22,7 @@ struct WordClipApp: App {
             WordEntry.self,
             CollectSource.self,
             ReviewLog.self,
+            WordGroup.self,
         ])
 
         // 确保 Application Support 目录存在（iOS 沙盒里默认不存在，

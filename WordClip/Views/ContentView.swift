@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import WordClipKit
 
 extension Notification.Name {
@@ -29,6 +30,11 @@ struct ContentView: View {
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
     @State private var showingHelp = false
+
+    // 首启词包引导：库为空且未展示过时弹出。
+    @AppStorage("packs.onboarded") private var packsOnboarded = false
+    @State private var showOnboarding = false
+    @Query private var allWords: [WordEntry]
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -84,6 +90,18 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
+            }
+            // 首启词包引导：库为空且未展示过时弹出，展示后记录标志避免重复。
+            .task {
+                if allWords.isEmpty && !packsOnboarded {
+                    showOnboarding = true
+                }
+            }
+            .sheet(isPresented: $showOnboarding) {
+                WordPackBrowserView(isOnboarding: true) {
+                    packsOnboarded = true
+                    showOnboarding = false
+                }
             }
             // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
             .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in
