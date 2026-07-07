@@ -180,7 +180,7 @@ struct ContentView: View {
         .background(sidebarShortcuts)
     }
 
-    /// ⌘1–⌘4 快速切换侧边栏项目。隐藏按钮承载快捷键。
+    /// ⌘1–⌘3 快速切换侧边栏项目(生词本/复习/统计)。隐藏按钮承载快捷键。
     @ViewBuilder
     private var sidebarShortcuts: some View {
         Group {
