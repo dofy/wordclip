@@ -20,6 +20,17 @@ struct StudyView: View {
             }
         }
         .navigationTitle(String(localized: "tab.review", defaultValue: "复习"))
+        // 长驻词包入口:两端均可从复习页工具栏打开词包浏览。
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    NotificationCenter.default.post(name: .showWordPacks, object: nil)
+                } label: {
+                    Label(String(localized: "menu.wordpacks", defaultValue: "词包…"),
+                          systemImage: "square.stack.3d.up")
+                }
+            }
+        }
         .onAppear {
             session.updateContext(modelContext)
             session.refreshStats()
@@ -43,6 +54,12 @@ struct StudyView: View {
             Image(systemName: "rectangle.on.rectangle.angled")
                 .font(.system(size: 56))
                 .foregroundStyle(.tint)
+
+            GroupPicker(selection: Binding(
+                get: { session.selectedGroupID },
+                set: { session.setGroup($0) }
+            ))
+            .padding(.horizontal, 20)
 
             HStack(spacing: 12) {
                 statCard(value: session.stats.total,

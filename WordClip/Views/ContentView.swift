@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import WordClipKit
 
 extension Notification.Name {
@@ -8,6 +9,8 @@ extension Notification.Name {
     static let showHelp = Notification.Name("showHelp")
     /// 从状态栏菜单请求开始复习。
     static let startReviewFromMenuBar = Notification.Name("startReviewFromMenuBar")
+    /// 请求打开词包浏览(长驻入口)。
+    static let showWordPacks = Notification.Name("showWordPacks")
 }
 
 /// 侧边栏导航目标
@@ -29,6 +32,12 @@ struct ContentView: View {
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
     @State private var showingHelp = false
+    @State private var showingWordPacks = false
+
+    // 首启词包引导：库为空且未展示过时弹出。
+    @AppStorage("packs.onboarded") private var packsOnboarded = false
+    @State private var showOnboarding = false
+    @Query private var allWords: [WordEntry]
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var hSizeClass
@@ -84,6 +93,30 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
+            }
+            // 长驻词包入口:菜单栏 / 复习页工具栏均经此通知唤出,补导入未导入的包。
+            .sheet(isPresented: $showingWordPacks) {
+                WordPackBrowserView(isOnboarding: false) {
+                    showingWordPacks = false
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .showWordPacks)) { _ in
+                showingWordPacks = true
+            }
+            // 首启词包引导：库为空且未展示过时弹出，展示后记录标志避免重复。
+            .task {
+                if allWords.isEmpty && !packsOnboarded {
+                    showOnboarding = true
+                }
+            }
+            .sheet(isPresented: $showOnboarding) {
+                WordPackBrowserView(isOnboarding: true) {
+                    packsOnboarded = true
+                    showOnboarding = false
+                }
+                // 禁止滑动关闭：只能经「跳过」/「导入」退出，两者都会置 packsOnboarded，
+                // 避免 iOS 上滑动 dismiss 后标志未置、下次空库启动重复弹出。
+                .interactiveDismissDisabled()
             }
             // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
             .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in

@@ -12,23 +12,26 @@ final class OCRWordPicker {
     private init() {}
 
     private var panel: NSPanel?
+    private var model: OCRPickerModel?
 
     /// 面板固定尺寸（与 OCRWordPickerView 的 .frame 一致）。
     private static let panelSize = NSSize(width: 380, height: 380)
 
-    /// 呈现选词面板。用户确认后回调选中的单词；取消则不回调。
-    func present(words: [String], onConfirm: @escaping ([String]) -> Void) {
+    /// 立即呈现「分析中」面板，覆盖 OCR 等待感。返回的 model 用于稍后填入候选词。
+    /// 用户确认后回调选中的单词；取消则不回调。
+    @discardableResult
+    func presentAnalyzing(onConfirm: @escaping ([String]) -> Void) -> OCRPickerModel {
         dismiss()
 
-        let view = OCRWordPickerView(
-            words: words,
-            onConfirm: { [weak self] picked in
-                self?.dismiss()
-                if !picked.isEmpty { onConfirm(picked) }
-            },
-            onCancel: { [weak self] in self?.dismiss() }
-        )
+        let model = OCRPickerModel()
+        model.onConfirm = { [weak self] picked in
+            self?.dismiss()
+            if !picked.isEmpty { onConfirm(picked) }
+        }
+        model.onCancel = { [weak self] in self?.dismiss() }
+        self.model = model
 
+        let view = OCRWordPickerView(model: model)
         let hosting = NSHostingView(rootView: view)
         let size = Self.panelSize
 
@@ -54,11 +57,23 @@ final class OCRWordPicker {
         self.panel = panel
         NSApp.activate(ignoringOtherApps: true)
         panel.makeKeyAndOrderFront(nil)
+        return model
     }
+
+    /// OCR 完成：把候选词填入正在显示的面板，切换到选词状态。
+    func showWords(_ words: [String]) {
+        model?.phase = .ready(words)
+    }
+
+    /// 面板是否仍在显示（用户可能已取消/关闭）。
+    var isPresenting: Bool { panel != nil }
+
+    func close() { dismiss() }
 
     private func dismiss() {
         panel?.orderOut(nil)
         panel = nil
+        model = nil
     }
 
     private func centerOnActiveScreen(_ panel: NSPanel, size: NSSize) {
