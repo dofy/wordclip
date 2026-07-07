@@ -41,6 +41,11 @@ final class StudySession: ObservableObject {
     }
     @Published var stats = Stats()
 
+    /// 当前学习的分组；nil = 全部分组混学。持久化到 UserDefaults。
+    @Published var selectedGroupID: UUID?
+
+    private static let selectedGroupKey = "study.selectedGroup"
+
     // MARK: - Private
 
     private var modelContext: ModelContext?
@@ -55,6 +60,10 @@ final class StudySession: ObservableObject {
 
     init(engine: any ReviewEngine = SM2Engine()) {
         self.engine = engine
+        if let s = UserDefaults.standard.string(forKey: Self.selectedGroupKey),
+           let id = UUID(uuidString: s) {
+            selectedGroupID = id
+        }
     }
 
     // MARK: - Setup
@@ -64,6 +73,17 @@ final class StudySession: ObservableObject {
     }
 
     // MARK: - Public API
+
+    /// 切换分组并持久化；调用后应 refreshStats()。
+    func setGroup(_ id: UUID?) {
+        selectedGroupID = id
+        if let id {
+            UserDefaults.standard.set(id.uuidString, forKey: Self.selectedGroupKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: Self.selectedGroupKey)
+        }
+        refreshStats()
+    }
 
     func refreshStats() {
         let all = fetchAll()
@@ -196,9 +216,12 @@ final class StudySession: ObservableObject {
 
     private func fetchAll() -> [WordEntry] {
         guard let ctx = modelContext else { return [] }
-        let descriptor = FetchDescriptor<WordEntry>(
+        var descriptor = FetchDescriptor<WordEntry>(
             sortBy: [SortDescriptor(\.createdAt, order: .forward)]
         )
+        if let gid = selectedGroupID {
+            descriptor.predicate = #Predicate { $0.group?.id == gid }
+        }
         return (try? ctx.fetch(descriptor)) ?? []
     }
 }
