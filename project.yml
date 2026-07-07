@@ -48,6 +48,11 @@ targets:
           - "Resources/Info-iOS.plist"
           - "Resources/*.entitlements"
           - "Resources/*.storekit"   # 由 scheme 引用，不打包/不编译
+          - "Resources/wordpacks"    # 见下方 folder reference（避免被展平到 Resources 根）
+      # 词包目录作为 folder reference 打包，保留 wordpacks/ 子目录，
+      # 供 Bundle.main.urls(forResourcesWithExtension:subdirectory:"wordpacks") 读取。
+      - path: WordClip/Resources/wordpacks
+        type: folder
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
@@ -80,6 +85,11 @@ targets:
           - "Resources/Info-iOS.plist"
           - "Resources/*.entitlements"
           - "Resources/*.storekit"   # 由 scheme 引用，不打包/不编译
+          - "Resources/wordpacks"    # 见下方 folder reference（避免被展平到 Resources 根）
+      # 词包目录作为 folder reference 打包，保留 wordpacks/ 子目录，
+      # 供 Bundle.main.urls(forResourcesWithExtension:subdirectory:"wordpacks") 读取。
+      - path: WordClip/Resources/wordpacks
+        type: folder
     resources:
       - path: WordClip/Resources/PrivacyInfo.xcprivacy
     dependencies:
