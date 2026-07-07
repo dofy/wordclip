@@ -271,6 +271,14 @@ struct WordListView: View {
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
 
+                // 词包(懒人包):直观的长驻入口,收录后随时可再导入
+                Button {
+                    NotificationCenter.default.post(name: .showWordPacks, object: nil)
+                } label: {
+                    Label(String(localized: "menu.wordpacks", defaultValue: "词包…"),
+                          systemImage: "square.stack.3d.up")
+                }
+
                 // 添加单词
                 Button {
                     showingAddWord = true
