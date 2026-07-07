@@ -101,8 +101,31 @@ private final class SelectionOverlayView: NSView {
 
     override var acceptsFirstResponder: Bool { true }
 
-    override func resetCursorRects() {
-        addCursorRect(bounds, cursor: .crosshair)
+    // 多屏时只有一个遮罩窗是 key。默认非 key 窗口的首次点击只用来激活窗口、
+    // 不会传成 mouseDown（表现为“第一下圈选无效，得再点一下”）。返回 true
+    // 让首次点击直接当作正常鼠标事件，任意屏都能一下开始框选。
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+
+    // 十字光标。用 NSTrackingArea + cursorUpdate 而非 addCursorRect：
+    // 光标矩形只对 key window 生效，多屏时非 key 屏的遮罩不会显示十字；
+    // .activeAlways 的 tracking area 不受 key 状态限制，各屏都能正确显示。
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        for area in trackingAreas { removeTrackingArea(area) }
+        addTrackingArea(NSTrackingArea(
+            rect: bounds,
+            options: [.activeAlways, .cursorUpdate, .mouseEnteredAndExited, .inVisibleRect],
+            owner: self,
+            userInfo: nil
+        ))
+    }
+
+    override func cursorUpdate(with event: NSEvent) {
+        NSCursor.crosshair.set()
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+        NSCursor.crosshair.set()
     }
 
     override func draw(_ dirtyRect: NSRect) {
