@@ -35,6 +35,11 @@ public final class WordEntry {
     @Relationship(deleteRule: .cascade)
     public var sources: [CollectSource]
 
+    // MARK: 分组归属(nil 视为「手动收录」组,存量老词无需迁移)
+    // 单向可选关系(WordGroup 侧不设反向数组,保持模型简单 + CloudKit 友好)。
+    @Relationship(deleteRule: .nullify)
+    public var group: WordGroup?
+
     public init(
         headword: String,
         lemma: String,
@@ -69,6 +74,45 @@ extension WordEntry {
         guard !isNew, let due = dueAt else { return false }
         return due <= now
     }
+}
+
+// MARK: - WordGroup
+
+/// 词条分组:手动收录集 或 某个懒人词包。
+/// 单一归属:一个 WordEntry 只属于一个 WordGroup。
+/// CloudKit 建模约束:无 .unique,属性有默认值或可选。
+@Model
+public final class WordGroup {
+
+    public var id: UUID
+    public var name: String            // "手动收录" / "旅游娱乐" / "考研核心"
+    public var kind: String            // kindManual | kindPack
+    public var packSlug: String?       // 包稳定标识(如 "travel"、"cet4");manual 组为 nil
+    public var iconSymbol: String?     // SF Symbol 名
+    public var sortOrder: Int
+    public var createdAt: Date
+
+    public init(
+        name: String,
+        kind: String,
+        packSlug: String? = nil,
+        iconSymbol: String? = nil,
+        sortOrder: Int = 0
+    ) {
+        self.id = UUID()
+        self.name = name
+        self.kind = kind
+        self.packSlug = packSlug
+        self.iconSymbol = iconSymbol
+        self.sortOrder = sortOrder
+        self.createdAt = Date()
+    }
+}
+
+extension WordGroup {
+    public static let kindManual = "manual"
+    public static let kindPack = "pack"
+    public static let manualGroupName = "手动收录"
 }
 
 // MARK: - CollectSource
