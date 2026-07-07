@@ -12,7 +12,7 @@
 - SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog` / `WordGroup`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
 - String Catalog(`Localizable.xcstrings`)zh-Hans + en,界面文案全部走 `String(localized:)`。
 - App 分类与显示名已配置。
-- `WordClipKit` 单元测试 57 条,GitHub Actions CI 跑 `swift test`。
+- `WordClipKit` 单元测试 61 条,GitHub Actions CI 跑 `swift test`。
 
 ### 收集
 - **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
@@ -39,6 +39,7 @@
 ### 生词本
 - 三栏布局(macOS / iPad):导航 → 列表 → 详情,`WordSelection` 统一选中态,原生单击选中、双击/回车打开。
 - **搜索**:输入防抖 + `#Index` + 结果缓存;生词本匹配优先,下方列出词典中未收录的匹配词,点击预览释义并一键收录。
+- **按词包过滤 + 移除词包**:已导入词包后工具栏出现 `GroupPicker`(全部/手动收录/各词包);过滤到某个词包组时,工具栏出现「移除此词包」→ 确认弹窗(显示待删词数)→ 删该组词条 + 复习日志(`WordPackRemover`,Kit 内单测)+ 分组本身,词包恢复「未导入」可再导入。手动组不可移除。
 - **排序**:收录时间 / 字母 / 熟悉度,工具栏菜单切换,`AppStorage` 记忆。
 - 收藏、TTS 朗读(`Speaker` / `AVSpeechSynthesizer`)、释义修复(重新查词回填)、删除。
 - 新收录词若词典未就绪导致释义缺失,进入生词本自动补全。

@@ -77,6 +77,13 @@ final class WordPackStore {
         return newWords.count
     }
 
+    /// 移除词包:删该组全部词条 + 复习日志 + 分组本身,返回删除词数。
+    /// 移除后词包恢复「未导入」,可重新导入(编排见 Kit `WordPackRemover`)。
+    @discardableResult
+    func removePack(_ group: WordGroup) -> Int {
+        WordPackRemover.remove(group: group, in: modelContext)
+    }
+
     private func fetchGroup(kind: String, slug: String?) -> WordGroup? {
         let d: FetchDescriptor<WordGroup>
         if let slug {

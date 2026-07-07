@@ -84,12 +84,15 @@ struct WordListView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var appState: AppState
     @Query(sort: \WordEntry.createdAt, order: .reverse) private var words: [WordEntry]
+    @Query(sort: \WordGroup.sortOrder) private var groups: [WordGroup]
 
     @State private var selectedItem: WordSelection?   // 三栏统一选中
+    @State private var selectedGroupID: UUID?         // 分组过滤(nil=全部,会话级)
     @State private var isRepairing = false
     @State private var repairMessage: String?
     @State private var pendingDelete: [WordEntry] = []  // 待确认删除
     @State private var showDeleteConfirm = false
+    @State private var showRemovePackConfirm = false   // 移除词包确认
     @State private var searchText = ""
     @State private var debouncedSearch = ""                  // 防抖后的搜索词
     @State private var showingAddWord = false
@@ -159,9 +162,23 @@ struct WordListView: View {
     /// （大词量下方向键/刷新会重排整表，导致黏滞）。仅在输入变化时 recompute。
     private var filteredWords: [WordEntry] { displayWords }
 
+    /// 当前过滤到的分组(用于工具栏移除入口)。选「全部」时为 nil。
+    private var selectedGroup: WordGroup? {
+        guard let gid = selectedGroupID else { return nil }
+        return groups.first { $0.id == gid }
+    }
+
+    /// 当前过滤到的分组是否为词包(仅词包组可移除;手动组不可移除)。
+    private var canRemoveSelectedPack: Bool {
+        selectedGroup?.kind == WordGroup.kindPack
+    }
+
     /// 重新计算过滤 + 排序结果（纯函数式，写入缓存）。
     private func recomputeDisplayWords() {
         var result = words
+        if let gid = selectedGroupID {
+            result = result.filter { $0.group?.id == gid }
+        }
         if showFavoritesOnly {
             result = result.filter { $0.isFavorite }
         }
@@ -200,6 +217,7 @@ struct WordListView: View {
         .onAppear { recomputeDisplayWords() }
         .onChange(of: words) { _, _ in recomputeDisplayWords() }
         .onChange(of: showFavoritesOnly) { _, _ in recomputeDisplayWords() }
+        .onChange(of: selectedGroupID) { _, _ in recomputeDisplayWords() }
         .onChange(of: sortRaw) { _, _ in recomputeDisplayWords() }
         .onChange(of: debouncedSearch) { _, _ in recomputeDisplayWords() }
         // 词典建议随防抖搜索刷新（依赖词典就绪与生词本变化）。
@@ -271,6 +289,22 @@ struct WordListView: View {
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
 
+                // 分组过滤:仅当已导入词包时出现(否则工具栏保持简洁)。
+                if groups.contains(where: { $0.kind == WordGroup.kindPack }) {
+                    GroupPicker(selection: $selectedGroupID)
+
+                    // 移除此词包:仅过滤到某个词包组时出现。
+                    if canRemoveSelectedPack {
+                        Button(role: .destructive) {
+                            showRemovePackConfirm = true
+                        } label: {
+                            Label(String(localized: "wordlist.toolbar.removePack", defaultValue: "移除此词包"),
+                                  systemImage: "trash")
+                        }
+                        .tint(.red)
+                    }
+                }
+
                 // 词包(懒人包):直观的长驻入口,收录后随时可再导入
                 Button {
                     NotificationCenter.default.post(name: .showWordPacks, object: nil)
@@ -322,6 +356,40 @@ struct WordListView: View {
                 pendingDelete = []
             }
         }
+        .confirmationDialog(
+            removePackConfirmTitle,
+            isPresented: $showRemovePackConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "wordlist.removePack.confirm", defaultValue: "移除词包"),
+                   role: .destructive) {
+                removeSelectedPack()
+            }
+            Button(String(localized: "delete.cancel", defaultValue: "取消"), role: .cancel) {}
+        } message: {
+            Text(removePackConfirmMessage)
+        }
+    }
+
+    /// 移除当前过滤到的词包组:删词条 + 日志 + 组,退回「全部」并清空可能失效的选中项。
+    private func removeSelectedPack() {
+        guard let group = selectedGroup, group.kind == WordGroup.kindPack else { return }
+        WordPackStore(modelContext: modelContext).removePack(group)
+        selectedGroupID = nil
+        // 右侧详情若是被删词条,清空(词条已随组删除,@Query 会刷新 words)
+        if case .word = selectedItem { selectedItem = nil }
+        recomputeDisplayWords()
+    }
+
+    private var removePackConfirmTitle: String {
+        String(localized: "wordlist.removePack.title",
+                defaultValue: "移除「\(selectedGroup?.name ?? "")」词包？")
+    }
+
+    private var removePackConfirmMessage: String {
+        let count = selectedGroup.map { g in words.filter { $0.group?.id == g.id }.count } ?? 0
+        return String(localized: "wordlist.removePack.message",
+                      defaultValue: "将删除该词包的 \(count) 个单词及其复习进度，可随时重新导入。")
     }
 
     private var deleteConfirmTitle: String {
