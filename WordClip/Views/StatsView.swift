@@ -3,42 +3,65 @@ import SwiftData
 import Charts
 import WordClipKit
 
-/// 统计页：收录趋势、熟悉度分布、复习认识率。
+/// 统计页：收录趋势、熟悉度分布、复习认识率。可按分组过滤(与复习页一致)。
 struct StatsView: View {
     @Query private var words: [WordEntry]
     @Query(sort: \ReviewLog.date) private var logs: [ReviewLog]
+
+    /// 当前统计的分组;nil = 全部。与复习页的 GroupPicker 同一交互,但各自独立选择。
+    @State private var selectedGroupID: UUID?
 
     private let trendDays = 30
 
     var body: some View {
         ScrollView {
-            if words.isEmpty {
-                ContentUnavailableView(
-                    String(localized: "stats.empty.title", defaultValue: "还没有统计数据"),
-                    systemImage: "chart.xyaxis.line",
-                    description: Text(String(localized: "stats.empty.desc",
-                        defaultValue: "收录单词并复习后，这里会显示你的学习统计"))
-                )
-                .padding(.top, 60)
-            } else {
-                VStack(alignment: .leading, spacing: 28) {
-                    summarySection
-                    familiaritySection
-                    collectTrendSection
-                    if summary.totalReviews > 0 {
-                        reviewAccuracySection
-                    }
-                }
-                .padding(20)
+            VStack(alignment: .leading, spacing: 20) {
+                GroupPicker(selection: $selectedGroupID)
+                content
             }
+            .padding(20)
         }
         .navigationTitle(String(localized: "tab.stats", defaultValue: "统计"))
     }
 
-    // MARK: - 数据
+    @ViewBuilder
+    private var content: some View {
+        if filteredWords.isEmpty {
+            ContentUnavailableView(
+                String(localized: "stats.empty.title", defaultValue: "还没有统计数据"),
+                systemImage: "chart.xyaxis.line",
+                description: Text(String(localized: "stats.empty.desc",
+                    defaultValue: "收录单词并复习后，这里会显示你的学习统计"))
+            )
+            .padding(.top, 40)
+        } else {
+            VStack(alignment: .leading, spacing: 28) {
+                summarySection
+                familiaritySection
+                collectTrendSection
+                if summary.totalReviews > 0 {
+                    reviewAccuracySection
+                }
+            }
+        }
+    }
 
-    private var familiarities: [Int] { words.map(\.familiarity) }
-    private var reviewGrades: [Int] { logs.map(\.grade) }
+    // MARK: - 数据(按当前分组过滤)
+
+    /// 当前分组的词条(nil = 全部)。
+    private var filteredWords: [WordEntry] {
+        guard let gid = selectedGroupID else { return words }
+        return words.filter { $0.group?.id == gid }
+    }
+    /// 当前分组词条对应的复习日志(ReviewLog 按 wordID 关联,借词条 id 集合过滤)。
+    private var filteredLogs: [ReviewLog] {
+        guard selectedGroupID != nil else { return logs }
+        let ids = Set(filteredWords.map(\.id))
+        return logs.filter { ids.contains($0.wordID) }
+    }
+
+    private var familiarities: [Int] { filteredWords.map(\.familiarity) }
+    private var reviewGrades: [Int] { filteredLogs.map(\.grade) }
 
     private var summary: StatsSummary {
         StatsCalculator.summary(familiarities: familiarities, reviewGrades: reviewGrades)
@@ -48,13 +71,13 @@ struct StatsView: View {
     }
     private var collectTrend: [DailyCount] {
         StatsCalculator.collectTrend(
-            dates: words.flatMap { $0.sources.map(\.collectedAt) },
+            dates: filteredWords.flatMap { $0.sources.map(\.collectedAt) },
             days: trendDays, now: Date()
         )
     }
     private var reviewTrend: [DailyReview] {
         StatsCalculator.reviewTrend(
-            entries: logs.map { (date: $0.date, grade: $0.grade) },
+            entries: filteredLogs.map { (date: $0.date, grade: $0.grade) },
             days: trendDays, now: Date()
         )
     }
