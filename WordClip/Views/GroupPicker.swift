@@ -15,5 +15,7 @@ struct GroupPicker: View {
             }
         }
         .pickerStyle(.menu)
+        // 工具栏默认把 Label 折叠成 iconOnly,导致选中项只剩图标;强制显示标题+图标。
+        .labelStyle(.titleAndIcon)
     }
 }
