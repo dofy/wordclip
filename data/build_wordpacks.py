@@ -31,7 +31,7 @@ LEVEL_PACKS = [
 SCENE_PACKS = [
     ("daily",       "日常生活",       "house"),
     ("travel",      "旅游娱乐",       "airplane"),
-    ("programming", "程序员/技术文档", "chevron.left.forwardslash.chevron.right"),
+    ("programming", "技术英语", "chevron.left.forwardslash.chevron.right"),
     ("business",    "商务职场",       "briefcase"),
 ]
 
