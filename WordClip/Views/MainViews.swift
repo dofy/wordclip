@@ -1169,16 +1169,6 @@ struct SettingsView: View {
                     defaultValue: "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"))
                 .foregroundStyle(.secondary)
             }
-
-            // ── 通用（仅 macOS）──────────────────────────────
-            Section {
-                Toggle(
-                    String(localized: "settings.general.launchatlogin", defaultValue: "登录时自动启动"),
-                    isOn: $appState.launchAtLogin
-                )
-            } header: {
-                Text(String(localized: "settings.section.general", defaultValue: "通用"))
-            }
             #endif
 
             // ── 学习（跨平台）────────────────────────────────
@@ -1301,6 +1291,18 @@ struct SettingsView: View {
                         defaultValue: "免费版可导出备份；导入为 Pro 功能。导入按单词智能合并，不会覆盖已有的学习进度。"))
                 .foregroundStyle(.secondary)
             }
+
+            // ── 通用（仅 macOS）──────────────────────────────
+            #if os(macOS)
+            Section {
+                Toggle(
+                    String(localized: "settings.general.launchatlogin", defaultValue: "登录时自动启动"),
+                    isOn: $appState.launchAtLogin
+                )
+            } header: {
+                Text(String(localized: "settings.section.general", defaultValue: "通用"))
+            }
+            #endif
 
             // ── 帮助 ──────────────────────────────────────
             Section {
