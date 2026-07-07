@@ -49,6 +49,17 @@ wordclip/                          # 仓库根（project.yml → xcodegen 生成
     var repetitions: Int
     var dueAt: Date?
     var lastReviewedAt: Date?
+
+    var group: WordGroup?         // 单一归属：手动组或某词包组（nil 视为手动组，deleteRule .nullify）
+}
+
+@Model final class WordGroup {        // 文件夹式分组：隔离词包与手动收录
+    var id: UUID
+    var name: String              // "手动收录" / "旅游娱乐" ...
+    var kind: String              // "manual" | "pack"
+    var packSlug: String?         // 包稳定标识（"travel"/"cet4"...），manual 组为 nil
+    var iconSymbol: String?
+    var sortOrder: Int
 }
 
 @Model final class CollectSource {
@@ -106,6 +117,14 @@ protocol DictionaryProvider {
 - **复合词库**:`CompositeDictionaryProvider` 按优先级串联「内置 + 用户导入」的多个 Provider,lookup 取首个命中,suggest 合并去重。
 - **自定义导入(本地,已实现)**:`DictionaryImporter` 把 CSV / ECDICT 结构 SQLite 转成词库文件,`DictionaryStore`(App 侧)管理已安装词典的启停/顺序,元数据存 UserDefaults、文件存 App Support。约束:只导入用户有权使用的词典,App 不分发第三方商业词典。
 - **在线词典服务(Pro,计划中)**:目标是通过在线服务**直接检索/导入**扩展词典,而非仅导入本地准备好的文件。设计上仍复用 `DictionaryProvider` / `CompositeDictionaryProvider` 抽象——在线词典作为又一个 Provider 叠加,或由服务端下发我们的 `entries` 结构包再落地为本地库。**待定**:后端形态(自建最小服务 vs 现成开放词典 API)、词源合规(同上,只提供用户有权使用的词库)、离线缓存策略。本地文件导入作为兜底保留。
+
+### 3.3b 词包(懒人包)与分组隔离
+
+- **两类离线词包**:分级包由 `data/build_wordpacks.py` 从完整 ECDICT 的 `tag` 列(zk/gk/cet4/cet6/ky/toefl/ielts/gre)离线生成;场景包为手工策划词表 + ECDICT 补全释义,每包 300–500 词。产物 `pack-*.json` 以 **folder reference** 随 App 分发(`project.yml`,避免被展平到 Resources 根),`WordPackCatalog` 读取。
+- **文件夹式分组**:`WordGroup`(kind=manual/pack)。词条**单一归属**,去重键为「分组 + lemma」;手动/OCR/URL 收录归入「手动收录」组,导入包归入各自包组。存量老词(group=nil)启动时一次性迁移到手动组(`migrateOrphansToManualGroup`),使「== 组 id」谓词对老词也成立。
+- **导入幂等**:`WordPackStore.import` 只补差集,导入词按「全新词」入队(`lastReviewedAt` 为 nil)。
+- **移除词包**:核心编排下沉 Kit `WordPackRemover`(平台无关、可单测)——删该组词条(`sources` cascade)+ 对应 `ReviewLog`(**按 wordID 手动清**,因 ReviewLog 不与 WordEntry 建关系,否则留孤儿日志污染统计)+ 分组本身;移除后包恢复「未导入」可再导入。手动组不可移除。
+- **分组学习/过滤**:`StudySession.selectedGroupID` 过滤复习候选集(nil=全部混学);生词本 `GroupPicker` 过滤列表,过滤到词包组时暴露移除入口。SM-2 算法与选词规则不变。
 
 ### 3.4 复习引擎
 

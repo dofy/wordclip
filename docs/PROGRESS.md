@@ -24,7 +24,7 @@
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
 
 ### 词包(懒人包)
-- **两类离线词包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/程序员/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
+- **两类离线词包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/技术/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
 - **文件夹式分组隔离**:`WordGroup`(kind=manual/pack)。词条单一归属,去重按「分组 + lemma」;手动/OCR 收录归入「手动收录」组,导入包归入各自包组。`WordPackStore` 幂等导入(重复导入只补差集),导入词按「全新词」入队。存量老词(group=nil)启动时一次性迁移到手动组。
 - **分组学习**:`StudySession.selectedGroupID` 按分组过滤候选集(nil=全部混学),复习页顶部 `GroupPicker` 切换;SM-2 算法与选词规则不变。
 - **入口**:首启空库自动弹词包引导(仅一次);状态栏菜单「词包…」/ 复习页工具栏长驻入口随时补导入。全部免费。
