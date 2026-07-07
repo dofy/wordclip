@@ -70,12 +70,18 @@ struct WordClipApp: App {
             SettingsView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
-                .frame(minWidth: 420, minHeight: 320)
+                // 固定宽高:配合 .windowResizability(.contentSize) 锁住拖拽缩放。
+                // 分区多时 Form 内部自动滚动。
+                .frame(width: 520, height: 560)
+                // 禁用绿灯(zoom/全屏):contentSize 关不掉全屏,需 NSWindow 层处理。
+                .background(SettingsWindowConfigurator())
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 520, height: 400)
         // 永不响应外部 URL：否则 wordclip://collect 会被 SwiftUI 误路由到此窗口。
         .handlesExternalEvents(matching: [])
+        // 启动时不自动弹出：设置窗口只应由 ⌘, / 菜单 / 状态栏显式打开。
+        // 多 Window scene 默认都会在启动时呈现，导致设置窗口随主窗口一起冒出。
+        .defaultLaunchBehavior(.suppressed)
 
         // ── 状态栏图标 ────────────────────────────────────
         MenuBarExtra {
@@ -362,3 +368,32 @@ final class CollectorBox {
     /// collector 初始化前通过 URL scheme 进来的词，就绪后统一处理。
     var pendingWords: [String] = []
 }
+
+#if os(macOS)
+/// 把设置窗口配置成固定尺寸的偏好式窗口：禁用绿灯(zoom/全屏)、移除全屏能力。
+/// `.windowResizability(.contentSize)` 只锁拖拽缩放，关不掉全屏绿灯，需 NSWindow 层处理。
+private struct SettingsWindowConfigurator: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async { configure(view.window) }
+        return view
+    }
+    func updateNSView(_ nsView: NSView, context: Context) {
+        DispatchQueue.main.async { configure(nsView.window) }
+    }
+    private func configure(_ window: NSWindow?) {
+        guard let window else { return }
+        // 移除全屏能力，改为辅助行为(仍可覆盖在别的全屏窗上,但自身不进全屏)。
+        window.collectionBehavior.remove(.fullScreenPrimary)
+        window.collectionBehavior.insert(.fullScreenAuxiliary)
+        // 禁用/隐藏绿灯 zoom 按钮。
+        if let zoom = window.standardWindowButton(.zoomButton) {
+            zoom.isEnabled = false
+        }
+        window.styleMask.remove(.resizable)   // 双保险：去掉可缩放样式位
+        // 不记住打开状态:退出时即使设置窗开着,下次启动也不恢复它。
+        // .suppressed 只抑制「无待恢复场景」的情况,挡不住状态恢复,故在此关掉可恢复性。
+        window.isRestorable = false
+    }
+}
+#endif
