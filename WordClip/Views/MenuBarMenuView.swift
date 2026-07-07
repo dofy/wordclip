@@ -56,6 +56,13 @@ struct MenuBarMenuView: View {
         }
         .keyboardShortcut("o", modifiers: [.command])
 
+        // 打开词包浏览(长驻入口)
+        Button(String(localized: "menu.wordpacks", defaultValue: "词包…")) {
+            openWindow(id: "main")
+            NSApp.activate(ignoringOtherApps: true)
+            NotificationCenter.default.post(name: .showWordPacks, object: nil)
+        }
+
         // 打开设置
         Button(String(localized: "menubar.settings", defaultValue: "设置…")) {
             openWindow(id: "settings")

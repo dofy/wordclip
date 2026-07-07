@@ -9,6 +9,8 @@ extension Notification.Name {
     static let showHelp = Notification.Name("showHelp")
     /// 从状态栏菜单请求开始复习。
     static let startReviewFromMenuBar = Notification.Name("startReviewFromMenuBar")
+    /// 请求打开词包浏览(长驻入口)。
+    static let showWordPacks = Notification.Name("showWordPacks")
 }
 
 /// 侧边栏导航目标
@@ -30,6 +32,7 @@ struct ContentView: View {
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false
     @State private var showingHelp = false
+    @State private var showingWordPacks = false
 
     // 首启词包引导：库为空且未展示过时弹出。
     @AppStorage("packs.onboarded") private var packsOnboarded = false
@@ -90,6 +93,15 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showingHelp) {
                 HelpView()
+            }
+            // 长驻词包入口:菜单栏 / 复习页工具栏均经此通知唤出,补导入未导入的包。
+            .sheet(isPresented: $showingWordPacks) {
+                WordPackBrowserView(isOnboarding: false) {
+                    showingWordPacks = false
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .showWordPacks)) { _ in
+                showingWordPacks = true
             }
             // 首启词包引导：库为空且未展示过时弹出，展示后记录标志避免重复。
             .task {
