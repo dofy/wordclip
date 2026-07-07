@@ -78,6 +78,7 @@ struct WordPackBrowserView: View {
             .opacity(imported ? 0.6 : 1)
         }
         .buttonStyle(.plain)
+        .focusable(false)   // 去掉网格卡片的键盘焦点环(macOS 上无意义)
     }
 
     private func load() {
