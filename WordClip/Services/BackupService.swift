@@ -34,9 +34,11 @@ struct BackupService {
 
     // MARK: - 导出
 
-    /// 导出全部词条为 JSON Data。exportedAt 由调用方传入。
+    /// 导出手动收录的词条为 JSON Data。exportedAt 由调用方传入。
+    /// 只导手动组(含存量 group==nil 老词):词包词可随时重新导入、无需备份,
+    /// 且导入侧固定归入手动组,两端语义对称,避免备份往返展平分组。
     func export(exportedAt: Date) throws -> Data {
-        let entries = fetchAll()
+        let entries = fetchManualEntries()
         let backup = WordBackup.from(entries: entries, exportedAt: exportedAt)
 
         let encoder = JSONEncoder()
@@ -136,8 +138,12 @@ struct BackupService {
         return try? modelContext.fetch(descriptor).first
     }
 
-    private func fetchAll() -> [WordEntry] {
+    /// 手动收录词条:归属手动组的词,外加存量 group==nil 老词(语义上也是手动)。
+    /// 启动时 migrateOrphansToManualGroup 通常已把 nil 词迁入手动组,这里再兜底一次。
+    private func fetchManualEntries() -> [WordEntry] {
+        let gid = manualGroupStore.manualGroup().id
         let descriptor = FetchDescriptor<WordEntry>(
+            predicate: #Predicate { $0.group?.id == gid || $0.group == nil },
             sortBy: [SortDescriptor(\.createdAt, order: .forward)]
         )
         return (try? modelContext.fetch(descriptor)) ?? []

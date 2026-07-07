@@ -257,7 +257,8 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 
 ## 6. 导入导出
 
-- **当前实现**:`WordClipKit/Sync/WordBackup` 提供全量 JSON 备份(含单词、来源、复习进度),App 侧 `BackupService` + `WordBackupDocument` 负责导入/导出;导入按单词智能合并,不覆盖已有学习进度。
+- **当前实现**:`WordClipKit/Sync/WordBackup` 提供 JSON 备份结构(含单词、来源、复习进度),App 侧 `BackupService` + `WordBackupDocument` 负责导入/导出;导入按单词智能合并,不覆盖已有学习进度。
+- **备份范围 = 手动收录组**:导出只取手动组(含存量 group==nil 老词);词包词不进备份——它们随时可重新导入,且导入侧固定归入手动组,两端语义对称,避免备份往返把词包词展平进手动组、丢失分组结构。
 - 词典导入是另一条路径:`WordClipKit/Dictionary/DictionaryImporter` 把 CSV / ECDICT SQLite 转成可查词库(见 §3.3),与个人词库备份互不相关。
 - 同步策略见上文 §4。
 

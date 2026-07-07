@@ -56,7 +56,7 @@
 
 ### 统计与数据
 - 统计面板(`StatsCalculator` + `StatsView`):总词数、待复习、新词、掌握率。
-- JSON 备份导入 / 导出(`BackupService` + `WordBackup` + `WordBackupDocument`),按单词智能合并、不覆盖学习进度。
+- JSON 备份导入 / 导出(`BackupService` + `WordBackup` + `WordBackupDocument`):只导出**手动收录**组的词(词包词可重新导入、不进备份),导入固定归入手动组、按单词智能合并、不覆盖学习进度。两端语义对称,避免备份往返展平分组。
 
 ### 帮助与说明
 - **App 内使用帮助**(`HelpView`):原生分区面板(核心概念 / 收词 / 添加查词 / 复习原理 / 数据与 Pro / FAQ),中英双语。macOS 从「帮助」菜单、两端从设置页「使用帮助」唤出;复用 `ShortcutCheatSheet` 的通知 + sheet 模式。
