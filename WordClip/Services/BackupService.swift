@@ -9,6 +9,10 @@ struct BackupService {
 
     let modelContext: ModelContext
 
+    /// 手动收录组（惰性找/建）。恢复备份的词都归入手动组——备份是用户自己的词库，
+    /// 与手动收录同源；去重也在手动组内进行，避免与懒人词包的同词条互相污染。
+    private var manualGroupStore: WordPackStore { WordPackStore(modelContext: modelContext) }
+
     struct ImportResult: Sendable {
         var added: Int      // 新建词条数
         var merged: Int     // 合并到已有词条数
@@ -55,16 +59,21 @@ struct BackupService {
             throw BackupError.unsupportedVersion(backup.version)
         }
 
+        // 恢复目标固定为手动收录组：去重、归属都在此组内。
+        let manualGroup = manualGroupStore.manualGroup()
+
         var result = ImportResult(added: 0, merged: 0)
         for dto in backup.words {
             let lemma = dto.lemma.lowercased()
             guard !lemma.isEmpty else { continue }
 
-            if let existing = fetchEntry(lemma: lemma) {
+            if let existing = fetchEntry(lemma: lemma, in: manualGroup) {
                 merge(dto, into: existing)
                 result.merged += 1
             } else {
-                modelContext.insert(makeEntry(from: dto))
+                let entry = makeEntry(from: dto)
+                entry.group = manualGroup
+                modelContext.insert(entry)
                 result.added += 1
             }
         }
@@ -117,9 +126,12 @@ struct BackupService {
         return entry
     }
 
-    private func fetchEntry(lemma: String) -> WordEntry? {
+    /// 在指定分组内按 lemma 查已有词条（恢复备份只在手动组内去重，
+    /// 不会命中懒人词包里的同词条）。
+    private func fetchEntry(lemma: String, in group: WordGroup) -> WordEntry? {
+        let gid = group.id
         let descriptor = FetchDescriptor<WordEntry>(
-            predicate: #Predicate { $0.lemma == lemma }
+            predicate: #Predicate { $0.lemma == lemma && $0.group?.id == gid }
         )
         return try? modelContext.fetch(descriptor).first
     }
