@@ -36,13 +36,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Disable Word Capture"
+            "value": "Disable Selection Capture"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "停用收词"
+            "value": "停用选中收词"
           }
         }
       }
@@ -53,13 +53,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enable Word Capture"
+            "value": "Enable Selection Capture"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用收词"
+            "value": "启用选中收词"
           }
         }
       }
@@ -191,30 +191,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enable Global Word Capture"
+            "value": "Enable Selection Capture"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "启用全局收词"
-          }
-        }
-      }
-    },
-    "settings.capture.hint": {
-      "comment": "Settings footer: capture shortcut usage hint",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a word in any app and press the shortcut to save it to WordClip"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在任意 App 中选中单词，按下快捷键即可收录到 WordClip"
+            "value": "启用选中收词"
           }
         }
       }
@@ -318,23 +301,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pro"
-          }
-        }
-      }
-    },
-    "settings.section.capture": {
-      "comment": "Settings section header: word capture",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Word Capture"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收词"
           }
         }
       }
@@ -1840,13 +1806,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Check that Accessibility is granted in System Settings, and that “Enable global capture” is on under Settings → Capture."
+            "value": "Check that Accessibility is granted in System Settings, and that “Enable Selection Capture” is on under Settings → Selection Capture. (OCR capture is independent and unaffected by this switch.)"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "检查系统设置是否授权「辅助功能」，以及设置 → 收词 里「启用全局收词」是否打开。"
+            "value": "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）"
           }
         }
       }
@@ -2265,6 +2231,74 @@
           "stringUnit": {
             "state": "translated",
             "value": "了解如何导入 ›"
+          }
+        }
+      }
+    },
+    "settings.section.capture.selection": {
+      "comment": "Settings section: select-to-capture",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选中收词"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selection Capture"
+          }
+        }
+      }
+    },
+    "settings.capture.selection.hint": {
+      "comment": "Settings footer: selection capture",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a word in any app and press the shortcut to save it to WordClip."
+          }
+        }
+      }
+    },
+    "settings.section.capture.ocr": {
+      "comment": "Settings section: OCR capture",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR 收词"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR Capture"
+          }
+        }
+      }
+    },
+    "settings.capture.ocr.hint": {
+      "comment": "Settings footer: OCR capture, clarifies independence",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a screen region to recognize English words in it (Pro) — works with images, PDFs, and non-selectable text. Independent of the Selection Capture switch above."
           }
         }
       }

@@ -180,7 +180,7 @@ struct HelpView: View {
                 Item(symbol: "questionmark.circle",
                      heading: String(localized: "help.faq.hotkey.title", defaultValue: "收词快捷键没反应？"),
                      body: String(localized: "help.faq.hotkey.body",
-                                  defaultValue: "检查系统设置是否授权「辅助功能」，以及设置 → 收词 里「启用全局收词」是否打开。")),
+                                  defaultValue: "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）")),
                 Item(symbol: "questionmark.circle",
                      heading: String(localized: "help.faq.nodef.title", defaultValue: "某个词「暂无释义」？"),
                      body: String(localized: "help.faq.nodef.body",

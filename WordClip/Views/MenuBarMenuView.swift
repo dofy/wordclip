@@ -40,8 +40,8 @@ struct MenuBarMenuView: View {
         } label: {
             Label(
                 appState.captureEnabled
-                    ? String(localized: "menubar.capture.disable", defaultValue: "停用收词")
-                    : String(localized: "menubar.capture.enable", defaultValue: "启用收词"),
+                    ? String(localized: "menubar.capture.disable", defaultValue: "停用选中收词")
+                    : String(localized: "menubar.capture.enable", defaultValue: "启用选中收词"),
                 systemImage: appState.captureEnabled ? "scissors.badge.ellipsis" : "scissors"
             )
         }
