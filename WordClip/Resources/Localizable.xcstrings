@@ -2285,6 +2285,23 @@
           }
         }
       }
+    },
+    "settings.capture.ocr.shortcut": {
+      "comment": "Settings: OCR capture shortcut label",
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR 收词快捷键"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OCR Capture Shortcut"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
