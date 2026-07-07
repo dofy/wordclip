@@ -20,18 +20,6 @@ struct MenuBarMenuView: View {
                     defaultValue: "生词本 \(total) · 待复习 \(due) · 新词 \(newWords)"))
             .font(.caption)
 
-        // 开始复习（有到期或新词时）
-        Button {
-            openWindow(id: "main")
-            NSApp.activate(ignoringOtherApps: true)
-            NotificationCenter.default.post(name: .startReviewFromMenuBar, object: nil)
-        } label: {
-            Label(String(localized: "menubar.review", defaultValue: "开始复习"),
-                  systemImage: "play.fill")
-        }
-        .keyboardShortcut("r", modifiers: [.command])
-        .disabled(due == 0 && newWords == 0)
-
         Divider()
 
         // 取词开关
@@ -55,20 +43,6 @@ struct MenuBarMenuView: View {
             NSApp.activate(ignoringOtherApps: true)
         }
         .keyboardShortcut("o", modifiers: [.command])
-
-        // 打开词包浏览(长驻入口)
-        Button(String(localized: "menu.wordpacks", defaultValue: "词包…")) {
-            openWindow(id: "main")
-            NSApp.activate(ignoringOtherApps: true)
-            NotificationCenter.default.post(name: .showWordPacks, object: nil)
-        }
-
-        // 打开设置
-        Button(String(localized: "menubar.settings", defaultValue: "设置…")) {
-            openWindow(id: "settings")
-            NSApp.activate(ignoringOtherApps: true)
-        }
-        .keyboardShortcut(",", modifiers: .command)
 
         Divider()
 
