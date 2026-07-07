@@ -25,6 +25,13 @@ final class WordCollector {
         self.dictionary = dictionary
     }
 
+    /// 手动收录组(惰性找/建)。手动/OCR 收录的词都归入此组。
+    private lazy var manualGroupStore = WordPackStore(modelContext: modelContext)
+
+    private func manualGroup() -> WordGroup {
+        manualGroupStore.manualGroup()
+    }
+
     /// 收录结果，供调用方反馈用户。
     enum CollectOutcome: Sendable {
         case collected(word: String, found: Bool, definition: String?)
@@ -86,6 +93,7 @@ final class WordCollector {
             entry.definition = dict?.definition
             entry.definitionEn = dict?.definitionEn
             entry.phonetic = dict?.phonetic
+            entry.group = manualGroup()
             modelContext.insert(entry)
         }
 
@@ -102,8 +110,10 @@ final class WordCollector {
     }
 
     private func fetchEntry(lemma: String) -> WordEntry? {
+        let group = manualGroup()
+        let gid = group.id
         let descriptor = FetchDescriptor<WordEntry>(
-            predicate: #Predicate { $0.lemma == lemma }
+            predicate: #Predicate { $0.lemma == lemma && $0.group?.id == gid }
         )
         return try? modelContext.fetch(descriptor).first
     }
