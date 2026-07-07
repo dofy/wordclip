@@ -102,6 +102,9 @@ struct ContentView: View {
                     packsOnboarded = true
                     showOnboarding = false
                 }
+                // 禁止滑动关闭：只能经「跳过」/「导入」退出，两者都会置 packsOnboarded，
+                // 避免 iOS 上滑动 dismiss 后标志未置、下次空库启动重复弹出。
+                .interactiveDismissDisabled()
             }
             // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
             .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in
