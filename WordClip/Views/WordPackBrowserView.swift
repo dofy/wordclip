@@ -19,8 +19,8 @@ struct WordPackBrowserView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(isOnboarding
-                 ? String(localized: "packs.welcome.title", defaultValue: "选择词包,快速开始")
-                 : String(localized: "packs.browse.title", defaultValue: "词包"))
+                 ? String(localized: "packs.welcome.title", defaultValue: "选择懒人包,快速开始")
+                 : String(localized: "packs.browse.title", defaultValue: "懒人包"))
                 .font(.title2).bold()
 
             ScrollView {

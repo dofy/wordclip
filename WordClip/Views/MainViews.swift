@@ -287,27 +287,27 @@ struct WordListView: View {
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
 
-                // 分组过滤:仅当已导入词包时出现(否则工具栏保持简洁)。
+                // 分组过滤:仅当已导入懒人包时出现(否则工具栏保持简洁)。
                 if groups.contains(where: { $0.kind == WordGroup.kindPack }) {
                     GroupPicker(selection: $selectedGroupID)
 
-                    // 移除此词包:仅过滤到某个词包组时出现。
+                    // 移除此懒人包:仅过滤到某个懒人包组时出现。
                     if canRemoveSelectedPack {
                         Button(role: .destructive) {
                             showRemovePackConfirm = true
                         } label: {
-                            Label(String(localized: "wordlist.toolbar.removePack", defaultValue: "移除此词包"),
+                            Label(String(localized: "wordlist.toolbar.removePack", defaultValue: "移除此懒人包"),
                                   systemImage: "trash")
                         }
                         .tint(.red)
                     }
                 }
 
-                // 词包(懒人包):直观的长驻入口,收录后随时可再导入
+                // 懒人包:直观的长驻入口,收录后随时可再导入
                 Button {
                     NotificationCenter.default.post(name: .showWordPacks, object: nil)
                 } label: {
-                    Label(String(localized: "menu.wordpacks", defaultValue: "词包…"),
+                    Label(String(localized: "menu.wordpacks", defaultValue: "懒人包…"),
                           systemImage: "square.stack.3d.up")
                 }
 
@@ -359,7 +359,7 @@ struct WordListView: View {
             isPresented: $showRemovePackConfirm,
             titleVisibility: .visible
         ) {
-            Button(String(localized: "wordlist.removePack.confirm", defaultValue: "移除词包"),
+            Button(String(localized: "wordlist.removePack.confirm", defaultValue: "移除此懒人包"),
                    role: .destructive) {
                 removeSelectedPack()
             }
@@ -369,7 +369,7 @@ struct WordListView: View {
         }
     }
 
-    /// 移除当前过滤到的词包组:删词条 + 日志 + 组,退回「全部」并清空可能失效的选中项。
+    /// 移除当前过滤到的懒人包组:删词条 + 日志 + 组,退回「全部」并清空可能失效的选中项。
     private func removeSelectedPack() {
         guard let group = selectedGroup, group.kind == WordGroup.kindPack else { return }
         WordPackStore(modelContext: modelContext).removePack(group)
@@ -381,13 +381,13 @@ struct WordListView: View {
 
     private var removePackConfirmTitle: String {
         String(localized: "wordlist.removePack.title",
-                defaultValue: "移除「\(selectedGroup?.name ?? "")」词包？")
+                defaultValue: "移除「\(selectedGroup?.name ?? "")」懒人包？")
     }
 
     private var removePackConfirmMessage: String {
         let count = selectedGroup.map { g in words.filter { $0.group?.id == g.id }.count } ?? 0
         return String(localized: "wordlist.removePack.message",
-                      defaultValue: "将删除该词包的 \(count) 个单词及其复习进度，可随时重新导入。")
+                      defaultValue: "将删除该懒人包的 \(count) 个单词及其复习进度，可随时重新导入。")
     }
 
     private var deleteConfirmTitle: String {

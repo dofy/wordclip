@@ -26,7 +26,7 @@ struct StudyView: View {
                 Button {
                     NotificationCenter.default.post(name: .showWordPacks, object: nil)
                 } label: {
-                    Label(String(localized: "menu.wordpacks", defaultValue: "词包…"),
+                    Label(String(localized: "menu.wordpacks", defaultValue: "懒人包…"),
                           systemImage: "square.stack.3d.up")
                 }
             }

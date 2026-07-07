@@ -142,9 +142,9 @@ struct HelpView: View {
                      body: String(localized: "help.add.search.body",
                                   defaultValue: "上方显示生词本匹配词，下方显示词典中未收录的词，点击可预览释义并一键收录。")),
             ]),
-            Section(title: String(localized: "help.section.packs", defaultValue: "词包(懒人包)"), items: [
+            Section(title: String(localized: "help.section.packs", defaultValue: "懒人包"), items: [
                 Item(symbol: "square.stack.3d.up",
-                     heading: String(localized: "help.packs.what.title", defaultValue: "预置词包"),
+                     heading: String(localized: "help.packs.what.title", defaultValue: "预置懒人包"),
                      body: String(localized: "help.packs.what.body",
                                   defaultValue: "分级包(初学者/高考/CET-4/6/考研/托福/雅思/GRE)与场景包(日常生活/旅游娱乐/技术英语/商务职场),全部免费离线,一键导入即可学习。")),
                 Item(symbol: "folder",
@@ -152,9 +152,9 @@ struct HelpView: View {
                      body: String(localized: "help.packs.group.body",
                                   defaultValue: "导入的词与手动收录的词按分组隔离。复习页顶部或生词本工具栏的分组选择器,可只学某个包,或选「全部」混学。")),
                 Item(symbol: "trash",
-                     heading: String(localized: "help.packs.remove.title", defaultValue: "移除词包"),
+                     heading: String(localized: "help.packs.remove.title", defaultValue: "移除懒人包"),
                      body: String(localized: "help.packs.remove.body",
-                                  defaultValue: "在生词本工具栏把分组过滤到某个词包,点「移除此词包」并确认,即可删掉该包的全部单词与复习进度,之后仍可重新导入。")),
+                                  defaultValue: "在生词本工具栏把分组过滤到某个懒人包,点「移除此懒人包」并确认,即可删掉该包的全部单词与复习进度,之后仍可重新导入。")),
             ]),
             Section(title: String(localized: "help.section.review", defaultValue: "复习原理"), items: [
                 Item(symbol: "circle.fill",

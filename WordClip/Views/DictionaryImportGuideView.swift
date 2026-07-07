@@ -57,7 +57,7 @@ struct DictionaryImportGuideView: View {
                     item("character.book.closed",
                          String(localized: "dictguide.what.title", defaultValue: "扩充查词的释义来源"),
                          String(localized: "dictguide.what.body",
-                                defaultValue: "导入的词典只在你查词时提供额外释义(如专业术语、其他语言),不会往生词本加词。想批量添加学习词条,请用「词包」。"))
+                                defaultValue: "导入的词典只在你查词时提供额外释义(如专业术语、其他语言),不会往生词本加词。想批量添加学习词条,请用「懒人包」。"))
                 }
                 // ② 什么时候需要
                 section(String(localized: "dictguide.section.when", defaultValue: "什么时候需要")) {
