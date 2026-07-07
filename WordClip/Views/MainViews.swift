@@ -18,8 +18,6 @@ struct SidebarView: View {
                 .tag(SidebarItem.review)
             Label(String(localized: "sidebar.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
                 .tag(SidebarItem.stats)
-            Label(String(localized: "sidebar.settings", defaultValue: "设置"), systemImage: "gearshape")
-                .tag(SidebarItem.settings)
         }
         .navigationTitle(String(localized: "app.name", defaultValue: "WordClip"))
         .listStyle(.sidebar)
@@ -1115,9 +1113,10 @@ struct SettingsView: View {
         Form {
             #if os(macOS)
             // ── 取词（仅 macOS）──────────────────────────────
+            // ── 选中收词 ──
             Section {
                 Toggle(
-                    String(localized: "settings.capture.enabled", defaultValue: "启用全局收词"),
+                    String(localized: "settings.capture.enabled", defaultValue: "启用选中收词"),
                     isOn: $appState.captureEnabled
                 )
 
@@ -1128,7 +1127,16 @@ struct SettingsView: View {
                     KeyboardShortcuts.setShortcut(newValue, for: .collectWord)
                     appState.refreshHotkeyRegistration()
                 }
+            } header: {
+                Text(String(localized: "settings.section.capture.selection", defaultValue: "选中收词"))
+            } footer: {
+                Text(String(localized: "settings.capture.selection.hint",
+                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。"))
+                .foregroundStyle(.secondary)
+            }
 
+            // ── OCR 收词（独立于上面的开关，始终可用）──
+            Section {
                 // OCR 取词快捷键（Pro）：免费用户显示锁，点击弹付费墙
                 if entitlement.isPro {
                     LabeledContent(String(localized: "settings.capture.ocr.shortcut",
@@ -1155,10 +1163,10 @@ struct SettingsView: View {
                     }
                 }
             } header: {
-                Text(String(localized: "settings.section.capture", defaultValue: "收词"))
+                Text(String(localized: "settings.section.capture.ocr", defaultValue: "OCR 收词"))
             } footer: {
-                Text(String(localized: "settings.capture.hint",
-                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。OCR 收词（Pro）可框选屏幕区域识别其中的英文单词。"))
+                Text(String(localized: "settings.capture.ocr.hint",
+                    defaultValue: "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"))
                 .foregroundStyle(.secondary)
             }
 

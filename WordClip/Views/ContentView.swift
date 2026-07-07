@@ -20,7 +20,6 @@ enum SidebarItem: Hashable, CaseIterable {
     case allWords
     case review
     case stats
-    case settings
 }
 
 /// 顶层导航容器。
@@ -36,9 +35,9 @@ struct ContentView: View {
     @State private var showingHelp = false
     @State private var showingWordPacks = false
     @State private var showingDictImportGuide = false
+    @State private var showingSettings = false   // iOS：从生词本页齿轮打开设置
 
-    // 首启词包引导：库为空且未展示过时弹出。
-    @AppStorage("packs.onboarded") private var packsOnboarded = false
+    // 词包引导：每次启动只要生词本为空就弹出（不再记忆「已展示」标志）。
     @State private var showOnboarding = false
     @Query private var allWords: [WordEntry]
 
@@ -112,20 +111,33 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: .showWordPacks)) { _ in
                 showingWordPacks = true
             }
-            // 首启词包引导：库为空且未展示过时弹出，展示后记录标志避免重复。
+            #if os(iOS)
+            .sheet(isPresented: $showingSettings) {
+                NavigationStack {
+                    SettingsView()
+                        .navigationTitle(String(localized: "tab.settings", defaultValue: "设置"))
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button(String(localized: "help.done", defaultValue: "完成")) {
+                                    showingSettings = false
+                                }
+                            }
+                        }
+                }
+            }
+            #endif
+            // 词包引导：每次启动只要生词本为空就弹出（.task 在视图首现时判断一次）。
             .task {
-                if allWords.isEmpty && !packsOnboarded {
+                if allWords.isEmpty {
                     showOnboarding = true
                 }
             }
             .sheet(isPresented: $showOnboarding) {
                 WordPackBrowserView(isOnboarding: true) {
-                    packsOnboarded = true
                     showOnboarding = false
                 }
-                // 禁止滑动关闭：只能经「跳过」/「导入」退出，两者都会置 packsOnboarded，
-                // 避免 iOS 上滑动 dismiss 后标志未置、下次空库启动重复弹出。
-                .interactiveDismissDisabled()
+                // 允许滑动关闭：空库用户可先跳过引导去手动收词，不被困在弹窗里。
             }
             // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
             .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in
@@ -160,6 +172,9 @@ struct ContentView: View {
         } detail: {
             NavigationStack {
                 detailView(for: selection ?? .allWords)
+                    #if os(iOS)
+                    .modifier(SettingsToolbarModifier(show: $showingSettings))
+                    #endif
             }
         }
         .background(sidebarShortcuts)
@@ -185,16 +200,19 @@ struct ContentView: View {
         case .allWords: WordListView()
         case .review: StudyView()
         case .stats: StatsView()
-        case .settings: SettingsView()
         }
     }
 
     // MARK: - 底部标签栏（iPhone）
 
+    #if os(iOS)
     @ViewBuilder
     private var tabView: some View {
         TabView {
-            NavigationStack { WordListView() }
+            NavigationStack {
+                WordListView()
+                    .modifier(SettingsToolbarModifier(show: $showingSettings))
+            }
                 .tabItem {
                     Label(String(localized: "tab.wordlist", defaultValue: "生词本"), systemImage: "books.vertical")
                 }
@@ -206,13 +224,29 @@ struct ContentView: View {
                 .tabItem {
                     Label(String(localized: "tab.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
                 }
-            NavigationStack { SettingsView() }
-                .tabItem {
-                    Label(String(localized: "tab.settings", defaultValue: "设置"), systemImage: "gearshape")
+        }
+    }
+    #endif
+}
+
+#if os(iOS)
+/// iOS：给承载视图的导航栏右上角加设置齿轮,点开设置 sheet。
+private struct SettingsToolbarModifier: ViewModifier {
+    @Binding var show: Bool
+    func body(content: Content) -> some View {
+        content.toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    show = true
+                } label: {
+                    Label(String(localized: "tab.settings", defaultValue: "设置"),
+                          systemImage: "gearshape")
                 }
+            }
         }
     }
 }
+#endif
 
 #Preview {
     ContentView()
