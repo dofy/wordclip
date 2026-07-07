@@ -45,3 +45,41 @@ struct WordPackDTODecodingTests {
         #expect(pack.words[1].phonetic == nil)
     }
 }
+
+@Suite("WordPackImporter dedup")
+struct WordPackImporterTests {
+
+    private func pack(_ lemmas: [String]) -> WordPackDTO {
+        WordPackDTO(slug: "t", name: "T", words: lemmas.map {
+            WordPackWordDTO(headword: $0, lemma: $0)
+        })
+    }
+
+    @Test("过滤掉本组已存在的 lemma")
+    func filtersExisting() {
+        let p = pack(["apple", "banana", "cherry"])
+        let result = WordPackImporter.newWords(in: p, existingLemmas: ["banana"])
+        #expect(result.map(\.lemma) == ["apple", "cherry"])
+    }
+
+    @Test("pack 内部重复 lemma 只保留首个")
+    func dedupWithinPack() {
+        let p = pack(["apple", "apple", "banana"])
+        let result = WordPackImporter.newWords(in: p, existingLemmas: [])
+        #expect(result.map(\.lemma) == ["apple", "banana"])
+    }
+
+    @Test("全部已存在返回空")
+    func allExisting() {
+        let p = pack(["apple", "banana"])
+        let result = WordPackImporter.newWords(in: p, existingLemmas: ["apple", "banana"])
+        #expect(result.isEmpty)
+    }
+
+    @Test("保持原始顺序")
+    func preservesOrder() {
+        let p = pack(["zebra", "alpha", "mango"])
+        let result = WordPackImporter.newWords(in: p, existingLemmas: [])
+        #expect(result.map(\.lemma) == ["zebra", "alpha", "mango"])
+    }
+}
