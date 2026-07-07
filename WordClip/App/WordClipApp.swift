@@ -258,7 +258,18 @@ struct WordClipApp: App {
             return
         }
 
+        // 截图已完成（未包含面板），此刻立即弹出「分析中」面板，覆盖 OCR 的等待感。
+        // 面板显示在截图之后，确保它不会被拍进将要识别的图像里污染 OCR。
+        OCRWordPicker.shared.presentAnalyzing { picked in
+            Task { @MainActor in
+                await Self.collectOCRWords(picked, collector: collector, appState: appState)
+            }
+        }
+
         let recognized = await ScreenOCR.recognizeWords(in: image)
+
+        // 用户可能在分析期间已取消/关闭面板：放弃后续。
+        guard OCRWordPicker.shared.isPresenting else { return }
 
         // 词典校验：只保留词典里真实存在的英文词，滤掉音标/噪声（如 maigreit、FREI）。
         // 额外滤掉「全大写且 ≤4 字母」的碎片（如 UPD/DEF/FAX/MP），这类多为词典 UI/缩写噪声。
@@ -272,6 +283,7 @@ struct WordClipApp: App {
         }
 
         guard !words.isEmpty else {
+            OCRWordPicker.shared.close()
             CollectHUD.shared.show(
                 symbol: "text.viewfinder", tint: .orange,
                 title: String(localized: "ocr.notext", defaultValue: "未识别到英文单词"),
@@ -280,11 +292,7 @@ struct WordClipApp: App {
             return
         }
 
-        OCRWordPicker.shared.present(words: words) { picked in
-            Task { @MainActor in
-                await Self.collectOCRWords(picked, collector: collector, appState: appState)
-            }
-        }
+        OCRWordPicker.shared.showWords(words)
     }
 
     /// 收录用户在选词面板里选中的词，HUD 汇总反馈。
