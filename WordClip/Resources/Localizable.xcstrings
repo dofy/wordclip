@@ -132,42 +132,6 @@
         }
       }
     },
-    "review.coming.description": {
-      "comment": "Review feature placeholder description",
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start collecting words now — spaced repetition review will be available soon"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "先收集一些单词，复习功能将在后续版本中推出"
-          }
-        }
-      }
-    },
-    "review.coming.title": {
-      "comment": "Review feature placeholder title",
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Review Coming Soon"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复习功能即将上线"
-          }
-        }
-      }
-    },
     "settings.account": {
       "comment": "Settings section header: account",
       "localizations": {
@@ -1565,13 +1529,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Toggle capture, see today’s overview, start a review, or open the main window / settings."
+            "value": "See today's overview, toggle selection capture, or open the main window. The icon dims when capture is off."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "快速启用/停用收词、查看今日概览、开始复习、打开主窗口或设置。"
+            "value": "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。"
           }
         }
       }

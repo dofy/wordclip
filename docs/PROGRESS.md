@@ -18,7 +18,7 @@
 - **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
 - **OCR 收词(Pro,macOS)**:独立热键(默认 `⌥⌘O`)→ 全屏框选(`RegionSelector`)→ ScreenCaptureKit 截图(`ScreenCapturer`)→ Vision 识别(`ScreenOCR`)→ 内置词典校验 + 滤除短大写噪声 → 选词面板(`OCRWordPicker`)多选收录。分词纯逻辑 `WordTokenizer` 在 Kit 内并单测。
 - 收词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
-- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、开始复习、启用/停用收词、打开主窗口 / 设置。
+- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、启用/停用选中收词、打开主窗口、退出。图标常亮/变暗指示收词是否启用。
 - **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
@@ -27,7 +27,7 @@
 - **两类离线懒人包**:分级包(初学者/高考/CET4/CET6/考研/托福/雅思/GRE,由 `data/build_wordpacks.py` 从完整 ECDICT 的 tag 列离线生成)+ 场景包(日常/旅游/技术/商务,手工策划词表 + ECDICT 补全释义,每包 300–500 词)。产物 `pack-*.json` 以 folder reference 随 App 分发(`project.yml`),`WordPackCatalog` 读取。
 - **文件夹式分组隔离**:`WordGroup`(kind=manual/pack)。词条单一归属,去重按「分组 + lemma」;手动/OCR 收录归入「手动收录」组,导入包归入各自包组。`WordPackStore` 幂等导入(重复导入只补差集),导入词按「全新词」入队。存量老词(group=nil)启动时一次性迁移到手动组。
 - **分组学习**:`StudySession.selectedGroupID` 按分组过滤候选集(nil=全部混学),复习页顶部 `GroupPicker` 切换;SM-2 算法与选词规则不变。
-- **入口**:首启空库自动弹懒人包引导(仅一次);状态栏菜单「懒人包…」/ 复习页工具栏长驻入口随时补导入。全部免费。
+- **入口**:首启空库自动弹懒人包引导(每次启动空库即弹);生词本 / 复习页工具栏「懒人包…」长驻入口随时补导入。全部免费。
 
 ### 词典与查词
 - 内置 ECDICT 约 5 万词离线库,`GRDBDictionaryProvider`(GRDB SQLite),首启从 bundle 拷到 App Support 只读打开。
@@ -52,7 +52,6 @@
 - 翻卡看释义,`空格` 翻面、`←`不认识 / `→`认识,翻面不可逆。
 - 生词本徽标区分新词(绿)/ 待复习(橙)。
 - 本地通知每日复习提醒(`NotificationService`,按需申请权限)。
-- 状态栏"开始复习"可切到复习页并自动开一轮。
 
 ### 统计与数据
 - 统计面板(`StatsCalculator` + `StatsView`):总词数、待复习、新词、掌握率。

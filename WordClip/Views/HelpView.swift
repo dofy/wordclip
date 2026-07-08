@@ -130,7 +130,7 @@ struct HelpView: View {
                 Item(symbol: "menubar.arrow.up.rectangle",
                      heading: String(localized: "help.collect.menubar.title", defaultValue: "状态栏图标"),
                      body: String(localized: "help.collect.menubar.body",
-                                  defaultValue: "快速启用/停用收词、查看今日概览、开始复习、打开主窗口或设置。")),
+                                  defaultValue: "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。")),
             ]),
             Section(title: String(localized: "help.section.add", defaultValue: "添加与查词"), items: [
                 Item(symbol: "plus.circle",
