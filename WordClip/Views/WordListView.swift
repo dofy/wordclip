@@ -1,10 +1,6 @@
 import SwiftUI
 import SwiftData
 import WordClipKit
-import UniformTypeIdentifiers
-#if os(macOS)
-import KeyboardShortcuts
-#endif
 
 /// 单词列表排序方式（含维度与升降序）。持久化用 rawValue。
 enum WordSort: String, CaseIterable, Identifiable {
