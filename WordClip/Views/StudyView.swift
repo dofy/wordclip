@@ -35,14 +35,6 @@ struct StudyView: View {
             session.updateContext(modelContext)
             session.refreshStats()
         }
-        #if os(macOS)
-        // 状态栏「开始复习」：切到本页后自动开始一轮
-        .onReceive(NotificationCenter.default.publisher(for: .startReviewFromMenuBar)) { _ in
-            session.updateContext(modelContext)
-            session.refreshStats()
-            if session.stats.total > 0 { session.start() }
-        }
-        #endif
     }
 
     // MARK: - Idle

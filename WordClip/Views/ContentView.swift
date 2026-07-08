@@ -7,8 +7,6 @@ extension Notification.Name {
     static let showShortcutCheatSheet = Notification.Name("showShortcutCheatSheet")
     /// 请求显示使用帮助面板。
     static let showHelp = Notification.Name("showHelp")
-    /// 从状态栏菜单请求开始复习。
-    static let startReviewFromMenuBar = Notification.Name("startReviewFromMenuBar")
     /// 请求打开词包浏览(长驻入口)。
     static let showWordPacks = Notification.Name("showWordPacks")
     /// 请求显示「导入词典」说明页。
@@ -142,10 +140,6 @@ struct ContentView: View {
             // 使用帮助：菜单 / 设置页 / 复习页均经此通知唤出（两端统一）
             .onReceive(NotificationCenter.default.publisher(for: .showHelp)) { _ in
                 showingHelp = true
-            }
-            // 状态栏「开始复习」：切到复习页（StudyView 自身监听同一通知开始）
-            .onReceive(NotificationCenter.default.publisher(for: .startReviewFromMenuBar)) { _ in
-                selection = .review
             }
     }
 
