@@ -27,13 +27,15 @@ python3 verify_dictionary.py
 
 ## 词库来源
 
-[ECDICT](https://github.com/skywind3000/ECDICT) — MIT 协议，约 77 万英语词条，包含：
+[ECDICT](https://github.com/skywind3000/ECDICT) — 约 77 万英语词条,包含:
 - 中文释义（`translation`）
 - 英英释义（`definition`）
 - IPA 音标（`phonetic`）
 - 词性（`pos`）
 - 词频（BNC / COCA）
 - 变形（复数、过去式、比较级等）
+
+> ⚠️ **授权提示(收费项目须知)**:ECDICT 仓库标注的 MIT 协议**只覆盖代码**,不覆盖词典**数据**本身——其数据来源为多方汇集,部分释义的原始出处不透明。收费分发前请阅读 [../docs/DICTIONARY-LICENSING.md](../docs/DICTIONARY-LICENSING.md) 了解风险与替代词源。**不要**对外宣称词典数据是 MIT 授权。
 
 ## 关于词库体积
 

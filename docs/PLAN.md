@@ -38,7 +38,7 @@
 | UI | SwiftUI(多平台单一代码库) | 一套代码覆盖 Mac/iOS/iPad |
 | 数据/同步 | SwiftData(+ 未来 CloudKit) | iCloud 私有库自动同步,免自建后端 |
 | 共享核心 | Swift Package `WordClipKit` | 模型/算法/词库逻辑与 UI 解耦,便于测试与复用 |
-| 词库 | 开源离线词库(英语 ECDICT)→ SQLite(GRDB) | 版权干净、可控、离线 |
+| 词库 | 开源离线词库(英语 ECDICT)→ SQLite(GRDB) | 可控、离线;数据授权见 [DICTIONARY-LICENSING.md](DICTIONARY-LICENSING.md)(收费须知:非"版权干净",MIT 仅覆盖代码) |
 | 读音 | `AVSpeechSynthesizer` | 系统自带、离线、多语言 |
 | 全局快捷键 | macOS 原生(`KeyboardShortcuts` + Accessibility 直读) | 跨平台框架不可行;直读不改剪贴板 |
 | 复习算法 | SM-2 起步,封装为协议,可换 FSRS | 成熟、易实现、可升级 |

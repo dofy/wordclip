@@ -82,6 +82,7 @@
 ### 在线词典服务(Pro)
 - 通过在线服务直接检索 / 导入扩展词典,而非仅导入本地准备好的文件。
 - 复用 `DictionaryProvider` / `CompositeDictionaryProvider` 抽象叠加;待定后端形态与词源合规,本地文件导入作为兜底保留。
+- **词源授权**:内置 ECDICT 数据授权风险与可商用替代词源调研见 [DICTIONARY-LICENSING.md](DICTIONARY-LICENSING.md)。
 
 ### 收集增强
 - iOS Share Extension:从系统分享菜单收词。
