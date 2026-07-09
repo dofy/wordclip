@@ -53,7 +53,8 @@ final class CollectHUD {
             ctx.duration = 0.25
             panel.animator().alphaValue = 0
         } completionHandler: {
-            panel.orderOut(nil)
+            // 动画完成回调始终在主线程触发,但类型系统看不出隔离,显式断言。
+            MainActor.assumeIsolated { panel.orderOut(nil) }
         }
     }
 

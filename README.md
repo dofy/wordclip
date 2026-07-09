@@ -46,26 +46,24 @@
 - 统计面板:总词数、待复习、新词、掌握率。
 - **JSON 备份导入/导出**:导出手动收录的词(懒人包词可重新导入、不进备份),导入按单词智能合并、不覆盖已有学习进度。
 
-### 付费(骨架)
-- **WordClip Pro 付费墙**:单档「终身买断」页面(权益:OCR 收词、iCloud 同步、导入/导出)。
-- **功能闸门**:免费/Pro 边界统一走 `entitlement.isPro`;当前用 `MockEntitlement`,可在设置「模拟 Pro」调试。
-- **StoreKit 2 骨架**:`StoreKitEntitlement`(一次性内购)+ 本地 `.storekit` 配置,Xcode Run 即可测购买流程,无需付费账号。
-- **免费**:收集 + 基础离线查词 + 生词本 + 复习 + 统计 + 导出。**Pro**:iCloud 同步、导入。
+### 付费
+- **WordClip Pro 付费墙**:单档「终身买断」页面(权益:OCR 收词、词库导入)。
+- **功能闸门**:免费/Pro 边界统一走 `entitlement.isPro`;DEBUG 用 `MockEntitlement`(设置「模拟 Pro」调试),Release 用真实 `StoreKitEntitlement`,经 `AppEntitlement` 别名切换。
+- **StoreKit 2 内购(已实装)**:`StoreKitEntitlement`(一次性非消耗型)+ 本地 `.storekit` 配置,Xcode Run 即可测购买/恢复,无需付费账号;上架待 ASC 商品配置 + 真机验证。
+- **免费**:收集 + 基础离线查词 + 生词本 + 复习 + 统计 + 导出。**Pro**:OCR 收词、词库导入。
 
 ### 其他
 - **界面多语言**:中文 / 英文(String Catalog),界面语言与学习语言相互独立。
-- **iCloud 同步预留 UI**:设置页占位开关(真实同步待 Apple 付费开发者账号)。
-- `WordClipKit` 单元测试 61 条覆盖算法 / 词库 / 导入 / 统计 / 权益 / 懒人包。
+- **iCloud 同步预留 UI**:设置页占位开关(真实同步为规划中功能,尚未实装)。
+- `WordClipKit` 单元测试 70 条覆盖算法 / 词库 / 导入 / 统计 / 权益 / 懒人包。
 
 ---
 
 ## 计划中功能
 
-> **收费政策(已定)**:一次性购买 · 终身买断(不做订阅)。**WordClip Pro** 权益:OCR 收词、iCloud 同步、导入/导出(及未来在线词典)。收集与基础查词永久免费。详见 [PLAN.md](docs/PLAN.md#5-收费政策已定)。
+> **收费政策(已定)**:一次性购买 · 终身买断(不做订阅)。**WordClip Pro** 权益:OCR 收词、词库导入(及规划中的 iCloud 同步、在线词典)。收集与基础查词永久免费。详见 [PLAN.md](docs/PLAN.md#5-收费政策已定)。
 
-- **付费墙(Pro)**:Paywall UI(单档终身买断)+ `isPro` 功能闸门(权益抽象层 `EntitlementProvider` / `MockEntitlement` 骨架已就位)。
-- **iCloud 同步**:SwiftData + CloudKit 多设备自动同步(先预留设置页 UI,真实同步待 Apple 付费开发者账号)。
-- **真实内购**:StoreKit 2 一次性内购,替换 mock 权益实现。
+- **iCloud 同步**:SwiftData + CloudKit 多设备自动同步(已预留设置页 UI,真实同步待实装 + Apple 付费开发者账号)。
 - **在线词典服务**:通过在线服务直接检索/导入扩展词典(不止导入本地文件);本地 CSV / SQLite 导入作为兜底保留。
 - **iOS Share Extension**:从系统分享菜单收词。
 - **更多复习模式**:中→英拼写、听音辨义等(当前为翻卡认识/不认识)。
@@ -85,4 +83,9 @@
 
 - macOS + **完整版 Xcode**(仅装 Command Line Tools 无法构建 App)
 - `brew install xcodegen`;`*.xcodeproj` 不入库,克隆后运行 `xcodegen generate` 生成工程
-- 上架 / iCloud / 真机调试需 Apple Developer 账号
+- 真机调试 / 分发需 Apple Developer 账号
+
+## 分发路线
+
+- **iOS/iPadOS**:上 App Store。见 [RELEASE-iOS.md](docs/RELEASE-iOS.md)。
+- **macOS**:Developer ID + 公证 + 网站分发(**不上 Mac App Store**,以保留原生全局取词——沙盒禁止跨 App 读取选中文本)。详见 [ARCHITECTURE §3.1](docs/ARCHITECTURE.md) 与 [PLAN 分发路线](docs/PLAN.md)。

@@ -7,6 +7,7 @@
 | 文件 | 说明 |
 |------|------|
 | `build_dictionary.py` | 下载 ECDICT → 裁剪字段 → 生成 `dictionary-en.sqlite` |
+| `build_wordpacks.py` | 从完整 ECDICT(`ecdict.db`)构建懒人词包 JSON → `WordClip/Resources/wordpacks/pack-<slug>.json` |
 | `verify_dictionary.py` | 快速验证生成的词库（抽查词条、词频、文件大小） |
 | `dictionary-en.sqlite` | **构建产物，不入库**，构建后复制到 Xcode 工程的 Resources |
 
@@ -57,6 +58,18 @@ python3 build_dictionary.py --top 100000 --output ecdict-100k.sqlite   # 或高�
 ```
 
 > ⚠️ ECDICT **原生** 的 `ecdict.db`（表名 `stardict`、中文在 `translation` 列）**不能**直接被 App 导入，必须先经本脚本转成 `entries` 结构。
+
+## 懒人词包构建
+
+`build_wordpacks.py` 从完整 ECDICT(`ecdict.db`)生成两类离线词包 JSON,产物写到 `WordClip/Resources/wordpacks/pack-<slug>.json`(以 folder reference 随 App 分发):
+
+- **分级包**:按 ECDICT 的 `tag` 列全量筛(zk/gk/cet4/cet6/ky/toefl/ielts/gre),词频升序。
+- **场景包**:读 `data/wordpacks/<slug>.txt`(一行一词)手工策划词表,用 ECDICT 补全释义,词频升序。
+
+```bash
+cd data/
+python3 build_wordpacks.py    # 需先有 ecdict.db(完整 ECDICT)
+```
 
 ## 添加新语言
 

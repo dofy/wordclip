@@ -313,6 +313,17 @@ struct EnglishPackTests {
         #expect(tokens.contains("world"))
         #expect(tokens.contains("beautiful"))
     }
+
+    @Test("混合文本只取基本拉丁词,排除中文与带音标词")
+    func tokenizeExcludesNonLatin() {
+        let tokens = pack.tokenize("学习 english café naïve 单词")
+        #expect(tokens.contains("english"))
+        // 中文与带音标(café/naïve)不应作为英文词收入。
+        #expect(!tokens.contains("学习"))
+        #expect(!tokens.contains("单词"))
+        #expect(!tokens.contains("café"))
+        #expect(!tokens.contains("naïve"))
+    }
 }
 
 // MARK: - MockEntitlement Tests

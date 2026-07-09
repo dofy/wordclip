@@ -45,8 +45,9 @@ public enum WordTokenizer {
     }
 }
 
-private extension Character {
+extension Character {
     /// 是否为基本拉丁字母 a–z / A–Z（排除带音标的拉丁扩展与 CJK）。
+    /// package 内共享(WordTokenizer 与 EnglishPack.tokenize 都用它做英文过滤)。
     var isLatinLetter: Bool {
         ("a"..."z").contains(self) || ("A"..."Z").contains(self)
     }

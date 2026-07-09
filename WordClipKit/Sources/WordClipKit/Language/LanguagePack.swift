@@ -29,7 +29,9 @@ public struct EnglishPack: LanguagePack {
 
     public init() {}
 
-    /// 英语：按空格/标点切分，取纯字母 token，过滤停用词和过短词。
+    /// 英语：按空格/标点切分，取纯基本拉丁字母 token，过滤停用词和过短词。
+    /// 仅收 a–z(用 isLatinLetter,排除 CJK 与带音标的拉丁扩展),
+    /// 避免混合文本里中文/重音词漏入英文分词结果(与 WordTokenizer 一致)。
     public func tokenize(_ text: String) -> [String] {
         let separators = CharacterSet.whitespacesAndNewlines
             .union(.punctuationCharacters)
@@ -38,7 +40,7 @@ public struct EnglishPack: LanguagePack {
         return text
             .components(separatedBy: separators)
             .map { $0.lowercased().trimmingCharacters(in: .letters.inverted) }
-            .filter { $0.count >= 2 && $0.allSatisfy(\.isLetter) }
+            .filter { $0.count >= 2 && $0.allSatisfy(\.isLatinLetter) }
             .filter { !Self.stopwords.contains($0) }
     }
 

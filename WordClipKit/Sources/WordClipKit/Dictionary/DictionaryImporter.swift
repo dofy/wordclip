@@ -45,8 +45,9 @@ public enum DictionaryImporter {
     // MARK: - CSV
 
     static func importCSV(from sourceURL: URL, to destPath: String) throws -> ImportResult {
-        guard let raw = try? String(contentsOf: sourceURL, encoding: .utf8)
-                ?? String(contentsOf: sourceURL, encoding: .utf8) else {
+        // UTF-8 优先,失败回退 ISO-8859-1(容忍非 UTF-8 的 CSV,不至于整份拒收)。
+        guard let raw = (try? String(contentsOf: sourceURL, encoding: .utf8))
+                ?? (try? String(contentsOf: sourceURL, encoding: .isoLatin1)) else {
             throw ImportError.unreadable
         }
         let rows = parseCSV(raw)

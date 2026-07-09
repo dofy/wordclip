@@ -411,13 +411,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Save new words to WordClip via Shortcuts or the share sheet"
+            "value": "Tap + to add manually, or collect from other apps via a wordclip:// link"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "通过快捷指令或分享菜单，把生词收录到 WordClip"
+            "value": "点右上角「+」手动添加，或从其他 App 用 wordclip:// 链接收录"
           }
         }
       }
@@ -1497,13 +1497,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "wordclip://collect?word=<word> — capture from Shortcuts or scripts."
+            "value": "wordclip://collect?word=<word> — collect via Shortcuts or scripts (macOS and iOS)."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词。"
+            "value": "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词（macOS / iOS 均支持）。"
           }
         }
       }

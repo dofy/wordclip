@@ -12,7 +12,7 @@
 - SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog` / `WordGroup`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
 - String Catalog(`Localizable.xcstrings`)zh-Hans + en,界面文案全部走 `String(localized:)`。
 - App 分类与显示名已配置。
-- `WordClipKit` 单元测试 61 条,GitHub Actions CI 跑 `swift test`。
+- `WordClipKit` 单元测试 70 条,GitHub Actions CI 跑 `swift test`。
 
 ### 收集
 - **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
@@ -65,19 +65,19 @@
 
 ## 计划中功能
 
-### 付费墙(骨架,不需账号)
-- **收费政策已定**:一次性购买 · 终身买断(不做订阅)。Pro 权益 = iCloud 同步 + 导入导出 + 在线词典功能。详见 [PLAN.md §5](PLAN.md)。
-- Paywall UI(**单档「终身买断」**展示)。
-- 免费 / Pro 功能闸门统一走 `entitlement.isPro`(`EntitlementProvider` / `MockEntitlement` 已就位)。
-- StoreKit 2 `.storekit` Configuration File 本地跑通购买流程(无需付费账号)。
+### 付费(代码侧已实装,待账号验证)
+- **收费政策已定**:一次性购买 · 终身买断(不做订阅)。Pro 权益 = OCR 收词 + 词库导入(iCloud 同步为规划中,未实装)。详见 [PLAN.md §5](PLAN.md)。
+- Paywall UI(**单档「终身买断」**,含「恢复购买」)。
+- 免费 / Pro 功能闸门统一走 `entitlement.isPro`;DEBUG=`MockEntitlement`、Release=`StoreKitEntitlement`,经 `AppEntitlement` 别名切换。
+- StoreKit 2 内购(Non-Consumable)已实装,`.storekit` 配置本地跑通购买/恢复(无需付费账号)。
 
 ### iCloud 同步(先预留 UI,功能待账号)
 - 设置页放置同步开关 / 状态占位 UI(无账号阶段不落地真实同步)。
 - 待账号:配置 CloudKit 容器,开启 SwiftData CloudKit 集成(主要改 `ModelConfiguration`),多设备同步与冲突处理(复习进度取更靠前者)。
 
-### 真实内购(待 Apple 付费开发者账号)
-- StoreKit 2 一次性内购(Non-Consumable),`StoreKitEntitlement` 替换 mock,UI 不变。
-- 申请 Small Business Program(15% 抽成)、真机与沙盒购买测试。
+### 内购上线验证(待 Apple 付费开发者账号)
+- `StoreKitEntitlement` 已实装并在 Release 生效;剩 App Store Connect 配置商品(ID `xyz.phpz.WordClip.pro.lifetime`)+ 真机/沙盒购买与恢复验证。见 [RELEASE-iOS.md](RELEASE-iOS.md)。
+- 申请 Small Business Program(15% 抽成,仅 App Store 侧)。
 
 ### 在线词典服务(Pro)
 - 通过在线服务直接检索 / 导入扩展词典,而非仅导入本地准备好的文件。

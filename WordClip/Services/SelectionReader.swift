@@ -13,14 +13,6 @@ enum SelectionReader {
         AXIsProcessTrusted()
     }
 
-    /// 弹出系统授权引导（首次会提示去“辅助功能”面板）。
-    static func promptForAccessibility() {
-        // 直接用字面量 key，避免引用非并发安全的全局符号 kAXTrustedCheckOptionPrompt。
-        let promptKey = "AXTrustedCheckOptionPrompt"
-        let options = [promptKey: true]
-        _ = AXIsProcessTrustedWithOptions(options as CFDictionary)
-    }
-
     /// 打开「辅助功能」系统设置面板。
     static func openAccessibilitySettings() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {

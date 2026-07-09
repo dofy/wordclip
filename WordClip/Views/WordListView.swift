@@ -123,14 +123,14 @@ struct WordListView: View {
         WordListActions(modelContext: modelContext, dictionary: appState.dictionary)
     }
 
-    /// 空状态描述文案：macOS 用全局快捷键，iOS 用快捷指令/分享。
+    /// 空状态描述文案：macOS 用全局快捷键，iOS 用「+」手动添加 / URL scheme。
     private var emptyDescription: String {
         #if os(macOS)
         String(localized: "wordlist.empty.description",
                defaultValue: "在任意 App 中选中单词，用快捷键一键收录")
         #else
         String(localized: "wordlist.empty.description.ios",
-               defaultValue: "通过快捷指令或分享菜单，把生词收录到 WordClip")
+               defaultValue: "点右上角「+」手动添加，或从其他 App 用 wordclip:// 链接收录")
         #endif
     }
 
@@ -432,7 +432,7 @@ struct WordListView: View {
             }
         case .dict(let term):
             DictionaryPreviewPane(term: term) {
-                await appState.collect(word: term)
+                _ = await appState.collect(word: term)
                 if let w = words.first(where: { $0.lemma == term.lowercased() }) {
                     selectedItem = .word(w.id)
                 }
@@ -540,7 +540,7 @@ struct WordListView: View {
             }
         case .dict(let term):
             DictionaryPreviewPane(term: term) {
-                await appState.collect(word: term)
+                _ = await appState.collect(word: term)
                 // 收录后：从词典段消失，转选中生词本里的该词
                 await refreshDictSuggestions()
                 if let w = words.first(where: { $0.lemma == term.lowercased() }) {

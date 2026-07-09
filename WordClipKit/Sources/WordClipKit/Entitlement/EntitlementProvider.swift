@@ -14,7 +14,7 @@ public enum ProProduct: String, Sendable, CaseIterable {
 public struct PlanProduct: Sendable {
     public let product: ProProduct
     public let localizedTitle: String
-    public let localizedPrice: String  // 格式化后的价格字符串，如 "¥198"
+    public let localizedPrice: String  // 格式化后的价格字符串，如 "¥28"
 
     public init(
         product: ProProduct,
@@ -86,7 +86,7 @@ public final class MockEntitlement: EntitlementProvider, ObservableObject {
 
     public func products() async -> [PlanProduct] {
         [
-            PlanProduct(product: .lifetime, localizedTitle: "终身买断", localizedPrice: "¥198"),
+            PlanProduct(product: .lifetime, localizedTitle: "终身买断", localizedPrice: "¥28"),
         ]
     }
 }

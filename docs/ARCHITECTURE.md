@@ -197,18 +197,18 @@ enum ProProduct { case lifetime }
 
 protocol EntitlementProvider {
     var isPro: Bool { get }                       // 是否解锁 Pro（一次买断即永久 true）
-    var statePublisher: AnyPublisher<Bool, Never> { get }
+    var isProPublisher: AnyPublisher<Bool, Never> { get }
     func purchase(_ product: ProProduct) async throws
     func restore() async throws                   // 恢复购买（换设备/重装）
     func products() async -> [PlanProduct]        // 价格/本地化标题
 }
 
-struct MockEntitlement: EntitlementProvider { ... }      // 开发期：开关即「已购买」
-// 账号就绪后：StoreKitEntitlement（StoreKit 2 一次性内购），UI 不变
+// 实装:DEBUG=MockEntitlement(开关即「已购买」),Release=StoreKitEntitlement(真实 StoreKit 2),
+// 经 typealias AppEntitlement 切换(见 WordClip/App/AppEntitlement.swift),UI 不变。
 ```
 
 - **功能闸门**统一走 `entitlement.isPro`，业务代码不直接碰 StoreKit。
-- **Pro 三大权益**:iCloud 同步 / 导入导出 / 在线词典功能(见 PLAN §5)。
+- **Pro 权益**:OCR 收词 / 导入导出(iCloud 同步为规划中,未实装,见 PLAN §5)。
 - StoreKit 2 用 `.storekit` Configuration File 可在无付费账号时本地跑通完整购买流程。
 
 ---
@@ -232,21 +232,25 @@ let container = try ModelContainer(for: WordEntry.self, /* ... */ configurations
 
 ---
 
-## 4.5 收费与同步选型（决策：Apple 生态内起步）
+## 4.5 收费与同步选型（分平台:iOS 走 StoreKit / macOS 走网站分发）
 
-**已确认路线：StoreKit 2 做一次性买断内购 + CloudKit 做同步，零自建后端。** 收费政策为**一次性购买、终身制**(非订阅,见 PLAN §5)。权益判断在本地完成，跨设备权益与数据同步都交给 Apple 生态。未来若需网页端购买/跨平台账号,再引入自建后端——核心逻辑已沉淀在 `WordClipKit`,可平滑扩展。
+**收费政策:一次性购买、终身制(非订阅,见 PLAN §5)。** 收费渠道**按分发路线分平台**(见 §3.1「分发决策」与 PLAN「分发路线」):
+- **iOS/iPadOS**:App Store 内购,**StoreKit 2 一次性非消耗型商品**(数字商品强制走 IAP)。`StoreKitEntitlement` 已实装。
+- **macOS**:Developer ID + 公证 + 网站分发(不上 MAS),购买需 **Merchant of Record**(如 Lemon Squeezy)+ 离线许可校验(如 Ed25519 签名),不走 App Store IAP。
+
+同步仍规划走 CloudKit 私有库(见 §4),当前**未实装**,仅预留 UI。权益判断在本地完成。核心逻辑沉淀在 `WordClipKit`,两平台共用。
 
 | 关注点 | 选择 | 备注 |
 |--------|------|------|
-| 收费渠道 | **StoreKit 2 一次性内购(Non-Consumable)** | 数字商品强制走 IAP;终身买断即一次性非消耗型商品 |
-| 抽成 | 申请 **Small Business Program** → 15% | 年收入 < $100 万适用 |
-| 同步 | **CloudKit 私有库** | 与 SwiftData 集成，见 §4;Pro 权益 |
+| iOS 收费渠道 | **StoreKit 2 一次性内购(Non-Consumable)** | 已实装;数字商品强制走 IAP |
+| iOS 抽成 | 申请 **Small Business Program** → 15% | 年收入 < $100 万适用;仅 App Store 侧 |
+| macOS 收费渠道 | **Merchant of Record + 离线许可校验** | 网站分发,不走 IAP;抽成以 MoR 费率为准 |
+| 同步 | **CloudKit 私有库(规划中,未实装)** | 与 SwiftData 集成,见 §4;Pro 权益 |
 | 在线词典 | **在线服务检索/导入** | Pro 权益,后端/词源待定(合规见 §3.3) |
-| 后端 | **词典服务需最小后端;其余暂不自建** | 购买/同步由 StoreKit + CloudKit 托管;在线词典按需引入服务 |
 
-**红线提醒**：iOS 上数字商品不得用 Stripe/微信支付等外部渠道在 App 内完成交易，否则下架。这也是选 StoreKit 的根本原因。
+**红线提醒(仅 iOS)**:App Store 上数字商品不得用 Stripe/微信支付等外部渠道在 App 内完成交易,否则下架。macOS 网站分发不受此限,故可用 MoR。
 
-> 前置条件：以上全部需要 Apple 付费开发者账号（$99/年）。当前用 `MockEntitlement`（见 §3.8）跑通 Pro 边界，账号就绪后换真实现。
+> 前置条件:iOS 上架需 Apple 付费开发者账号($99/年)。代码侧 DEBUG 用 `MockEntitlement`、Release 用 `StoreKitEntitlement`(见 §3.8),待账号做 ASC 商品配置 + 真机/沙盒购买验证。
 
 ---
 

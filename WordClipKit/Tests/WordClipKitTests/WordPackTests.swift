@@ -82,4 +82,12 @@ struct WordPackImporterTests {
         let result = WordPackImporter.newWords(in: p, existingLemmas: [])
         #expect(result.map(\.lemma) == ["zebra", "alpha", "mango"])
     }
+
+    @Test("existingLemmas 大小写不敏感,避免重复导入")
+    func existingLemmasCaseInsensitive() {
+        let p = pack(["apple", "banana"])
+        // 调用方传入未归一的大写 lemma,也应被视为已存在。
+        let result = WordPackImporter.newWords(in: p, existingLemmas: ["Apple", "BANANA"])
+        #expect(result.isEmpty)
+    }
 }

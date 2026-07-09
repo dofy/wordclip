@@ -23,8 +23,8 @@
 
 ## 2. 项目约束
 
-- ✅ **计划上架 App Store** → 全局快捷键等必须避开私有 API,走合规方案。
-- ⚠️ **暂无 Apple 付费开发者账号** → iCloud/CloudKit 同步、真机调试、真实订阅暂缓;当前用本地 SwiftData(模拟器即可跑通收集/查词/复习),账号到位后主要改 `ModelConfiguration` 即可切云。
+- ✅ **分发路线(见下方「分发路线」)**:iOS 上 App Store;macOS 走 Developer ID + 公证 + 网站分发(**不上 MAS**,以保留原生全局取词)。macOS 因此无需为沙盒/审核避开 Accessibility 直读。
+- ⚠️ **暂无 Apple 付费开发者账号的完整配置** → iCloud/CloudKit 同步暂缓(当前仅预留 UI);当前用本地 SwiftData(模拟器即可跑通收集/查词/复习),账号到位后主要改 `ModelConfiguration` 即可切云。内购代码已实装(见 §5),待 ASC 商品配置 + 真机/沙盒购买验证。
 - ✅ **优先级**:先打磨「收集 + 离线查词」,复习其次,同步最后。
 - ✅ **界面多语言(中/英)从一开始就纳入**:所有用户可见文案走 String Catalog,禁止硬编码。
 - ✅ **只导入用户有权使用的词典**:App 不打包/分发任何第三方商业词典。
@@ -64,7 +64,7 @@
 
 - **付费墙骨架(mock,不需账号)**:Paywall UI(单档「终身买断」)、`isPro` 功能闸门、免费上限逻辑。
 - **iCloud 同步(先预留 UI,功能待账号)**:设置页放置同步开关/状态占位 UI;真实同步待 CloudKit 私有库 + Apple 付费账号,主要改 `ModelConfiguration`。
-- **真实订阅(待账号)**:StoreKit 2 一次性内购,`StoreKitEntitlement` 替换 mock,沙盒购买测试。
+- **内购上线验证(待账号)**:`StoreKitEntitlement` 已实装并在 Release 生效(见 §5);待 App Store Connect 配置商品 + 真机/沙盒购买与恢复验证。不做订阅,仅一次性买断。
 - **在线词典服务(Pro)**:通过在线服务直接检索并导入扩展词典,而非仅导入本地准备好的文件。需先明确后端/词源(合规:只提供用户有权使用的词库,App 不分发第三方商业词典);现有本地 CSV / SQLite 导入作为兜底保留。
 - **收集增强**:iOS Share Extension(系统分享菜单收词)。
 - **复习增强**:更多测试模式(中→英拼写、听音辨义)。
