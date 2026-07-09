@@ -26,7 +26,7 @@ enum SidebarItem: Hashable, CaseIterable {
 struct ContentView: View {
 
     @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var entitlement: MockEntitlement
+    @EnvironmentObject private var entitlement: AppEntitlement
 
     @State private var selection: SidebarItem? = .allWords
     @State private var showingShortcuts = false

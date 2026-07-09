@@ -13,7 +13,12 @@ struct WordClipApp: App {
     #endif
 
     // MARK: Dependencies
+    // DEBUG 用 Mock(可切换模拟 Pro),Release 用真实 StoreKit。见 AppEntitlement.swift。
+    #if DEBUG
     @StateObject private var entitlement = MockEntitlement(overridePro: false)
+    #else
+    @StateObject private var entitlement = StoreKitEntitlement()
+    #endif
     @StateObject private var appState = AppState()
 
     // MARK: SwiftData 容器

@@ -8,7 +8,7 @@ import KeyboardShortcuts
 
 /// 设置页
 struct SettingsView: View {
-    @EnvironmentObject private var entitlement: MockEntitlement
+    @EnvironmentObject private var entitlement: AppEntitlement
     @EnvironmentObject private var appState: AppState
     @Environment(\.modelContext) private var modelContext
 

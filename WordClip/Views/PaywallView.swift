@@ -5,7 +5,7 @@ import WordClipKit
 ///
 /// 收费政策：一次性购买、终身制，不做订阅（见 docs/PLAN.md §5）。
 struct PaywallView: View {
-    @EnvironmentObject private var entitlement: MockEntitlement
+    @EnvironmentObject private var entitlement: AppEntitlement
     @Environment(\.dismiss) private var dismiss
 
     @State private var product: PlanProduct?

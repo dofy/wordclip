@@ -103,7 +103,7 @@ struct HelpView: View {
     }
 
     static var sections: [Section] {
-        [
+        var result: [Section] = [
             Section(title: String(localized: "help.section.concepts", defaultValue: "核心概念"), items: [
                 Item(symbol: "books.vertical",
                      heading: String(localized: "help.concepts.wordlist.title", defaultValue: "生词本"),
@@ -114,6 +114,11 @@ struct HelpView: View {
                      body: String(localized: "help.concepts.dictionary.body",
                                   defaultValue: "用于查询的参考词库，内置 ECDICT 5 万词，可导入更多。")),
             ]),
+        ]
+
+        // 收词分区仅 macOS(选中收词/OCR/状态栏均为 macOS 能力,iOS 不显示以免误导)。
+        #if os(macOS)
+        result.append(
             Section(title: String(localized: "help.section.collect", defaultValue: "收词（macOS）"), items: [
                 Item(symbol: "cursorarrow.click.2",
                      heading: String(localized: "help.collect.selection.title", defaultValue: "选中收词 · ⌥⌘C"),
@@ -131,7 +136,11 @@ struct HelpView: View {
                      heading: String(localized: "help.collect.menubar.title", defaultValue: "状态栏图标"),
                      body: String(localized: "help.collect.menubar.body",
                                   defaultValue: "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。")),
-            ]),
+            ])
+        )
+        #endif
+
+        result += [
             Section(title: String(localized: "help.section.add", defaultValue: "添加与查词"), items: [
                 Item(symbol: "plus.circle",
                      heading: String(localized: "help.add.manual.title", defaultValue: "手动添加（iOS）"),
@@ -176,20 +185,32 @@ struct HelpView: View {
                      body: String(localized: "help.data.pro.body",
                                   defaultValue: "一次性买断、终身解锁：OCR 收词、iCloud 同步、词库导入/导出。收集与基础查词永久免费。")),
             ]),
-            Section(title: String(localized: "help.section.faq", defaultValue: "常见问题"), items: [
-                Item(symbol: "questionmark.circle",
-                     heading: String(localized: "help.faq.hotkey.title", defaultValue: "收词快捷键没反应？"),
-                     body: String(localized: "help.faq.hotkey.body",
-                                  defaultValue: "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）")),
-                Item(symbol: "questionmark.circle",
-                     heading: String(localized: "help.faq.nodef.title", defaultValue: "某个词「暂无释义」？"),
-                     body: String(localized: "help.faq.nodef.body",
-                                  defaultValue: "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。")),
-                Item(symbol: "questionmark.circle",
-                     heading: String(localized: "help.faq.import.title", defaultValue: "导入的词典没生效？"),
-                     body: String(localized: "help.faq.import.body",
-                                  defaultValue: "确认在 设置 → 词典 里该词典的开关是打开的。")),
-            ]),
+            Section(title: String(localized: "help.section.faq", defaultValue: "常见问题"), items: faqItems),
         ]
+        return result
+    }
+
+    /// 常见问题条目。「快捷键没反应」仅 macOS(涉及辅助功能/选中收词开关)。
+    private static var faqItems: [Item] {
+        var items: [Item] = []
+        #if os(macOS)
+        items.append(
+            Item(symbol: "questionmark.circle",
+                 heading: String(localized: "help.faq.hotkey.title", defaultValue: "收词快捷键没反应？"),
+                 body: String(localized: "help.faq.hotkey.body",
+                              defaultValue: "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）"))
+        )
+        #endif
+        items += [
+            Item(symbol: "questionmark.circle",
+                 heading: String(localized: "help.faq.nodef.title", defaultValue: "某个词「暂无释义」？"),
+                 body: String(localized: "help.faq.nodef.body",
+                              defaultValue: "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。")),
+            Item(symbol: "questionmark.circle",
+                 heading: String(localized: "help.faq.import.title", defaultValue: "导入的词典没生效？"),
+                 body: String(localized: "help.faq.import.body",
+                              defaultValue: "确认在 设置 → 词典 里该词典的开关是打开的。")),
+        ]
+        return items
     }
 }
