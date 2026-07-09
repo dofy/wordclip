@@ -95,7 +95,11 @@ CloudKit 要求：所有属性有默认值或可选、关系可选、不可用�
 | B. 全局热键 + 模拟复制 | 热键 → 发送 ⌘C → 读剪贴板 | 真·全局体验 | 需 Accessibility 权限;会改动剪贴板 |
 | **C. 全局热键 + Accessibility 直读**(已采用) | 热键 → `AXUIElement` 读聚焦元素选中文本 | 全局体验且不动剪贴板 | 需 Accessibility 权限,个别 App 不支持 |
 
-> 上架时需在审核说明中解释辅助功能权限用途(读取选中文本以收词)。
+> **分发决策(2026-07-09 定稿):macOS 走 Developer ID + 公证 + 网站分发,不上 Mac App Store。**
+> 根因:方案 C 依赖 Accessibility 跨 App 读取选中文本,而 **App Sandbox(MAS 强制)禁止任何跨 App 文本读取**(AX 直读 / 合成 ⌘C / AppleScript keystroke 全被禁)。二者不可兼得。曾在 `feat/mas-sandbox-capture` 分支尝试「沙盒 + 快捷指令(Shortcuts)/ App Intents 收词」以换取 MAS 资格,但需用户手工配置快捷指令、失去开箱即用的全局取词体验,**已否决并放弃该分支**,回到原生全局取词。
+> - **macOS**:Developer ID 签名 + 公证,网站直接分发。审核不适用;辅助功能权限首启引导授权。
+> - **iOS**:不含全局取词(iOS 无此机制),正常上 App Store,不受此决策影响。
+> - 该结论若要推翻(重新考虑 MAS),须先解决「沙盒下如何保留全局取词」这一根本矛盾——目前无合规解。
 
 ### 3.2 读音
 

@@ -1,6 +1,11 @@
 # 全面上 App Store:macOS 取词机制沙盒化改造 — 设计文档
 
-> 日期:2026-07-08 · 状态:已定稿待实现
+> **⛔ 已否决(2026-07-09)** —— 本文档记录的「沙盒化上 MAS」方向已放弃。
+> 决策:macOS 保留原生全局取词(Accessibility 直读),走 **Developer ID + 公证 + 网站分发**,不上 Mac App Store。
+> 根因:沙盒禁止跨 App 读取选中文本,与全局取词不可兼得;沙盒替代方案(合成⌘C / 快捷指令 / App Intents)均需牺牲开箱即用的取词体验。
+> 现行决策见 `docs/ARCHITECTURE.md` §3.1 与 `docs/PLAN.md`「分发路线」。本文档仅作历史留档,勿据此实现。
+>
+> 日期:2026-07-08 · 状态:~~已定稿待实现~~ → **已否决**
 > 依据调研:`.superpowers/research/sandbox-global-capture.md`(sandbox 兼容性)
 
 ## 背景与决策

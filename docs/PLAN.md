@@ -73,6 +73,17 @@
 
 ---
 
+## 分发路线(2026-07-09 定稿)
+
+**macOS 走 Developer ID + 公证 + 网站分发,不上 Mac App Store;iOS 正常上 App Store。**
+
+- **根因**:全局选中取词依赖 Accessibility 跨 App 直读文本,而 App Sandbox(MAS 强制)禁止一切跨 App 文本读取。取词与 MAS 二者不可兼得,**优先保取词体验**。详见架构文档 §3.1。
+- **曾尝试并否决**:`feat/mas-sandbox-capture` 分支试过「沙盒 + 快捷指令 / App Intents 收词」换 MAS 资格,但需用户手工配快捷指令、丧失开箱即用的全局取词,体验不可接受,已放弃该分支。
+- **付费实现分平台**:iOS 用 StoreKit(App Store 内购,Small Business 15%,见 §5);**macOS 网站分发的收费需 Merchant of Record(如 Lemon Squeezy)+ 离线许可校验**,§5 的「15% 抽成」仅适用 iOS/App Store 侧。
+- **回退锚点**:`v0.2.0` tag(原生 AX 取词 + 网站分发基线)。
+
+---
+
 ## 5. 收费政策(已定)
 
 **模式**:Freemium —— 核心「收集 + 基础查词」永久免费,进阶能力做成 **WordClip Pro**。技术方案见架构文档 §3.8 / §4.5(StoreKit 2 + CloudKit,零后端)。
