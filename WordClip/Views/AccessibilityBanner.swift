@@ -42,7 +42,11 @@ struct AccessibilityBanner: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+        .frame(maxWidth: .infinity)
+        // 两层：警示色贴着内容，底下再垫 .bar，否则横幅是半透明的，
+        // 窗口内容会透上来和文字糊在一起。
         .background(.yellow.opacity(0.12))
+        .background(.bar)
         .overlay(alignment: .bottom) {
             Divider()
         }
