@@ -23,6 +23,10 @@ set -euo pipefail
 
 readonly project_root="$(cd "$(dirname "$0")/.." && pwd)"
 readonly derived_data="${TMPDIR%/}/wordclip-local/DerivedData"
+# Package checkouts live outside DerivedData so wiping a build does not throw
+# them away. Resolving GRDB and KeyboardShortcuts needs the network and is by
+# far the slowest and least reliable step; this way it happens once.
+readonly source_packages="$HOME/Library/Caches/xyz.phpz.app.wordclip/SourcePackages"
 readonly app_name="WordClip.app"
 readonly built_app="$derived_data/Build/Products/Release/$app_name"
 readonly installed_app="/Applications/$app_name"
@@ -81,14 +85,20 @@ ensure_signing_identity
 cd "$project_root"
 xcodegen generate
 
-# Keep DerivedData between runs. Deleting it forces SwiftPM to resolve GRDB and
-# KeyboardShortcuts again, which needs the network and is the slowest part of a
-# clean build by a wide margin.
+mkdir -p "$source_packages"
+
+# -onlyUsePackageVersionsFromResolvedFile: take the pins in
+# WordClipKit/Package.resolved as given and skip the remote version check.
+# Without it every build reaches out to GitHub, which on a flaky connection
+# fails the whole build with "Could not resolve package dependencies" even
+# though the checkouts are already on disk.
 xcodebuild \
     -project WordClip.xcodeproj \
     -scheme WordClip-macOS \
     -configuration Release \
     -derivedDataPath "$derived_data" \
+    -clonedSourcePackagesDirPath "$source_packages" \
+    -onlyUsePackageVersionsFromResolvedFile \
     CODE_SIGNING_ALLOWED=NO \
     build
 
