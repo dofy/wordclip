@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 状态栏模板图标：纯黑 + 透明底。系统按 template 自动适配明暗模式。
-     W 放大并可溢出书签轮廓，保证菜单栏小尺寸下清晰可辨。 -->
+<!--
+  状态栏模板图标：纯黑 + 透明底。系统按 template 自动适配明暗模式。
+  与 scripts/generate_app_icon.swift 保持一致（实际 PNG 由该脚本生成）。
+  书签几何和 W 路径与 App 图标同源，只有两处按菜单栏尺寸放大：
+  W 更大（书签高的 46%）、位置更靠上——18pt 的槽位用 App 图标的比例会看不清。
+-->
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <mask id="cut">
     <rect width="64" height="64" fill="white"/>
-    <!-- W 放大、加粗，垂直略偏上，允许触达/溢出书签边缘 -->
-    <text x="32" y="28" font-family="-apple-system, Helvetica Neue, sans-serif" font-size="34"
-          font-weight="900" fill="black" text-anchor="middle" dominant-baseline="central">W</text>
+    <!-- W 以遮罩镂空，粗笔画圆端；template 图只携带 alpha，非透明处一律被染成同一色 -->
+    <path d="M14.4 53.5 L18.3 39.0 L23.9 47.1 L29.5 39.0 L33.4 53.5"
+          transform="translate(8.1, -30.8)"
+          fill="none" stroke="black" stroke-width="5.4"
+          stroke-linecap="round" stroke-linejoin="round"/>
   </mask>
   <path d="M16 5 H48 a4 4 0 0 1 4 4 V59 L32 47 L12 59 V9 a4 4 0 0 1 4 -4 Z"
         fill="#000000" mask="url(#cut)"/>
