@@ -63,7 +63,7 @@ targets:
       - sdk: ScreenCaptureKit.framework  # OCR 取词：屏幕区域截图
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: xyz.phpz.WordClip.macOS
+        PRODUCT_BUNDLE_IDENTIFIER: xyz.phpz.app.wordclip
         PRODUCT_NAME: WordClip
         INFOPLIST_FILE: WordClip/Resources/Info-macOS.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
