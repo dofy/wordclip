@@ -140,6 +140,49 @@ final class AppState: ObservableObject {
         needsAccessibilityPrompt = false
     }
 
+    #if os(macOS)
+    /// 订阅授权状态变化，让横幅在用户授权后立刻消失。
+    ///
+    /// 只在 onAppear 检测一次是不够的：用户是在 app 启动之后才去系统设置里打开
+    /// 开关的，回到 app 时横幅仍然挂着，看起来像没授权成功。
+    /// - `com.apple.accessibility.api` 是系统在辅助功能授权变动时发出的分布式
+    ///   通知，不需要轮询；它的投递有轻微延迟，故延后一拍再读。
+    /// - 再补一个 app 重新激活时的复查，兜住通知没收到的情况。
+    func observeAccessibilityChanges() {
+        guard accessibilityObservers.isEmpty else { return }
+
+        let recheck: (Notification) -> Void = { [weak self] _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self?.checkAccessibilityStatus()
+            }
+        }
+
+        accessibilityObservers.append(
+            DistributedNotificationCenter.default().addObserver(
+                forName: NSNotification.Name("com.apple.accessibility.api"),
+                object: nil,
+                queue: .main,
+                using: recheck
+            )
+        )
+        accessibilityObservers.append(
+            NotificationCenter.default.addObserver(
+                forName: NSApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main,
+                using: recheck
+            )
+        )
+    }
+
+    /// 观察者句柄，仅用于避免重复注册。
+    ///
+    /// 不做反注册：AppState 注入在 App 根节点，生命周期等于进程，观察者本就该
+    /// 活到退出。写 deinit 反而过不了 Swift 6 的并发检查——deinit 是 nonisolated，
+    /// 不能访问 @MainActor 隔离的非 Sendable 属性。
+    private var accessibilityObservers: [NSObjectProtocol] = []
+    #endif
+
     /// 热键回调是否已注册（onKeyUp 只需注册一次，否则会叠加重复触发）。
     private var hotkeyHandlerRegistered = false
     /// OCR 热键回调是否已注册。
