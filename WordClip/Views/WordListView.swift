@@ -509,6 +509,7 @@ struct WordListView: View {
         }
         .background(isRegularWidth ? listShortcuts : nil)
         #if os(macOS)
+        .modifier(TopScrollEdgeEffectHidden(hidden: appState.needsAccessibilityPrompt))
         .onDeleteCommand {
             if case .word(let id) = selectedItem,
                let w = filteredWords.first(where: { $0.id == id }) {
@@ -1053,3 +1054,24 @@ struct DictionaryPreviewPane: View {
         }
     }
 }
+
+#if os(macOS)
+/// 授权横幅显示时，关掉列表顶部的滚动边缘效果。
+///
+/// 横幅和 NavigationSplitView 是平级堆叠的（见 ContentView.bannerWrapped），
+/// split view 被整体下推之后，系统仍会在列表的新顶边画那条渐进模糊带，于是它脱离
+/// 工具栏、悬在横幅下面，看起来像一条来历不明的半透明条，底下还透出半截单词行。
+///
+/// 只在横幅显示时关：列表紧贴工具栏时这条模糊带是系统本来的观感，不该动。
+private struct TopScrollEdgeEffectHidden: ViewModifier {
+    let hidden: Bool
+
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content.scrollEdgeEffectHidden(hidden, for: .top)
+        } else {
+            content
+        }
+    }
+}
+#endif
