@@ -61,3 +61,6 @@ data/*.db
 data/*.zip
 data/*.log
 data/raw/
+
+# 本机 AI 助手配置（settings.local.json 含本机路径与权限白名单）
+.claude/

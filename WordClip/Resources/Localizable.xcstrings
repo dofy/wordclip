@@ -1,2272 +1,2282 @@
 {
-  "sourceLanguage": "zh-Hans",
-  "strings": {
-    "/%@/": {},
-    "%@": {},
-    "%@ / %@": {
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$@ / %2$@"
+  "sourceLanguage" : "zh-Hans",
+  "strings" : {
+    "/%@/" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ / %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
           }
         }
       }
     },
-    "app.name": {
-      "comment": "App display name",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WordClip"
+    "%@ 词" : {
+
+    },
+    "addword.add" : {
+      "comment" : "Add button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WordClip"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加"
           }
         }
       }
     },
-    "menubar.capture.disable": {
-      "comment": "Menu bar menu item: disable capture",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Disable Selection Capture"
+    "addword.placeholder" : {
+      "comment" : "Add word input placeholder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter an English word"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "停用选中收词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "输入英文单词"
           }
         }
       }
     },
-    "menubar.capture.enable": {
-      "comment": "Menu bar menu item: enable capture",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Selection Capture"
+    "addword.title" : {
+      "comment" : "Add word panel title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Word"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用选中收词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加单词"
           }
         }
       }
     },
-    "menubar.open": {
-      "comment": "Menu bar menu item: open main window",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open WordClip"
+    "app.name" : {
+      "comment" : "App display name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 WordClip"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip"
           }
         }
       }
     },
-    "menubar.quit": {
-      "comment": "Menu bar menu item: quit app",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit"
+    "backup.export.ok" : {
+      "comment" : "Export success",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vocabulary exported"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已导出词库"
           }
         }
       }
     },
-    "recorder.empty": {
-      "comment": "Shortcut recorder placeholder when empty",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Click to record"
+    "common.ok" : {
+      "comment" : "OK button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点击录制"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
     },
-    "recorder.press": {
-      "comment": "Shortcut recorder prompt while recording",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Press shortcut…"
+    "definition.english" : {
+      "comment" : "Definition section: English-English gloss",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按下快捷键…"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "英英释义"
           }
         }
       }
     },
-    "settings.account": {
-      "comment": "Settings section header: account",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Account"
+    "detail.shortcuts" : {
+      "comment" : "Detail window shortcut hint",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⌘L Speak · ⌘D Favorite · ⌘R Repair"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "账户"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
           }
         }
       }
     },
-    "settings.capture.enabled": {
-      "comment": "Settings toggle: enable global word capture",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Selection Capture"
+    "detail.shortcuts.nav" : {
+      "comment" : "Detail window shortcut hint with navigation",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "↑↓ Navigate · ⌘L Speak · ⌘D Favorite · ⌘R Repair"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用选中收词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
           }
         }
       }
     },
-    "settings.capture.shortcut": {
-      "comment": "Settings row label: capture keyboard shortcut recorder",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shortcut"
+    "dict.builtin.badge" : {
+      "comment" : "Built-in badge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收词快捷键"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置"
           }
         }
       }
     },
-    "settings.debug.pro": {
-      "comment": "Debug toggle: simulate Pro",
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Simulate Pro (Debug)"
+    "dict.builtin.name" : {
+      "comment" : "Built-in dictionary name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "English–Chinese (ECDICT)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "模拟 Pro（调试）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "英汉词典（ECDICT）"
           }
         }
       }
     },
-    "settings.general.launchatlogin": {
-      "comment": "Settings toggle: launch at login",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Launch at Login"
+    "dict.delete" : {
+      "comment" : "Delete dictionary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录时自动启动"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "删除"
           }
         }
       }
     },
-    "settings.plan": {
-      "comment": "Settings row: current plan",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Current Plan"
+    "dict.import" : {
+      "comment" : "Import dictionary button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Dictionary…"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前方案"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入词典…"
           }
         }
       }
     },
-    "settings.plan.free": {
-      "comment": "Plan name: Free",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Free"
+    "dict.import.fail.title" : {
+      "comment" : "Import failure alert title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Failed"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "免费版"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入失败"
           }
         }
       }
     },
-    "settings.plan.pro": {
-      "comment": "Plan name: Pro",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pro"
+    "dict.importing" : {
+      "comment" : "Importing progress",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing…"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pro"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入中…"
           }
         }
       }
     },
-    "settings.section.general": {
-      "comment": "Settings section header: general",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "General"
+    "dictguide.csv.body" : {
+      "comment" : "Dict import guide: CSV body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Three columns per row: word, definition, phonetic (phonetic optional). Comma- or tab-separated; header row optional; wrap a definition in double quotes if it contains a comma."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通用"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每行三列:单词、释义、音标(音标可省)。逗号或制表符分隔;首行表头可选;释义含逗号时用双引号包裹。"
           }
         }
       }
     },
-    "sidebar.allwords": {
-      "comment": "macOS sidebar: all words item",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wordbook"
+    "dictguide.csv.title" : {
+      "comment" : "Dict import guide: CSV title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV table"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生词本"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CSV 表格"
           }
         }
       }
     },
-    "sidebar.review": {
-      "comment": "macOS sidebar: review item",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Review"
+    "dictguide.prepare.excel.body" : {
+      "comment" : "Dict import guide: prepare excel body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill three columns in Excel / Numbers / Google Sheets, then Save As / Export as CSV (UTF-8)."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复习"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 Excel / Numbers / Google 表格里填三列,「另存为 / 导出」时选 CSV(UTF-8)即可。"
           }
         }
       }
     },
-    "tab.review": {
-      "comment": "Tab bar / sidebar: review",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Review"
+    "dictguide.prepare.excel.title" : {
+      "comment" : "Dict import guide: prepare excel title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make a CSV in a spreadsheet"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复习"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用表格软件做 CSV"
           }
         }
       }
     },
-    "tab.settings": {
-      "comment": "Tab bar / sidebar: settings",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "dictguide.prepare.sqlite.body" : {
+      "comment" : "Dict import guide: prepare sqlite body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build one from open dictionary data. For example, this app's built-in dictionary comes from ECDICT (MIT-licensed)."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可用开源词典数据自制。例如本 App 内置词库即来自 ECDICT(MIT 开源)。"
           }
         }
       }
     },
-    "tab.wordlist": {
-      "comment": "Tab bar / sidebar: word list",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wordbook"
+    "dictguide.prepare.sqlite.title" : {
+      "comment" : "Dict import guide: prepare sqlite title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advanced: build a SQLite file"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生词本"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "进阶:自制 SQLite"
           }
         }
       }
     },
-    "wordlist.empty.description": {
-      "comment": "Empty state description in word list",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select any word in any app and use the shortcut to save it here"
+    "dictguide.section.format" : {
+      "comment" : "Dict import guide: section 'format'",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supported Formats"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在任意 App 中选中单词，用快捷键一键收录"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持的格式"
           }
         }
       }
     },
-    "wordlist.empty.title": {
-      "comment": "Empty state title in word list",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Words Yet"
+    "dictguide.section.prepare" : {
+      "comment" : "Dict import guide: section 'prepare'",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to Prepare One"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有收藏的单词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "怎么自己准备"
           }
         }
       }
     },
-    "wordlist.empty.description.ios": {
-      "comment": "Empty state description on iOS (no global hotkey)",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap + to add manually, or collect from other apps via a wordclip:// link"
+    "dictguide.section.what" : {
+      "comment" : "Dict import guide: section 'what'",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What This Is"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点右上角「+」手动添加，或从其他 App 用 wordclip:// 链接收录"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这是什么"
           }
         }
       }
     },
-    "settings.section.data": {
-      "comment": "Settings section: data",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data"
+    "dictguide.section.when" : {
+      "comment" : "Dict import guide: section 'when'",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When You Need It"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "什么时候需要"
           }
         }
       }
     },
-    "settings.export": {
-      "comment": "Export vocabulary",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export Vocabulary"
+    "dictguide.sqlite.body" : {
+      "comment" : "Dict import guide: SQLite body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Must contain an `entries` table with `word` and `definition` columns (ECDICT structure); adopted directly on import."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导出词库"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "需含 entries 表,且有 word、definition 列(即 ECDICT 结构),导入时直接采用。"
           }
         }
       }
     },
-    "settings.import": {
-      "comment": "Import vocabulary",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Vocabulary"
+    "dictguide.sqlite.title" : {
+      "comment" : "Dict import guide: SQLite title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SQLite database"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入词库"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SQLite 词库"
           }
         }
       }
     },
-    "settings.data.hint": {
-      "comment": "Data section footer",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export a JSON backup, or import on a new device. Import merges by word and won't overwrite your learning progress."
+    "dictguide.title" : {
+      "comment" : "Dict import guide: page title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to Import a Dictionary"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "如何导入词典"
           }
         }
       }
     },
-    "backup.export.ok": {
-      "comment": "Export success",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vocabulary exported"
+    "dictguide.what.body" : {
+      "comment" : "Dict import guide: what body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported dictionaries only add extra definitions when you look up a word (e.g. specialized terms, other languages). They do not add words to your word list — use Word Packs for that."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已导出词库"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入的词典只在你查词时提供额外释义(如专业术语、其他语言),不会往生词本加词。想批量添加学习词条,请用「懒人包」。"
           }
         }
       }
     },
-    "definition.english": {
-      "comment": "Definition section: English-English gloss",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "English"
+    "dictguide.what.title" : {
+      "comment" : "Dict import guide: what title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extra sources for lookups"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "英英释义"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "扩充查词的释义来源"
           }
         }
       }
     },
-    "tab.stats": {
-      "comment": "Tab: stats",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stats"
+    "dictguide.when.body" : {
+      "comment" : "Dict import guide: when body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The built-in ECDICT (50k words) already covers everyday English. Useful when you want a specialized dictionary (medical / legal / tech), definitions into another language, or you have your own word list."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "统计"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "内置 ECDICT 5 万词已覆盖日常英语。适合这些情况:查专业领域词库(医学 / 法律 / 计算机)、需要英→其他语言释义、已有自制词表。"
           }
         }
       }
     },
-    "sidebar.stats": {
-      "comment": "Sidebar: stats",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stats"
+    "dictguide.when.title" : {
+      "comment" : "Dict import guide: when title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most people don't need this"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "统计"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多数人无需导入"
           }
         }
       }
     },
-    "stats.total": {
-      "comment": "Stat: total words",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Total"
+    "help.add.manual.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap “+” in the word list to type or paste from the clipboard."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "总词数"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生词本右上角「+」，手动输入或从剪贴板粘贴。"
           }
         }
       }
     },
-    "stats.mastered": {
-      "comment": "Stat: mastered",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mastered"
+    "help.add.manual.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Manually (iOS)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已掌握"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手动添加（iOS）"
           }
         }
       }
     },
-    "stats.learning": {
-      "comment": "Stat: learning",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Learning"
+    "help.add.search.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Matches in your list show on top; dictionary words you haven’t saved show below — tap to preview and save."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "学习中"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上方显示生词本匹配词，下方显示词典中未收录的词，点击可预览释义并一键收录。"
           }
         }
       }
     },
-    "stats.accuracy": {
-      "comment": "Stat: accuracy",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recall"
+    "help.add.search.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search & Save · ⌘F"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "认识率"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "搜索并收录 · ⌘F"
           }
         }
       }
     },
-    "stats.familiarity.title": {
-      "comment": "Chart: familiarity",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Familiarity Distribution"
+    "help.collect.menubar.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See today's overview, toggle selection capture, or open the main window. The icon dims when capture is off."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "熟悉度分布"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。"
           }
         }
       }
     },
-    "stats.collect.title": {
-      "comment": "Chart: collect trend",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Last 30 Days Collected"
+    "help.collect.menubar.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu Bar Icon"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "近 30 天收录"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状态栏图标"
           }
         }
       }
     },
-    "stats.review.title": {
-      "comment": "Chart: review accuracy",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Review Recall"
+    "help.collect.ocr.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag to select any screen region and recognize its words — works on images, PDFs, non-selectable text. Grant Screen Recording on first use."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复习认识率"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "框选屏幕任意区域识别单词，适用于图片 / PDF / 不可选文本。首次需授权「屏幕录制」。"
           }
         }
       }
     },
-    "stats.empty.title": {
-      "comment": "Stats empty title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Stats Yet"
+    "help.collect.ocr.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR Capture · ⌥⌘O (Pro)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "还没有统计数据"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 收词 · ⌥⌘O（Pro）"
           }
         }
       }
     },
-    "stats.empty.desc": {
-      "comment": "Stats empty desc",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Collect and review words to see your learning stats here"
+    "help.collect.selection.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a word in any app and press the hotkey — a HUD confirms, the clipboard is untouched. Grant Accessibility on first use."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收录单词并复习后，这里会显示你的学习统计"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "任意 App 中选中英文单词按快捷键，弹 HUD 提示、不改剪贴板。首次需在系统设置授权「辅助功能」。"
           }
         }
       }
     },
-    "addword.title": {
-      "comment": "Add word panel title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Word"
+    "help.collect.selection.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select to Capture · ⌥⌘C"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加单词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选中收词 · ⌥⌘C"
           }
         }
       }
     },
-    "addword.placeholder": {
-      "comment": "Add word input placeholder",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter an English word"
+    "help.collect.url.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wordclip://collect?word=<word> — collect via Shortcuts or scripts (macOS and iOS)."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "输入英文单词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词（macOS / iOS 均支持）。"
           }
         }
       }
     },
-    "addword.add": {
-      "comment": "Add button",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add"
+    "help.collect.url.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL Scheme"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL Scheme"
           }
         }
       }
     },
-    "wordlist.toolbar.add": {
-      "comment": "Toolbar: add word",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Word"
+    "help.concepts.dictionary.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The reference lexicon for lookups — 50k built-in ECDICT words, importable for more."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加单词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于查询的参考词库，内置 ECDICT 5 万词，可导入更多。"
           }
         }
       }
     },
-    "settings.section.reminder": {
-      "comment": "Settings: reminder section",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reminder"
+    "help.concepts.dictionary.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictionary"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "提醒"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "词典"
           }
         }
       }
     },
-    "settings.reminder.enabled": {
-      "comment": "Toggle daily review reminder",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily Review Reminder"
+    "help.concepts.wordlist.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The words you’ve saved to study, with familiarity and review progress."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每日复习提醒"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你收录、要学习的单词，带熟悉度与复习进度。"
           }
         }
       }
     },
-    "settings.reminder.time": {
-      "comment": "Reminder time",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reminder Time"
+    "help.concepts.wordlist.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Word List"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "提醒时间"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生词本"
           }
         }
       }
     },
-    "reminder.title": {
-      "comment": "Review reminder title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Time to Review"
+    "help.data.backup.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a JSON backup (free, includes progress); import to restore on a new device (Pro), merged per word without overwriting progress."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "该复习单词啦"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出 JSON 备份（免费，含学习进度）；在新设备导入恢复（Pro），按单词智能合并、不覆盖进度。"
           }
         }
       }
     },
-    "reminder.body": {
-      "comment": "Review reminder body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open WordClip to review words due today"
+    "help.data.backup.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Backup Import / Export"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开 WordClip 复习今天到期的单词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "备份导入 / 导出"
           }
         }
       }
     },
-    "wordlist.toolbar.favorites": {
-      "comment": "Toolbar: favorites filter",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Favorites Only"
+    "help.data.pro.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "One-time purchase, lifetime unlock: OCR capture, iCloud sync, import/export. Collecting and basic lookup are always free."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "只看收藏"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一次性买断、终身解锁：OCR 收词、iCloud 同步、词库导入/导出。收集与基础查词永久免费。"
           }
         }
       }
     },
-    "wordlist.menu.favorite": {
-      "comment": "Swipe: favorite",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Favorite"
+    "help.data.pro.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip Pro"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收藏"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip Pro"
           }
         }
       }
     },
-    "wordlist.menu.speak": {
-      "comment": "Context menu: speak word",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speak"
+    "help.done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "朗读"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "完成"
           }
         }
       }
     },
-    "wordlist.menu.unfavorite": {
-      "comment": "Context menu: remove from favorites",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unfavorite"
+    "help.faq.hotkey.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check that Accessibility is granted in System Settings, and that “Enable Selection Capture” is on under Settings → Selection Capture. (OCR capture is independent and unaffected by this switch.)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消收藏"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）"
           }
         }
       }
     },
-    "detail.shortcuts": {
-      "comment": "Detail window shortcut hint",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⌘L Speak · ⌘D Favorite · ⌘R Repair"
+    "help.faq.hotkey.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture hotkey does nothing?"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收词快捷键没反应？"
           }
         }
       }
     },
-    "detail.shortcuts.nav": {
-      "comment": "Detail window shortcut hint with navigation",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "↑↓ Navigate · ⌘L Speak · ⌘D Favorite · ⌘R Repair"
+    "help.faq.import.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Make sure the dictionary is toggled on under Settings → Dictionaries."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "确认在 设置 → 词典 里该词典的开关是打开的。"
           }
         }
       }
     },
-    "lookup.collect": {
-      "comment": "Lookup: collect to wordbook button",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Wordbook"
+    "help.faq.import.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported dictionary not working?"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收录到生词本"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入的词典没生效？"
           }
         }
       }
     },
-    "wordlist.status.new": {
-      "comment": "Wordlist row: new word badge",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New"
+    "help.faq.nodef.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The dictionary may not have been ready when it was saved. It auto-fills in the word list, or press ⌘R to repair."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。"
           }
         }
       }
     },
-    "wordlist.status.due": {
-      "comment": "Wordlist row: due for review badge",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due"
+    "help.faq.nodef.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A word shows “No definition”?"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "待复习"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "某个词「暂无释义」？"
           }
         }
       }
     },
-    "settings.section.dict": {
-      "comment": "Settings: dictionaries section",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dictionaries"
+    "help.open" : {
+      "comment" : "Menu / settings entry to open help",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "词典"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用帮助"
           }
         }
       }
     },
-    "settings.dict.hint": {
-      "comment": "Settings: dictionary import hint",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imported dictionaries add extra definitions when looking up words (they don't add words to your list). Multiple dictionaries stack in order; built-in takes priority."
+    "help.review.sm2.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Know it → the interval keeps growing (1d→6d→…); Don’t → reset to tomorrow. A word you keep marking unknown stays “New”."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入词典可在查词时提供额外释义（不会往生词本加词）。多本按顺序叠加，内置优先。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "认识 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；不认识 → 重置回明天重新巩固。一直标记「不认识」的词会停留在「新词」。"
           }
         }
       }
     },
-    "dict.builtin.name": {
-      "comment": "Built-in dictionary name",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "English–Chinese (ECDICT)"
+    "help.review.sm2.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SM-2 Spaced Repetition"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "英汉词典（ECDICT）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SM-2 间隔重复"
           }
         }
       }
     },
-    "dict.builtin.badge": {
-      "comment": "Built-in badge",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Built-in"
+    "help.review.states.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New (green, not yet marked known) · Due (orange, time to review) · Fresh (no badge, next review still far off)."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "内置"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新词（绿，还没认识过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。"
           }
         }
       }
     },
-    "dict.import": {
-      "comment": "Import dictionary button",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Dictionary…"
+    "help.review.states.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Three States"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入词典…"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "三种状态"
           }
         }
       }
     },
-    "dict.importing": {
-      "comment": "Importing progress",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing…"
+    "help.section.add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add & Look Up"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入中…"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加与查词"
           }
         }
       }
     },
-    "dict.delete": {
-      "comment": "Delete dictionary",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "help.section.collect" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Capture (macOS)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "删除"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收词（macOS）"
           }
         }
       }
     },
-    "dict.import.fail.title": {
-      "comment": "Import failure alert title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import Failed"
+    "help.section.concepts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basics"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入失败"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "核心概念"
           }
         }
       }
     },
-    "common.ok": {
-      "comment": "OK button",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+    "help.section.data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data & Pro"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "好"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据与 Pro"
           }
         }
       }
     },
-    "study.principle.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Know it → next interval grows; Don’t → back to tomorrow (SM-2 spaced repetition)"
+    "help.section.faq" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "FAQ"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "认识 → 下次间隔拉长；不认识 → 打回明天重来（SM-2 间隔重复）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常见问题"
           }
         }
       }
     },
-    "study.principle.more": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Learn more"
+    "help.section.review" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How Review Works"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "了解更多"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习原理"
           }
         }
       }
     },
-    "help.title": {
-      "comment": "Help panel title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Help"
+    "help.title" : {
+      "comment" : "Help panel title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Help"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用帮助"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用帮助"
           }
         }
       }
     },
-    "help.open": {
-      "comment": "Menu / settings entry to open help",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Help"
+    "lookup.collect" : {
+      "comment" : "Lookup: collect to wordbook button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Wordbook"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用帮助"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收录到生词本"
           }
         }
       }
     },
-    "help.done": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "menubar.capture.disable" : {
+      "comment" : "Menu bar menu item: disable capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Selection Capture"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "完成"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停用选中收词"
           }
         }
       }
     },
-    "help.section.concepts": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Basics"
+    "menubar.capture.enable" : {
+      "comment" : "Menu bar menu item: enable capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Selection Capture"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "核心概念"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用选中收词"
           }
         }
       }
     },
-    "help.section.collect": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capture (macOS)"
+    "menubar.open" : {
+      "comment" : "Menu bar menu item: open main window",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open WordClip"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收词（macOS）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 WordClip"
           }
         }
       }
     },
-    "help.section.add": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add & Look Up"
+    "menubar.quit" : {
+      "comment" : "Menu bar menu item: quit app",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加与查词"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
           }
         }
       }
     },
-    "help.section.review": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How Review Works"
+    "recorder.empty" : {
+      "comment" : "Shortcut recorder placeholder when empty",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Click to record"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复习原理"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击录制"
           }
         }
       }
     },
-    "help.section.data": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data & Pro"
+    "recorder.press" : {
+      "comment" : "Shortcut recorder prompt while recording",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Press shortcut…"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "数据与 Pro"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "按下快捷键…"
           }
         }
       }
     },
-    "help.section.faq": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "FAQ"
+    "reminder.body" : {
+      "comment" : "Review reminder body",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open WordClip to review words due today"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "常见问题"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 WordClip 复习今天到期的单词"
           }
         }
       }
     },
-    "help.concepts.wordlist.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Word List"
+    "reminder.title" : {
+      "comment" : "Review reminder title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time to Review"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生词本"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "该复习单词啦"
           }
         }
       }
     },
-    "help.concepts.wordlist.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The words you’ve saved to study, with familiarity and review progress."
+    "settings.account" : {
+      "comment" : "Settings section header: account",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "你收录、要学习的单词，带熟悉度与复习进度。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账户"
           }
         }
       }
     },
-    "help.concepts.dictionary.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dictionary"
+    "settings.capture.enabled" : {
+      "comment" : "Settings toggle: enable global word capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Selection Capture"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "词典"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用选中收词"
           }
         }
       }
     },
-    "help.concepts.dictionary.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The reference lexicon for lookups — 50k built-in ECDICT words, importable for more."
+    "settings.capture.ocr.hint" : {
+      "comment" : "Settings footer: OCR capture, clarifies independence",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a screen region to recognize English words in it (Pro) — works with images, PDFs, and non-selectable text. Independent of the Selection Capture switch above."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于查询的参考词库，内置 ECDICT 5 万词，可导入更多。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"
           }
         }
       }
     },
-    "help.collect.selection.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select to Capture · ⌥⌘C"
+    "settings.capture.ocr.shortcut" : {
+      "comment" : "Settings: OCR capture shortcut label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR Capture Shortcut"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选中收词 · ⌥⌘C"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 收词快捷键"
           }
         }
       }
     },
-    "help.collect.selection.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a word in any app and press the hotkey — a HUD confirms, the clipboard is untouched. Grant Accessibility on first use."
+    "settings.capture.selection.hint" : {
+      "comment" : "Settings footer: selection capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a word in any app and press the shortcut to save it to WordClip."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任意 App 中选中英文单词按快捷键，弹 HUD 提示、不改剪贴板。首次需在系统设置授权「辅助功能」。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。"
           }
         }
       }
     },
-    "help.collect.ocr.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR Capture · ⌥⌘O (Pro)"
+    "settings.capture.shortcut" : {
+      "comment" : "Settings row label: capture keyboard shortcut recorder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shortcut"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR 收词 · ⌥⌘O（Pro）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收词快捷键"
           }
         }
       }
     },
-    "help.collect.ocr.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Drag to select any screen region and recognize its words — works on images, PDFs, non-selectable text. Grant Screen Recording on first use."
+    "settings.data.hint" : {
+      "comment" : "Data section footer",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export a JSON backup, or import on a new device. Import merges by word and won't overwrite your learning progress."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "框选屏幕任意区域识别单词，适用于图片 / PDF / 不可选文本。首次需授权「屏幕录制」。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。"
           }
         }
       }
     },
-    "help.collect.url.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "URL Scheme"
+    "settings.debug.pro" : {
+      "comment" : "Debug toggle: simulate Pro",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulate Pro (Debug)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "URL Scheme"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "模拟 Pro（调试）"
           }
         }
       }
     },
-    "help.collect.url.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "wordclip://collect?word=<word> — collect via Shortcuts or scripts (macOS and iOS)."
+    "settings.dict.hint" : {
+      "comment" : "Settings: dictionary import hint",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Imported dictionaries add extra definitions when looking up words (they don't add words to your list). Multiple dictionaries stack in order; built-in takes priority."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词（macOS / iOS 均支持）。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入词典可在查词时提供额外释义（不会往生词本加词）。多本按顺序叠加，内置优先。"
           }
         }
       }
     },
-    "help.collect.menubar.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Menu Bar Icon"
+    "settings.dict.learnmore" : {
+      "comment" : "Settings: dictionary learn-more link",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn how to import ›"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "状态栏图标"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解如何导入 ›"
           }
         }
       }
     },
-    "help.collect.menubar.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "See today's overview, toggle selection capture, or open the main window. The icon dims when capture is off."
+    "settings.export" : {
+      "comment" : "Export vocabulary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Vocabulary"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出词库"
           }
         }
       }
     },
-    "help.add.manual.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Manually (iOS)"
+    "settings.general.launchatlogin" : {
+      "comment" : "Settings toggle: launch at login",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Launch at Login"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "手动添加（iOS）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "登录时自动启动"
           }
         }
       }
     },
-    "help.add.manual.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap “+” in the word list to type or paste from the clipboard."
+    "settings.import" : {
+      "comment" : "Import vocabulary",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import Vocabulary"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "生词本右上角「+」，手动输入或从剪贴板粘贴。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入词库"
           }
         }
       }
     },
-    "help.add.search.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search & Save · ⌘F"
+    "settings.plan" : {
+      "comment" : "Settings row: current plan",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current Plan"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "搜索并收录 · ⌘F"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前方案"
           }
         }
       }
     },
-    "help.add.search.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Matches in your list show on top; dictionary words you haven’t saved show below — tap to preview and save."
+    "settings.plan.free" : {
+      "comment" : "Plan name: Free",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "上方显示生词本匹配词，下方显示词典中未收录的词，点击可预览释义并一键收录。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "免费版"
           }
         }
       }
     },
-    "help.review.states.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Three States"
+    "settings.plan.pro" : {
+      "comment" : "Plan name: Pro",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "三种状态"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro"
           }
         }
       }
     },
-    "help.review.states.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New (green, not yet marked known) · Due (orange, time to review) · Fresh (no badge, next review still far off)."
+    "settings.reminder.enabled" : {
+      "comment" : "Toggle daily review reminder",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily Review Reminder"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新词（绿，还没认识过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每日复习提醒"
           }
         }
       }
     },
-    "help.review.sm2.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SM-2 Spaced Repetition"
+    "settings.reminder.time" : {
+      "comment" : "Reminder time",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder Time"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SM-2 间隔重复"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒时间"
           }
         }
       }
     },
-    "help.review.sm2.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Know it → the interval keeps growing (1d→6d→…); Don’t → reset to tomorrow. A word you keep marking unknown stays “New”."
+    "settings.section.capture.ocr" : {
+      "comment" : "Settings section: OCR capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR Capture"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "认识 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；不认识 → 重置回明天重新巩固。一直标记「不认识」的词会停留在「新词」。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OCR 收词"
           }
         }
       }
     },
-    "help.data.backup.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Backup Import / Export"
+    "settings.section.capture.selection" : {
+      "comment" : "Settings section: select-to-capture",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selection Capture"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "备份导入 / 导出"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选中收词"
           }
         }
       }
     },
-    "help.data.backup.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export a JSON backup (free, includes progress); import to restore on a new device (Pro), merged per word without overwriting progress."
+    "settings.section.data" : {
+      "comment" : "Settings section: data",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导出 JSON 备份（免费，含学习进度）；在新设备导入恢复（Pro），按单词智能合并、不覆盖进度。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "数据"
           }
         }
       }
     },
-    "help.data.pro.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WordClip Pro"
+    "settings.section.dict" : {
+      "comment" : "Settings: dictionaries section",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dictionaries"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "WordClip Pro"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "词典"
           }
         }
       }
     },
-    "help.data.pro.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "One-time purchase, lifetime unlock: OCR capture, iCloud sync, import/export. Collecting and basic lookup are always free."
+    "settings.section.general" : {
+      "comment" : "Settings section header: general",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "一次性买断、终身解锁：OCR 收词、iCloud 同步、词库导入/导出。收集与基础查词永久免费。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通用"
           }
         }
       }
     },
-    "help.faq.hotkey.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Capture hotkey does nothing?"
+    "settings.section.reminder" : {
+      "comment" : "Settings: reminder section",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收词快捷键没反应？"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提醒"
           }
         }
       }
     },
-    "help.faq.hotkey.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Check that Accessibility is granted in System Settings, and that “Enable Selection Capture” is on under Settings → Selection Capture. (OCR capture is independent and unaffected by this switch.)"
+    "settings.section.study" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Study"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学习"
           }
         }
       }
     },
-    "help.faq.nodef.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A word shows “No definition”?"
+    "settings.study.roundsize" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Words per round"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "某个词「暂无释义」？"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每轮学习词数"
           }
         }
       }
     },
-    "help.faq.nodef.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The dictionary may not have been ready when it was saved. It auto-fills in the word list, or press ⌘R to repair."
+    "settings.study.roundsize.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How many words each round covers — a mix of due reviews and new words, ending automatically. Uses the actual count when you have fewer."
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每一轮固定学习的单词数，兼顾到期复习词与新词，学完自动结束。词量不足时学实际数量。"
           }
         }
       }
     },
-    "help.faq.import.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imported dictionary not working?"
+    "sidebar.allwords" : {
+      "comment" : "macOS sidebar: all words item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wordbook"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入的词典没生效？"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生词本"
           }
         }
       }
     },
-    "help.faq.import.body": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Make sure the dictionary is toggled on under Settings → Dictionaries."
+    "sidebar.review" : {
+      "comment" : "macOS sidebar: review item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确认在 设置 → 词典 里该词典的开关是打开的。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习"
           }
         }
       }
     },
-    "settings.section.study": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Study"
+    "sidebar.stats" : {
+      "comment" : "Sidebar: stats",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "学习"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "统计"
           }
         }
       }
     },
-    "settings.study.roundsize": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Words per round"
+    "stats.accuracy" : {
+      "comment" : "Stat: accuracy",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recall"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每轮学习词数"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "认识率"
           }
         }
       }
     },
-    "settings.study.roundsize.hint": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How many words each round covers — a mix of due reviews and new words, ending automatically. Uses the actual count when you have fewer."
+    "stats.collect.title" : {
+      "comment" : "Chart: collect trend",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last 30 Days Collected"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每一轮固定学习的单词数，兼顾到期复习词与新词，学完自动结束。词量不足时学实际数量。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "近 30 天收录"
           }
         }
       }
     },
-    "dictguide.title": {
-      "comment": "Dict import guide: page title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How to Import a Dictionary"
+    "stats.empty.desc" : {
+      "comment" : "Stats empty desc",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collect and review words to see your learning stats here"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "如何导入词典"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收录单词并复习后，这里会显示你的学习统计"
           }
         }
       }
     },
-    "dictguide.section.what": {
-      "comment": "Dict import guide: section 'what'",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "What This Is"
+    "stats.empty.title" : {
+      "comment" : "Stats empty title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Stats Yet"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "这是什么"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有统计数据"
           }
         }
       }
     },
-    "dictguide.what.title": {
-      "comment": "Dict import guide: what title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extra sources for lookups"
+    "stats.familiarity.title" : {
+      "comment" : "Chart: familiarity",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Familiarity Distribution"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "扩充查词的释义来源"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "熟悉度分布"
           }
         }
       }
     },
-    "dictguide.what.body": {
-      "comment": "Dict import guide: what body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imported dictionaries only add extra definitions when you look up a word (e.g. specialized terms, other languages). They do not add words to your word list — use Word Packs for that."
+    "stats.learning" : {
+      "comment" : "Stat: learning",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learning"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入的词典只在你查词时提供额外释义(如专业术语、其他语言),不会往生词本加词。想批量添加学习词条,请用「懒人包」。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "学习中"
           }
         }
       }
     },
-    "dictguide.section.when": {
-      "comment": "Dict import guide: section 'when'",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When You Need It"
+    "stats.mastered" : {
+      "comment" : "Stat: mastered",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mastered"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "什么时候需要"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已掌握"
           }
         }
       }
     },
-    "dictguide.when.title": {
-      "comment": "Dict import guide: when title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Most people don't need this"
+    "stats.review.title" : {
+      "comment" : "Chart: review accuracy",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review Recall"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "多数人无需导入"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习认识率"
           }
         }
       }
     },
-    "dictguide.when.body": {
-      "comment": "Dict import guide: when body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The built-in ECDICT (50k words) already covers everyday English. Useful when you want a specialized dictionary (medical / legal / tech), definitions into another language, or you have your own word list."
+    "stats.total" : {
+      "comment" : "Stat: total words",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "内置 ECDICT 5 万词已覆盖日常英语。适合这些情况:查专业领域词库(医学 / 法律 / 计算机)、需要英→其他语言释义、已有自制词表。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "总词数"
           }
         }
       }
     },
-    "dictguide.section.format": {
-      "comment": "Dict import guide: section 'format'",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supported Formats"
+    "study.principle.hint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Know it → next interval grows; Don’t → back to tomorrow (SM-2 spaced repetition)"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "支持的格式"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "认识 → 下次间隔拉长；不认识 → 打回明天重来（SM-2 间隔重复）"
           }
         }
       }
     },
-    "dictguide.csv.title": {
-      "comment": "Dict import guide: CSV title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CSV table"
+    "study.principle.more" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Learn more"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CSV 表格"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "了解更多"
           }
         }
       }
     },
-    "dictguide.csv.body": {
-      "comment": "Dict import guide: CSV body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Three columns per row: word, definition, phonetic (phonetic optional). Comma- or tab-separated; header row optional; wrap a definition in double quotes if it contains a comma."
+    "tab.review" : {
+      "comment" : "Tab bar / sidebar: review",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "每行三列:单词、释义、音标(音标可省)。逗号或制表符分隔;首行表头可选;释义含逗号时用双引号包裹。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "复习"
           }
         }
       }
     },
-    "dictguide.sqlite.title": {
-      "comment": "Dict import guide: SQLite title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SQLite database"
+    "tab.settings" : {
+      "comment" : "Tab bar / sidebar: settings",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SQLite 词库"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
           }
         }
       }
     },
-    "dictguide.sqlite.body": {
-      "comment": "Dict import guide: SQLite body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Must contain an `entries` table with `word` and `definition` columns (ECDICT structure); adopted directly on import."
+    "tab.stats" : {
+      "comment" : "Tab: stats",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stats"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "需含 entries 表,且有 word、definition 列(即 ECDICT 结构),导入时直接采用。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "统计"
           }
         }
       }
     },
-    "dictguide.section.prepare": {
-      "comment": "Dict import guide: section 'prepare'",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "How to Prepare One"
+    "tab.wordlist" : {
+      "comment" : "Tab bar / sidebar: word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wordbook"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "怎么自己准备"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "生词本"
           }
         }
       }
+    },
+    "word,definition,phonetic\nephemeral,adj. 短暂的,ɪˈfem(ə)rəl" : {
+
     },
-    "dictguide.prepare.excel.title": {
-      "comment": "Dict import guide: prepare excel title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Make a CSV in a spreadsheet"
+    "wordlist.empty.description" : {
+      "comment" : "Empty state description in word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select any word in any app and use the shortcut to save it here"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用表格软件做 CSV"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在任意 App 中选中单词，用快捷键一键收录"
           }
         }
       }
     },
-    "dictguide.prepare.excel.body": {
-      "comment": "Dict import guide: prepare excel body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fill three columns in Excel / Numbers / Google Sheets, then Save As / Export as CSV (UTF-8)."
+    "wordlist.empty.description.ios" : {
+      "comment" : "Empty state description on iOS (no global hotkey)",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap + to add manually, or collect from other apps via a wordclip:// link"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在 Excel / Numbers / Google 表格里填三列,「另存为 / 导出」时选 CSV(UTF-8)即可。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点右上角「+」手动添加，或从其他 App 用 wordclip:// 链接收录"
           }
         }
       }
     },
-    "dictguide.prepare.sqlite.title": {
-      "comment": "Dict import guide: prepare sqlite title",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Advanced: build a SQLite file"
+    "wordlist.empty.title" : {
+      "comment" : "Empty state title in word list",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Words Yet"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "进阶:自制 SQLite"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有收藏的单词"
           }
         }
       }
     },
-    "dictguide.prepare.sqlite.body": {
-      "comment": "Dict import guide: prepare sqlite body",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Build one from open dictionary data. For example, this app's built-in dictionary comes from ECDICT (MIT-licensed)."
+    "wordlist.menu.favorite" : {
+      "comment" : "Swipe: favorite",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "可用开源词典数据自制。例如本 App 内置词库即来自 ECDICT(MIT 开源)。"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏"
           }
         }
       }
     },
-    "settings.dict.learnmore": {
-      "comment": "Settings: dictionary learn-more link",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Learn how to import ›"
+    "wordlist.menu.speak" : {
+      "comment" : "Context menu: speak word",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speak"
           }
         },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "了解如何导入 ›"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "朗读"
           }
         }
       }
     },
-    "settings.section.capture.selection": {
-      "comment": "Settings section: select-to-capture",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选中收词"
+    "wordlist.menu.unfavorite" : {
+      "comment" : "Context menu: remove from favorites",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unfavorite"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Selection Capture"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消收藏"
           }
         }
       }
     },
-    "settings.capture.selection.hint": {
-      "comment": "Settings footer: selection capture",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。"
+    "wordlist.status.due" : {
+      "comment" : "Wordlist row: due for review badge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Due"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a word in any app and press the shortcut to save it to WordClip."
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待复习"
           }
         }
       }
     },
-    "settings.section.capture.ocr": {
-      "comment": "Settings section: OCR capture",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR 收词"
+    "wordlist.status.new" : {
+      "comment" : "Wordlist row: new word badge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR Capture"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新词"
           }
         }
       }
     },
-    "settings.capture.ocr.hint": {
-      "comment": "Settings footer: OCR capture, clarifies independence",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"
+    "wordlist.toolbar.add" : {
+      "comment" : "Toolbar: add word",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Word"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a screen region to recognize English words in it (Pro) — works with images, PDFs, and non-selectable text. Independent of the Selection Capture switch above."
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加单词"
           }
         }
       }
     },
-    "settings.capture.ocr.shortcut": {
-      "comment": "Settings: OCR capture shortcut label",
-      "localizations": {
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR 收词快捷键"
+    "wordlist.toolbar.favorites" : {
+      "comment" : "Toolbar: favorites filter",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites Only"
           }
         },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OCR Capture Shortcut"
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "只看收藏"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }
