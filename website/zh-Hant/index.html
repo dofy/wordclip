@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="WordClip 是一款原生 macOS 與 iOS 單字工具。在任何 App 中選取單字，按快速鍵一鍵收錄，用隨 App 離線的字典查詢，再靠 SM-2 間隔重複複習。"
+      content="WordClip 是一款原生 macOS 與 iOS 單字工具。在任何 App 中選取單字，按快速鍵一鍵收錄，用隨 App 離線的字典查詢，再在你快忘掉的時候把它送回來。"
     />
     <meta name="theme-color" content="#fffdfc" />
     <meta property="og:title" content="WordClip — 選取，收錄，記住" />
     <meta
       property="og:description"
-      content="在 macOS 上隨處收詞，離線查詢，按 SM-2 排程複習。"
+      content="在 macOS 上隨處收詞，離線查詢，在你快忘掉的那一刻再見到它。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/app-icon.png" />
@@ -35,6 +35,7 @@
         <a href="#workflow">使用方式</a>
         <a href="#content">字典</a>
         <a href="#pricing">價格</a>
+        <a href="#get">上市狀態</a>
       </nav>
       <div class="header-end">
         <nav class="lang-switch" aria-label="語言">
@@ -42,14 +43,6 @@
           <a href="/zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简</a>
           <a href="/zh-Hant/" hreflang="zh-Hant" aria-current="page">繁</a>
         </nav>
-        <a
-          class="header-link"
-          href="https://github.com/dofy/wordclip"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
       </div>
     </header>
 
@@ -64,16 +57,10 @@
             再在你快要忘掉的那一刻把它送回來。
           </p>
           <div class="hero-actions">
-            <a
-              class="button button-primary"
-              href="https://github.com/dofy/wordclip"
-              target="_blank"
-              rel="noreferrer"
-              >在 GitHub 查看專案</a
-            >
-            <a class="button button-secondary" href="#start">查看安裝方式</a>
+            <a class="button button-primary" href="#get">什麼時候能用</a>
+            <a class="button button-secondary" href="#workflow">看它怎麼用</a>
           </div>
-          <p class="hero-meta">macOS 15+ · iOS 18+ · SwiftUI · MIT License</p>
+          <p class="hero-meta">macOS 15 以上 · iOS / iPadOS 18 以上</p>
         </div>
 
         <div class="hero-demo" aria-label="收詞流程示範">
@@ -178,12 +165,12 @@
             <span class="option-symbol" aria-hidden="true">◎</span>
             <h3>內建字典</h3>
             <p>
-              隨 App 附帶約 5 萬條 ECDICT 詞條，帶音標、中文釋義與英英釋義。
+              約 5 萬條詞條隨 App 一起裝進來，帶音標、中文釋義與英英釋義。
               變化形會還原成原形，所以查 <em lang="en">brought</em> 能命中
-              <em lang="en">bring</em>。也可以匯入自己的 CSV 或 ECDICT 結構的
-              SQLite，往上疊更多釋義來源。
+              <em lang="en">bring</em>。你也可以帶自己的詞庫進來，疊在上面當額外的
+              釋義來源。
             </p>
-            <code>約 5 萬詞條 · 離線 · 資料為 MIT 開源</code>
+            <code>約 5 萬詞條 · 不用連網</code>
           </article>
           <article>
             <span class="option-symbol" aria-hidden="true">◍</span>
@@ -205,16 +192,16 @@
         </div>
         <div class="detail-list">
           <div>
-            <h3>SM-2 間隔重複</h3>
+            <h3>間隔重複</h3>
             <p>
-              一直認識，間隔就越拉越長；不認識就重設。引擎抽象成了協定，
-              以後換 FSRS 是個小改動。
+              每認識一次，下次出現的間隔就拉長一點；
+              哪次不認識，它立刻縮回明天。
             </p>
           </div>
           <div>
             <h3>OCR 收詞</h3>
             <p>
-              框選螢幕任一區域。辨識經系統 Vision 框架在本機完成 ——
+              框選螢幕任一區域，裡面的單字就在你這台 Mac 上讀出來，
               什麼都不上傳。
             </p>
           </div>
@@ -226,10 +213,10 @@
             </p>
           </div>
           <div>
-            <h3>一份程式碼，三個平台</h3>
+            <h3>每塊螢幕都是原生的</h3>
             <p>
-              macOS、iOS、iPadOS 共用 SwiftUI 與 SwiftData，
-              字典和複習引擎放在一個共享的 Swift package 裡。
+              Mac、iPhone、iPad 各有一套本該屬於那塊螢幕的版面 ——
+              同一本單字本，不是塞在視窗裡的網頁。
             </p>
           </div>
         </div>
@@ -249,28 +236,21 @@
         </div>
       </section>
 
-      <section class="start section" id="start">
-        <div>
-          <h2>今天就能建置。</h2>
+      <section class="release section" id="get">
+        <div class="release-copy">
+          <h2>還沒上 App Store。</h2>
           <p>
-            App Store 上架還在路上。在那之前專案是開源的 —— 複製、建置，
-            然後開始收詞。
+            上架之前要先把三個平台都做完 —— 你在 Mac 上收的字，
+            拿起手機就該已經在那兒等著了。
           </p>
         </div>
-        <div class="terminal" aria-label="安裝指令">
-          <div class="terminal-bar"><span></span><span></span><span></span></div>
-          <pre><code>git clone https://github.com/dofy/wordclip.git
-cd wordclip
-xcodegen generate
-open WordClip.xcodeproj</code></pre>
+        <div class="release-card">
+          <span class="release-badge">即將上架 App Store</span>
+          <p>
+            買一次，Mac、iPhone、iPad 終身解鎖。不訂閱；
+            沒真正做好之前，也不承諾日期。
+          </p>
         </div>
-        <a
-          class="button button-primary"
-          href="https://github.com/dofy/wordclip/blob/main/README.zh-Hant.md#開發環境"
-          target="_blank"
-          rel="noreferrer"
-          >打開完整安裝說明</a
-        >
       </section>
     </main>
 
@@ -280,11 +260,6 @@ open WordClip.xcodeproj</code></pre>
         <span>WordClip</span>
       </div>
       <p>為那些本來會溜走的字而做。</p>
-      <div class="footer-links">
-        <a href="https://github.com/dofy/wordclip">GitHub</a>
-        <a href="https://github.com/dofy/wordclip/issues">問題回報</a>
-        <a href="https://github.com/dofy/wordclip/blob/main/LICENSE">MIT License</a>
-      </div>
       <p class="copyright">© <span id="year">2026</span> WordClip</p>
     </footer>
 

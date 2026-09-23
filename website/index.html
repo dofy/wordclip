@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="WordClip is a native macOS and iOS vocabulary tool. Select a word in any app, save it with a hotkey, look it up in a dictionary that ships offline, and review it with SM-2 spaced repetition."
+      content="WordClip is a native macOS and iOS vocabulary tool. Select a word in any app, save it with a hotkey, look it up in a dictionary that ships offline, and review it before you forget it."
     />
     <meta name="theme-color" content="#fffdfc" />
     <meta property="og:title" content="WordClip — Select, capture, remember" />
     <meta
       property="og:description"
-      content="Capture a word anywhere on macOS, look it up offline, and review it on an SM-2 schedule."
+      content="Capture a word anywhere on macOS, look it up offline, and see it again right before you forget it."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/app-icon.png" />
@@ -35,6 +35,7 @@
         <a href="#workflow">How it works</a>
         <a href="#content">Dictionary</a>
         <a href="#pricing">Pricing</a>
+        <a href="#get">Availability</a>
       </nav>
       <div class="header-end">
         <nav class="lang-switch" aria-label="Language">
@@ -42,14 +43,6 @@
           <a href="/zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简</a>
           <a href="/zh-Hant/" hreflang="zh-Hant" lang="zh-Hant">繁</a>
         </nav>
-        <a
-          class="header-link"
-          href="https://github.com/dofy/wordclip"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
       </div>
     </header>
 
@@ -65,16 +58,10 @@
             when you were about to forget it.
           </p>
           <div class="hero-actions">
-            <a
-              class="button button-primary"
-              href="https://github.com/dofy/wordclip"
-              target="_blank"
-              rel="noreferrer"
-              >View the project on GitHub</a
-            >
-            <a class="button button-secondary" href="#start">How to install it</a>
+            <a class="button button-primary" href="#get">When you can get it</a>
+            <a class="button button-secondary" href="#workflow">See how it works</a>
           </div>
-          <p class="hero-meta">macOS 15+ · iOS 18+ · SwiftUI · MIT License</p>
+          <p class="hero-meta">macOS 15 and later · iOS and iPadOS 18 and later</p>
         </div>
 
         <div class="hero-demo" aria-label="A demonstration of capturing a word">
@@ -184,12 +171,12 @@
             <span class="option-symbol" aria-hidden="true">◎</span>
             <h3>Built-in dictionary</h3>
             <p>
-              About 50,000 entries from ECDICT, with phonetics and both Chinese
-              and English glosses, in the bundle. Inflected forms resolve to their
-              base form, so <em>brought</em> finds <em>bring</em>. Import your own
-              CSV or ECDICT-shaped SQLite to stack more definition sources on top.
+              About 50,000 entries ship inside the app, with phonetics and both
+              Chinese and English glosses. Inflected forms resolve to their base
+              form, so <em>brought</em> finds <em>bring</em>. Bring your own
+              dictionary and it stacks on top as an extra source.
             </p>
-            <code>~50,000 entries · offline · MIT-licensed data</code>
+            <code>~50,000 entries · no network needed</code>
           </article>
           <article>
             <span class="option-symbol" aria-hidden="true">◍</span>
@@ -215,17 +202,17 @@
         </div>
         <div class="detail-list">
           <div>
-            <h3>SM-2 spaced repetition</h3>
+            <h3>Spaced repetition</h3>
             <p>
-              The interval grows as you keep knowing a word and resets when you
-              don't. Behind a protocol, so a move to FSRS later is a small change.
+              The gap between reviews grows every time you know a word, and
+              collapses back to tomorrow the moment you don't.
             </p>
           </div>
           <div>
             <h3>OCR capture</h3>
             <p>
-              Drag out any region of the screen. Recognition runs on device
-              through the system's Vision framework — nothing is uploaded.
+              Drag out any region of the screen and the words in it are read
+              right there on your Mac. Nothing is uploaded.
             </p>
           </div>
           <div>
@@ -236,10 +223,10 @@
             </p>
           </div>
           <div>
-            <h3>One codebase, three platforms</h3>
+            <h3>Native on every screen</h3>
             <p>
-              SwiftUI and SwiftData across macOS, iOS and iPadOS, with a shared
-              Swift package carrying the dictionary and the review engine.
+              Mac, iPhone and iPad each get a layout that belongs there — the
+              same word list, not a website in a window.
             </p>
           </div>
         </div>
@@ -261,28 +248,21 @@
         </div>
       </section>
 
-      <section class="start section" id="start">
-        <div>
-          <h2>Build it today.</h2>
+      <section class="release section" id="get">
+        <div class="release-copy">
+          <h2>Not on the App Store yet.</h2>
           <p>
-            The App Store listing is still on its way. Until then the project is
-            open source — clone it, build it, and start collecting.
+            It's being finished on all three platforms before it goes up, because
+            a word you capture on the Mac should already be waiting on your phone.
           </p>
         </div>
-        <div class="terminal" aria-label="Install commands">
-          <div class="terminal-bar"><span></span><span></span><span></span></div>
-          <pre><code>git clone https://github.com/dofy/wordclip.git
-cd wordclip
-xcodegen generate
-open WordClip.xcodeproj</code></pre>
+        <div class="release-card">
+          <span class="release-badge">Coming to the App Store</span>
+          <p>
+            One purchase will unlock it for life on Mac, iPhone and iPad. No
+            subscription, and no date promised until it's actually ready.
+          </p>
         </div>
-        <a
-          class="button button-primary"
-          href="https://github.com/dofy/wordclip#development-setup"
-          target="_blank"
-          rel="noreferrer"
-          >Read the full install notes</a
-        >
       </section>
     </main>
 
@@ -292,11 +272,6 @@ open WordClip.xcodeproj</code></pre>
         <span>WordClip</span>
       </div>
       <p>Made for words that would otherwise get away.</p>
-      <div class="footer-links">
-        <a href="https://github.com/dofy/wordclip">GitHub</a>
-        <a href="https://github.com/dofy/wordclip/issues">Issues</a>
-        <a href="https://github.com/dofy/wordclip/blob/main/LICENSE">MIT License</a>
-      </div>
       <p class="copyright">© <span id="year">2026</span> WordClip</p>
     </footer>
 
