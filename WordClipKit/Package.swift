@@ -20,7 +20,12 @@ let package = Package(
             dependencies: [
                 .product(name: "GRDB", package: "GRDB.swift"),
             ],
-            path: "Sources/WordClipKit"
+            path: "Sources/WordClipKit",
+            resources: [
+                // Kit 自带字符串目录：Kit 里的错误文案要用 bundle: .module 取，
+                // 否则 swift test 下没有 Bundle.main 的目录可查。
+                .process("Resources"),
+            ]
         ),
         .testTarget(
             name: "WordClipKitTests",

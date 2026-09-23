@@ -19,14 +19,14 @@ struct StudyView: View {
                 finishedView
             }
         }
-        .navigationTitle(String(localized: "tab.review", defaultValue: "复习"))
+        .navigationTitle(String(localized: "tab.review", defaultValue: "Review"))
         // 长驻词包入口:两端均可从复习页工具栏打开词包浏览。
         .toolbar {
             ToolbarItem {
                 Button {
                     NotificationCenter.default.post(name: .showWordPacks, object: nil)
                 } label: {
-                    Label(String(localized: "menu.wordpacks", defaultValue: "懒人包…"),
+                    Label(String(localized: "menu.wordpacks", defaultValue: "Word Packs…"),
                           systemImage: "square.stack.3d.up")
                 }
             }
@@ -55,20 +55,20 @@ struct StudyView: View {
 
             HStack(spacing: 12) {
                 statCard(value: session.stats.total,
-                         label: String(localized: "study.stat.total", defaultValue: "总词数"),
+                         label: String(localized: "study.stat.total", defaultValue: "Total"),
                          color: .blue)
                 statCard(value: session.stats.due,
-                         label: String(localized: "study.stat.due", defaultValue: "待复习"),
+                         label: String(localized: "study.stat.due", defaultValue: "Due"),
                          color: .orange)
                 statCard(value: session.stats.newWords,
-                         label: String(localized: "study.stat.new", defaultValue: "新词"),
+                         label: String(localized: "study.stat.new", defaultValue: "New"),
                          color: .green)
             }
             .padding(.horizontal, 20)
 
             if session.stats.total == 0 {
                 Text(String(localized: "study.empty",
-                            defaultValue: "还没有收藏的单词，先去收录一些吧"))
+                            defaultValue: "No saved words yet — go collect a few first"))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             } else {
@@ -76,7 +76,7 @@ struct StudyView: View {
                     session.start()
                 } label: {
                     Label(
-                        String(localized: "study.start", defaultValue: "开始学习"),
+                        String(localized: "study.start", defaultValue: "Start studying"),
                         systemImage: "play.fill"
                     )
                     .font(.title3.bold())
@@ -88,14 +88,14 @@ struct StudyView: View {
 
                 VStack(spacing: 6) {
                     Text(String(localized: "study.principle.hint",
-                                defaultValue: "认识 → 下次间隔拉长；不认识 → 打回明天重来（SM-2 间隔重复）"))
+                                defaultValue: "Know it → next interval grows; Don’t → back to tomorrow (SM-2 spaced repetition)"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                     Button {
                         NotificationCenter.default.post(name: .showHelp, object: nil)
                     } label: {
-                        Text(String(localized: "study.principle.more", defaultValue: "了解更多"))
+                        Text(String(localized: "study.principle.more", defaultValue: "Learn more"))
                             .font(.caption)
                     }
                     .buttonStyle(.plain)
@@ -114,7 +114,7 @@ struct StudyView: View {
     @ViewBuilder
     private func statCard(value: Int, label: String, color: Color) -> some View {
         VStack(spacing: 6) {
-            Text("\(value)")
+            Text(verbatim: "\(value)")
                 .font(.system(size: 36, weight: .bold, design: .rounded))
                 .foregroundStyle(color)
             Text(label)
@@ -136,7 +136,7 @@ struct StudyView: View {
                 Button {
                     session.stop()
                 } label: {
-                    Label(String(localized: "study.stop", defaultValue: "停止"),
+                    Label(String(localized: "study.stop", defaultValue: "Stop"),
                           systemImage: "stop.fill")
                         .foregroundStyle(.secondary)
                 }
@@ -145,7 +145,7 @@ struct StudyView: View {
                 Spacer()
 
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text("\(session.sessionCount) / \(session.roundTotal)")
+                    Text(verbatim: "\(session.sessionCount) / \(session.roundTotal)")
                         .font(.caption.bold())
                         .foregroundStyle(.secondary)
                     coverageBar
@@ -215,7 +215,7 @@ struct StudyView: View {
                 Button {
                     session.grade(correct: false)
                 } label: {
-                    Label(String(localized: "study.grade.wrong", defaultValue: "不认识"),
+                    Label(String(localized: "study.grade.wrong", defaultValue: "Don’t know"),
                           systemImage: "xmark")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -228,7 +228,7 @@ struct StudyView: View {
                 Button {
                     session.grade(correct: true)
                 } label: {
-                    Label(String(localized: "study.grade.correct", defaultValue: "认识"),
+                    Label(String(localized: "study.grade.correct", defaultValue: "Know it"),
                           systemImage: "checkmark")
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -241,7 +241,7 @@ struct StudyView: View {
 
             // 正面时提示可翻面（不强制）；背面留白保持布局稳定。
             Text(session.phase == .front
-                 ? String(localized: "study.flip.hint", defaultValue: "点击卡片或按空格键看释义")
+                 ? String(localized: "study.flip.hint", defaultValue: "Tap the card or press Space to see the definition")
                  : " ")
                 .font(.caption)
                 .foregroundStyle(.tertiary)
@@ -259,13 +259,13 @@ struct StudyView: View {
                 .foregroundStyle(.green)
 
             VStack(spacing: 8) {
-                Text(String(localized: "study.finished.title", defaultValue: "本轮学习完成"))
+                Text(String(localized: "study.finished.title", defaultValue: "Round complete"))
                     .font(.title2.bold())
                 let pct = session.sessionCount > 0
                     ? Int(Double(session.sessionCorrect) / Double(session.sessionCount) * 100)
                     : 0
                 Text(String(localized: "study.finished.score",
-                            defaultValue: "认识 \(session.sessionCorrect) / \(session.sessionCount)（\(pct)%）"))
+                            defaultValue: "Knew \(session.sessionCorrect) of \(session.sessionCount) (\(pct)%)"))
                     .foregroundStyle(.secondary)
             }
 
@@ -273,7 +273,7 @@ struct StudyView: View {
                 Button {
                     session.stop()
                 } label: {
-                    Text(String(localized: "study.finished.back", defaultValue: "返回"))
+                    Text(String(localized: "study.finished.back", defaultValue: "Back"))
                         .padding(.horizontal, 24)
                 }
                 .buttonStyle(.bordered)
@@ -281,7 +281,7 @@ struct StudyView: View {
                 Button {
                     session.start()
                 } label: {
-                    Text(String(localized: "study.finished.again", defaultValue: "再来一轮"))
+                    Text(String(localized: "study.finished.again", defaultValue: "Another round"))
                         .padding(.horizontal, 24)
                 }
                 .buttonStyle(.borderedProminent)

@@ -1,101 +1,107 @@
-# WordClip 使用帮助
+# WordClip Help
 
-WordClip 是一款 **macOS + iOS/iPadOS** 的单词收藏与复习工具:在任意 App 里选中生词一键收录,内置 5 万词英汉词典,支持 SM-2 间隔复习。
+**English** · [简体中文](HELP.zh-Hans.md) · [繁體中文](HELP.zh-Hant.md)
 
----
+<!-- Keep this file in sync with the `help.*` keys in
+     WordClip/Resources/Localizable.xcstrings — HelpView.swift duplicates this
+     content in the app, and there is no build-time link between the two. -->
 
-## 核心概念
-
-| 名称 | 说明 |
-|------|------|
-| **生词本** | 你收录的、要学习的单词(带熟悉度 / 复习进度 / 收藏) |
-| **词典** | 用于查询的参考词库(内置 ECDICT 5 万词,可导入更多) |
-| **懒人包** | 按难度 / 场景预置的单词集,一键导入即可开始学习;与手动收录的词按分组隔离 |
+WordClip is a word-saving and review tool for **macOS and iOS/iPadOS**: select a word in any app and save it in one keystroke, look it up in a bundled 50,000-word English–Chinese dictionary, and review it with SM-2 spaced repetition.
 
 ---
 
-## macOS 用法
+## Core concepts
 
-### 选中收词(核心功能)
-1. 在**任意 App**(浏览器、PDF、邮件…)中选中一个英文单词
-2. 按下**收词快捷键**(默认 `⌥⌘C`,可在 设置 → 选中收词 中修改)
-3. 屏幕上弹出 HUD 提示"已收录",单词进入生词本
-
-> 首次使用需在 **系统设置 → 隐私与安全性 → 辅助功能** 中授权 WordClip(用于读取选中文本)。
-
-### OCR 收词(Pro)
-对图片、PDF、视频、不可选文本里的单词也能收录:
-
-1. 按下 **OCR 收词快捷键**(默认 `⌥⌘O`,可在 设置 → OCR 收词 中修改)
-2. 屏幕变暗,**框选**要识别的区域(类似系统截图 `⌘⇧4`)
-3. 弹出选词面板,列出识别到的单词(已按内置词典校验、滤除音标噪声)
-4. 勾选一个或多个 → 点「收录」
-
-> 首次使用需在 **系统设置 → 隐私与安全性 → 屏幕录制** 中授权 WordClip(授权后需重启 App)。
-
-### 懒人包
-不想从零手动收词?可以直接导入预置懒人包:
-
-- **分级包**:初学者(中考)、高考、CET-4、CET-6、考研、托福、雅思、GRE
-- **场景包**:日常生活、旅游娱乐、技术英语、商务职场
-
-用法:
-1. **生词本为空时**每次启动都会自动弹出懒人包引导,勾选想学的包 → 导入
-2. 之后随时可从**生词本或复习页工具栏的「懒人包…」按钮**再打开,补导入更多包
-3. 导入的词与手动收录的词**按分组隔离**;在**复习页顶部**或**生词本工具栏**的分组选择器里可切换只学某个包,或选「全部」混学
-4. 已导入的包显示「已添加」,重复导入不会产生重复词
-5. **移除懒人包**:在生词本工具栏把分组过滤到某个懒人包,点「移除此懒人包」并确认,即可删掉该包的全部单词与复习进度;之后仍可重新导入
-
-> 懒人包全部**免费、离线**,无需联网。导入的词按「全新词」进入学习队列。
-
-### 状态栏图标
-菜单栏的书签图标可以:查看今日概览、快速**启用/停用选中收词**、打开主窗口。停用时图标变暗。(OCR 收词独立,不受此开关影响。)
-
-### 键盘快捷键
-| 快捷键 | 作用 |
-|--------|------|
-| `⌘1` / `⌘2` / `⌘3` | 切换 生词本 / 复习 / 统计 |
-| `⌘,` | 打开设置 |
-| `⌘F` 或 `⌘K` | 定位到搜索框 |
-| `⌘N` | 添加单词 |
-| `⌘L` | 朗读选中词 |
-| `⌘D` | 收藏 / 取消收藏 |
-| `⌘R` | 修复释义 |
-| `⌘⌫` | 删除选中词 |
-| `↑` / `↓` | 在词条间切换 |
-| `⌘E` | (状态栏)启用/停用选中收词 |
-| `⌘/` | 显示快捷键速查表 |
-| 学习时 `空格` | 翻面看释义 |
-| 学习时 `←` / `→` | 不认识 / 认识 |
+| Name | What it is |
+|------|------------|
+| **Word list** | The words you've saved to study, with familiarity, review progress, and favorites |
+| **Dictionary** | The reference lexicon for lookups — 50,000 built-in ECDICT words, importable for more |
+| **Word pack** | A ready-made set of words by difficulty or topic. Import one and start studying; it stays in its own group, separate from what you save yourself |
 
 ---
 
-## iOS / iPadOS 用法
+## On macOS
 
-- **添加单词**:生词本右上角 `+`,手动输入或从剪贴板粘贴
-- **设置**:在生词本页右上角点齿轮图标打开
-- **iPad**:与 macOS 一样是「列表 + 详情」两栏;接上键盘后快捷键同样可用
-- **iPhone**:点击词条进入详情,左上返回
+### Select to capture (the main feature)
+1. Select an English word in **any app** — a browser, a PDF, your mail client.
+2. Press the **capture shortcut** (`⌥⌘C` by default, changeable under Settings → Selection Capture).
+3. A HUD confirms "Collected" on screen and the word lands in your word list.
+
+> The first time, authorize WordClip under **System Settings → Privacy & Security → Accessibility** so it can read the selected text.
+
+### OCR capture (Pro)
+Also captures words from images, PDFs, video, and text you can't select:
+
+1. Press the **OCR capture shortcut** (`⌥⌘O` by default, changeable under Settings → OCR Capture).
+2. The screen dims — **drag to select** the region to recognize, much like the system's `⌘⇧4`.
+3. A picker lists the words it found, already checked against the built-in dictionary and filtered of phonetic noise.
+4. Tick one or several, then click **Collect**.
+
+> The first time, authorize WordClip under **System Settings → Privacy & Security → Screen Recording**. Restart the app after granting it.
+
+### Word packs
+Don't want to build a list from scratch? Import a ready-made pack:
+
+- **Graded**: Beginner (Zhongkao), Gaokao, CET-4, CET-6, Postgraduate Entrance Exam, TOEFL, IELTS, GRE
+- **Topical**: Daily Life, Travel & Leisure, Tech English, Business
+
+How to use them:
+1. **While your word list is empty**, the pack prompt appears at every launch — tick the packs you want and import.
+2. After that, reopen it any time from the **"Word Packs…" button in the word list or Review toolbar** to import more.
+3. Imported words are **isolated by group** from the words you save yourself. The group picker at the **top of Review** or in the **word list toolbar** lets you study a single pack, or pick "All" to mix.
+4. Packs you already have are marked "Added"; importing again won't create duplicates.
+5. **Removing a pack**: filter the word list's group to that pack, click "Remove This Pack" and confirm — that deletes all of the pack's words and their review progress. You can import it again later.
+
+> Every pack is **free and offline**; no network needed. Imported words enter the study queue as brand-new words.
+
+### The menu bar icon
+The bookmark icon in the menu bar shows today's overview, **enables or disables selection capture**, and opens the main window. It dims when capture is off. (OCR capture is independent and unaffected by that switch.)
+
+### Keyboard shortcuts
+| Shortcut | What it does |
+|----------|--------------|
+| `⌘1` / `⌘2` / `⌘3` | Switch between Wordbook / Review / Stats |
+| `⌘,` | Open Settings |
+| `⌘F` or `⌘K` | Focus the search field |
+| `⌘N` | Add a word |
+| `⌘L` | Speak the selected word |
+| `⌘D` | Favorite / unfavorite |
+| `⌘R` | Repair the definition |
+| `⌘⌫` | Delete the selected word |
+| `↑` / `↓` | Move between words |
+| `⌘E` | (Menu bar) enable / disable selection capture |
+| `⌘/` | Show the shortcut cheat sheet |
+| `Space` while studying | Flip to the definition |
+| `←` / `→` while studying | Don't know / Know it |
 
 ---
 
-## 搜索与查词典
+## On iOS / iPadOS
 
-在生词本按 `⌘F`(或点搜索框)输入:
-
-- 上方显示**生词本**里匹配的词
-- 下方显示**词典(未收录)**里匹配的词 —— 点击查看释义,可一键"收录到生词本"
+- **Add a word**: the `+` at the top right of the word list — type it or paste from the clipboard.
+- **Settings**: the gear icon at the top right of the word list.
+- **iPad**: the same two-column "list + detail" layout as macOS. With a keyboard attached, the shortcuts work too.
+- **iPhone**: tap a word to open its detail, then use back at the top left.
 
 ---
 
-## 导入自定义词典
+## Search and dictionary lookup
 
-> **用途:扩充查词时的释义来源,不会往生词本加词。** 想批量添加学习词条,请用「懒人包」。
+Press `⌘F` in the word list (or click the search field) and type:
 
-**设置 → 词典 → 导入词典…**,支持两种格式:
+- **Wordbook** matches appear on top.
+- **Dictionary (not saved)** matches appear below — tap one to read its definition and "Add to Wordbook" in one step.
+
+---
+
+## Importing a custom dictionary
+
+> **What it's for: extra definition sources when looking words up. It does not add words to your list.** To add study entries in bulk, use word packs.
+
+**Settings → Dictionaries → Import Dictionary…** takes two formats:
 
 ### 1. CSV
-每行 `单词,释义[,音标]`,逗号或制表符分隔,首行可为表头:
+One row per word: `word,definition[,phonetic]`, comma- or tab-separated. A header row is optional:
 
 ```csv
 word,definition,phonetic
@@ -103,107 +109,107 @@ serendipity,n. 意外发现珍宝的运气,ˌserənˈdɪpɪti
 ephemeral,a. 短暂的,ɪˈfem(ə)rəl
 ```
 
-### 2. SQLite(entries 表结构)
-含 `entries(word, definition, ...)` 表的 SQLite 文件可直接导入。
+### 2. SQLite (with an `entries` table)
+Any SQLite file containing an `entries(word, definition, ...)` table imports directly.
 
-> ECDICT **原生** SQLite(表名 `stardict`、中文在 `translation` 列)**不能直接导入**,需先转换成本 App 的 `entries` 结构。仓库 `data/build_dictionary.py` 就是干这个的:
+> **Stock ECDICT SQLite won't import as-is** — its table is called `stardict` and the Chinese sits in a `translation` column, so it has to be converted to this app's `entries` shape first. `data/build_dictionary.py` in this repo does exactly that:
 > ```bash
-> cd data && python3 build_dictionary.py --output ecdict-full.sqlite      # 全量 ~77 万词
-> python3 build_dictionary.py --top 100000 --output ecdict-100k.sqlite    # 或只取高频 10 万词
+> cd data && python3 build_dictionary.py --output ecdict-full.sqlite      # all ~770k words
+> python3 build_dictionary.py --top 100000 --output ecdict-100k.sqlite    # or the top 100k
 > ```
-> 生成的 `.sqlite` 即可在此处导入。ECDICT 为 MIT 协议。
+> The resulting `.sqlite` imports here. ECDICT is MIT-licensed.
 
-**多本词典按顺序叠加查询,内置词典优先。** 每本可单独启用/停用/删除。
+**Several dictionaries stack in order, and the built-in one wins.** Each can be enabled, disabled, or deleted on its own.
 
-> ⚠️ 请只导入你有权使用的词典文件。App 不分发任何第三方商业词典。
-
----
-
-## 复习
-
-复习页基于 **SM-2 间隔重复算法**:翻卡片看释义,标记"认识/不认识",系统自动安排下次复习时间。
-
-### 单词的三种状态
-
-生词本里每个词按复习状态分三类,徽标颜色区分:
-
-| 状态 | 徽标 | 含义 |
-|------|------|------|
-| **新词** | 绿 | 还没复习过(刚收录,或一直标记"不认识") |
-| **待复习** | 橙 | 复习过至少一次,现在到了该再复习的时间 |
-| 记忆新鲜 | 无 | 复习过,但离下次复习还早,暂时不用管 |
-
-> ⚠️ 一个词只要你还标记"不认识",它会**一直停在绿色「新词」**——因为算法认为你尚未真正记住它。这是 SM-2 的设计,不是 bug。
-
-### SM-2 一句话原理
-
-**标记"认识"就把复习间隔越拉越长,"不认识"就打回原形:**
-
-- **认识** → 间隔递增(1 天 → 6 天 → 再乘"难易系数"…),越熟越久才提醒你,复习次数最省。
-- **不认识** → 间隔重置回明天,重新巩固。
-
-> 想深入了解算法可参考 [SuperMemo SM-2 说明](https://super-memory.com/english/ol/sm2.htm)。WordClip 已把复习引擎抽象成协议,未来可平滑升级到更现代的 FSRS 算法。
+> ⚠️ Import only dictionary files you have the right to use. The app distributes no third-party commercial dictionary.
 
 ---
 
-## URL Scheme
+## Review
 
-WordClip 注册了 `wordclip://` scheme,可从快捷指令、脚本、其他 App 调用。
+Review is built on the **SM-2 spaced repetition algorithm**: flip the card, read the definition, mark "Know it" or "Don't know", and the next review is scheduled for you.
 
-### `wordclip://collect?word=<单词>`
-收录指定单词到生词本(会自动查词典补充释义)。
+### The three states a word can be in
 
-**示例:**
+Every word in your list falls into one of three review states, distinguished by badge color:
+
+| State | Badge | Meaning |
+|-------|-------|---------|
+| **New** | Green | Not yet marked known — either just saved, or always marked "Don't know" |
+| **Due** | Orange | Reviewed at least once, and it's time to review again |
+| Fresh | None | Reviewed, but the next review is still far off — nothing to do |
+
+> ⚠️ As long as you keep marking a word "Don't know", it **stays green and New** — the algorithm doesn't consider it learned yet. That's SM-2 by design, not a bug.
+
+### SM-2 in one line
+
+**"Know it" stretches the interval further and further; "Don't know" sends it back to the start:**
+
+- **Know it** → the interval grows (1 day → 6 days → then multiplied by an ease factor), so well-known words nag you less and less and cost the fewest reviews.
+- **Don't know** → the interval resets to tomorrow to rebuild the memory.
+
+> For the algorithm itself, see the [SuperMemo SM-2 description](https://super-memory.com/english/ol/sm2.htm). WordClip's review engine sits behind a protocol, so upgrading to the more modern FSRS later is a smooth change.
+
+---
+
+## URL scheme
+
+WordClip registers the `wordclip://` scheme, callable from Shortcuts, scripts, and other apps.
+
+### `wordclip://collect?word=<word>`
+Saves the given word to your list, filling in the definition from the dictionary automatically.
+
+**Example:**
 ```
 wordclip://collect?word=serendipity
 ```
 
-- macOS:后台收录,弹 HUD 提示,不打断当前 App
-- iOS:可配合"快捷指令"自动化收词
+- macOS: saved in the background with a HUD confirmation, without interrupting the app you're in.
+- iOS: pairs well with Shortcuts automations.
 
-> 命令行测试(macOS):`open "wordclip://collect?word=serendipity"`
-> (首次可能弹系统确认框,点"打开"即可。)
+> To test from the command line on macOS: `open "wordclip://collect?word=serendipity"`
+> (The system may ask for confirmation the first time — click "Open".)
 
 ---
 
-## 数据备份
+## Backing up your data
 
-**设置 → 数据**:
+**Settings → Data**:
 
-- **导出词库**:把**手动收录**的词导出为 JSON 备份(含学习进度)。**免费可用。**
-- **导入词库**:在新设备恢复到手动收录,按单词智能合并、不覆盖已有进度。**Pro 功能。**
+- **Export Vocabulary**: exports the words you **saved yourself** as a JSON backup, learning progress included. **Free.**
+- **Import Vocabulary**: restores them on a new device, merged by word without overwriting progress you already have. **Pro.**
 
-> 懒人包的词不进备份——它们随时可在新设备重新导入,无需占用备份体积。
+> Word pack words stay out of backups — they can be re-imported on the new device at any time, so there's no reason to carry their bulk.
 
 ---
 
 ## WordClip Pro
 
-WordClip 采用 **一次性购买、终身买断**(无订阅、无自动续费)。
+WordClip is a **one-time purchase, unlocked for life**. No subscription, no auto-renewal.
 
-| 功能 | 免费 | Pro |
-|------|:---:|:---:|
-| 收词(选中 / URL Scheme / 粘贴) | ✅ | ✅ |
-| 内置离线词典(音标 + 释义 + 朗读) | ✅ | ✅ |
-| 生词本、复习、统计、复习提醒 | ✅ | ✅ |
-| 导出词库备份 | ✅ | ✅ |
-| **OCR 收词**(框选屏幕识别单词) | ❌ | ✅ |
-| **导入词库** | ❌ | ✅ |
-| **iCloud 多设备同步** | ❌ | ✅ |
+| Feature | Free | Pro |
+|---------|:----:|:---:|
+| Capture (selection / URL scheme / paste) | ✅ | ✅ |
+| Built-in offline dictionary (phonetics, definitions, speech) | ✅ | ✅ |
+| Word list, review, stats, review reminders | ✅ | ✅ |
+| Exporting a vocabulary backup | ✅ | ✅ |
+| **OCR capture** (recognize words in a screen region) | ❌ | ✅ |
+| **Importing a vocabulary** | ❌ | ✅ |
+| **iCloud sync across devices** | ❌ | ✅ |
 
-- **升级**:设置 → 账户 →「升级 WordClip Pro」。
-- **iCloud 同步** 正在开发中(设置里已有占位开关,暂不可用)。
-- 换设备或重装后,在付费墙点「恢复购买」即可找回 Pro。
+- **To upgrade**: Settings → Account → "Upgrade to WordClip Pro".
+- **iCloud sync** is still in development — the switch in Settings is a placeholder and doesn't work yet.
+- After changing devices or reinstalling, tap "Restore Purchase" on the paywall to get Pro back.
 
 ---
 
-## 常见问题
+## FAQ
 
-**Q:收词快捷键没反应?**
-检查:① 系统设置里是否授权了辅助功能;② 设置 → 选中收词 里"启用选中收词"是否打开。(OCR 收词独立,不受此开关影响。)
+**Q: The capture shortcut does nothing?**
+Check two things: whether Accessibility is granted in System Settings, and whether "Enable Selection Capture" is on under Settings → Selection Capture. (OCR capture is independent and unaffected by that switch.)
 
-**Q:某个词显示"暂无释义"?**
-可能收录时词典未就绪。进入生词本会自动补全;也可选中该词按 `⌘R` 手动修复。
+**Q: A word shows "No definition yet"?**
+The dictionary may not have been ready when it was saved. Opening the word list fills it in automatically; you can also select the word and press `⌘R` to repair it by hand.
 
-**Q:导入的词典没生效?**
-确认在 设置 → 词典 里该词典的开关是打开的。
+**Q: My imported dictionary isn't working?**
+Make sure that dictionary's switch is turned on under Settings → Dictionaries.

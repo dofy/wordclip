@@ -1,7 +1,9 @@
 import SwiftUI
 
 /// App 内使用帮助面板。macOS 从「帮助」菜单、iOS/macOS 从设置页唤出。
-/// 静态内容驱动，与仓库 HELP.md 对齐但为原生排版（SwiftUI 不渲染 markdown 表格）。
+/// 静态内容驱动，与仓库 HELP.md / HELP.zh-Hans.md / HELP.zh-Hant.md 对齐但为原生排版
+/// （SwiftUI 不渲染 markdown 表格）。三份 md 与这里的 `help.*` key 靠人工保持一致，
+/// 构建期没有关联；改文案时两边都要动。
 struct HelpView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -16,11 +18,11 @@ struct HelpView: View {
         #else
         NavigationStack {
             scrollBody
-                .navigationTitle(String(localized: "help.title", defaultValue: "使用帮助"))
+                .navigationTitle(String(localized: "help.title", defaultValue: "Help"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button(String(localized: "help.done", defaultValue: "完成")) { dismiss() }
+                        Button(String(localized: "help.done", defaultValue: "Done")) { dismiss() }
                     }
                 }
         }
@@ -33,7 +35,7 @@ struct HelpView: View {
     #if os(macOS)
     private var titleBar: some View {
         HStack {
-            Label(String(localized: "help.title", defaultValue: "使用帮助"),
+            Label(String(localized: "help.title", defaultValue: "Help"),
                   systemImage: "questionmark.circle")
                 .font(.headline)
             Spacer()
@@ -104,88 +106,88 @@ struct HelpView: View {
 
     static var sections: [Section] {
         var result: [Section] = [
-            Section(title: String(localized: "help.section.concepts", defaultValue: "核心概念"), items: [
+            Section(title: String(localized: "help.section.concepts", defaultValue: "Basics"), items: [
                 Item(symbol: "books.vertical",
-                     heading: String(localized: "help.concepts.wordlist.title", defaultValue: "生词本"),
+                     heading: String(localized: "help.concepts.wordlist.title", defaultValue: "Word List"),
                      body: String(localized: "help.concepts.wordlist.body",
-                                  defaultValue: "你收录、要学习的单词，带熟悉度与复习进度。")),
+                                  defaultValue: "The words you’ve saved to study, with familiarity and review progress.")),
                 Item(symbol: "character.book.closed",
-                     heading: String(localized: "help.concepts.dictionary.title", defaultValue: "词典"),
+                     heading: String(localized: "help.concepts.dictionary.title", defaultValue: "Dictionary"),
                      body: String(localized: "help.concepts.dictionary.body",
-                                  defaultValue: "用于查询的参考词库，内置 ECDICT 5 万词，可导入更多。")),
+                                  defaultValue: "The reference lexicon for lookups — 50k built-in ECDICT words, importable for more.")),
             ]),
         ]
 
         // 收词分区仅 macOS(选中收词/OCR/状态栏均为 macOS 能力,iOS 不显示以免误导)。
         #if os(macOS)
         result.append(
-            Section(title: String(localized: "help.section.collect", defaultValue: "收词（macOS）"), items: [
+            Section(title: String(localized: "help.section.collect", defaultValue: "Capture (macOS)"), items: [
                 Item(symbol: "cursorarrow.click.2",
-                     heading: String(localized: "help.collect.selection.title", defaultValue: "选中收词 · ⌥⌘C"),
+                     heading: String(localized: "help.collect.selection.title", defaultValue: "Select to Capture · ⌥⌘C"),
                      body: String(localized: "help.collect.selection.body",
-                                  defaultValue: "任意 App 中选中英文单词按快捷键，弹 HUD 提示、不改剪贴板。首次需在系统设置授权「辅助功能」。")),
+                                  defaultValue: "Select a word in any app and press the hotkey — a HUD confirms, the clipboard is untouched. Grant Accessibility on first use.")),
                 Item(symbol: "text.viewfinder",
-                     heading: String(localized: "help.collect.ocr.title", defaultValue: "OCR 收词 · ⌥⌘O（Pro）"),
+                     heading: String(localized: "help.collect.ocr.title", defaultValue: "OCR Capture · ⌥⌘O (Pro)"),
                      body: String(localized: "help.collect.ocr.body",
-                                  defaultValue: "框选屏幕任意区域识别单词，适用于图片 / PDF / 不可选文本。首次需授权「屏幕录制」。")),
+                                  defaultValue: "Drag to select any screen region and recognize its words — works on images, PDFs, non-selectable text. Grant Screen Recording on first use.")),
                 Item(symbol: "menubar.arrow.up.rectangle",
-                     heading: String(localized: "help.collect.menubar.title", defaultValue: "状态栏图标"),
+                     heading: String(localized: "help.collect.menubar.title", defaultValue: "Menu Bar Icon"),
                      body: String(localized: "help.collect.menubar.body",
-                                  defaultValue: "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。")),
+                                  defaultValue: "See today's overview, toggle selection capture, or open the main window. The icon dims when capture is off.")),
             ])
         )
         #endif
 
         result += [
-            Section(title: String(localized: "help.section.add", defaultValue: "添加与查词"), items: [
+            Section(title: String(localized: "help.section.add", defaultValue: "Add & Look Up"), items: [
                 Item(symbol: "plus.circle",
-                     heading: String(localized: "help.add.manual.title", defaultValue: "手动添加（iOS）"),
+                     heading: String(localized: "help.add.manual.title", defaultValue: "Add Manually (iOS)"),
                      body: String(localized: "help.add.manual.body",
-                                  defaultValue: "生词本右上角「+」，手动输入或从剪贴板粘贴。")),
+                                  defaultValue: "Tap “+” in the word list to type or paste from the clipboard.")),
                 Item(symbol: "magnifyingglass",
-                     heading: String(localized: "help.add.search.title", defaultValue: "搜索并收录 · ⌘F"),
+                     heading: String(localized: "help.add.search.title", defaultValue: "Search & Save · ⌘F"),
                      body: String(localized: "help.add.search.body",
-                                  defaultValue: "上方显示生词本匹配词，下方显示词典中未收录的词，点击可预览释义并一键收录。")),
+                                  defaultValue: "Matches in your list show on top; dictionary words you haven’t saved show below — tap to preview and save.")),
                 Item(symbol: "link",
                      heading: String(localized: "help.collect.url.title", defaultValue: "URL Scheme"),
                      body: String(localized: "help.collect.url.body",
-                                  defaultValue: "wordclip://collect?word=<单词>，可从快捷指令、脚本调用收词（macOS / iOS 均支持）。")),
+                                  defaultValue: "wordclip://collect?word=<word> — collect via Shortcuts or scripts (macOS and iOS).")),
             ]),
-            Section(title: String(localized: "help.section.packs", defaultValue: "懒人包"), items: [
+            Section(title: String(localized: "help.section.packs", defaultValue: "Word Packs"), items: [
                 Item(symbol: "square.stack.3d.up",
-                     heading: String(localized: "help.packs.what.title", defaultValue: "预置懒人包"),
+                     heading: String(localized: "help.packs.what.title", defaultValue: "Built-in word packs"),
                      body: String(localized: "help.packs.what.body",
-                                  defaultValue: "分级包(初学者/高考/CET-4/6/考研/托福/雅思/GRE)与场景包(日常生活/旅游娱乐/技术英语/商务职场),全部免费离线,一键导入即可学习。")),
+                                  defaultValue: "Graded packs (Beginner / Gaokao / CET-4 & CET-6 / Postgraduate / TOEFL / IELTS / GRE) and topic packs (Daily Life / Travel & Leisure / Tech English / Business). All free, all offline — import one and start studying.")),
                 Item(symbol: "folder",
-                     heading: String(localized: "help.packs.group.title", defaultValue: "分组隔离与过滤"),
+                     heading: String(localized: "help.packs.group.title", defaultValue: "Group isolation and filtering"),
                      body: String(localized: "help.packs.group.body",
-                                  defaultValue: "导入的词与手动收录的词按分组隔离。复习页顶部或生词本工具栏的分组选择器,可只学某个包,或选「全部」混学。")),
+                                  defaultValue: "Imported words stay in their own group, separate from the words you save yourself. Use the group picker at the top of Review, or in the word list toolbar, to study a single pack — or choose “All” to mix them.")),
                 Item(symbol: "trash",
-                     heading: String(localized: "help.packs.remove.title", defaultValue: "移除懒人包"),
+                     heading: String(localized: "help.packs.remove.title", defaultValue: "Removing a word pack"),
                      body: String(localized: "help.packs.remove.body",
-                                  defaultValue: "在生词本工具栏把分组过滤到某个懒人包,点「移除此懒人包」并确认,即可删掉该包的全部单词与复习进度,之后仍可重新导入。")),
+                                  defaultValue: "Filter the word list to one pack, tap “Remove This Pack” and confirm: that deletes all of the pack’s words along with their review progress. You can import it again at any time.")),
             ]),
-            Section(title: String(localized: "help.section.review", defaultValue: "复习原理"), items: [
+            Section(title: String(localized: "help.section.review", defaultValue: "How Review Works"), items: [
                 Item(symbol: "circle.fill",
-                     heading: String(localized: "help.review.states.title", defaultValue: "三种状态"),
+                     heading: String(localized: "help.review.states.title", defaultValue: "Three States"),
                      body: String(localized: "help.review.states.body",
-                                  defaultValue: "新词（绿，还没复习过）· 待复习（橙，到了该复习的时间）· 记忆新鲜（无徽标，离下次复习还早）。")),
+                                  defaultValue: "New (green, not yet marked known) · Due (orange, time to review) · Fresh (no badge, next review still far off).")),
                 Item(symbol: "arrow.up.right",
-                     heading: String(localized: "help.review.sm2.title", defaultValue: "SM-2 间隔重复"),
+                     heading: String(localized: "help.review.sm2.title", defaultValue: "SM-2 Spaced Repetition"),
                      body: String(localized: "help.review.sm2.body",
-                                  defaultValue: "认识 → 间隔越拉越长（1天→6天→…），越熟越久才提醒；不认识 → 重置回明天重新巩固。一直标记「不认识」的词会停留在「新词」。")),
+                                  defaultValue: "Know it → the interval keeps growing (1d→6d→…); Don’t → reset to tomorrow. A word you keep marking unknown stays “New”.")),
             ]),
-            Section(title: String(localized: "help.section.data", defaultValue: "数据与 Pro"), items: [
+            Section(title: String(localized: "help.section.data", defaultValue: "Data & Pro"), items: [
                 Item(symbol: "square.and.arrow.up",
-                     heading: String(localized: "help.data.backup.title", defaultValue: "备份导入 / 导出"),
+                     heading: String(localized: "help.data.backup.title", defaultValue: "Backup Import / Export"),
                      body: String(localized: "help.data.backup.body",
-                                  defaultValue: "导出 JSON 备份（免费，含学习进度）；在新设备导入恢复（Pro），按单词智能合并、不覆盖进度。")),
+                                  defaultValue: "Export a JSON backup (free, includes progress); import to restore on a new device (Pro), merged per word without overwriting progress.")),
                 Item(symbol: "crown",
                      heading: String(localized: "help.data.pro.title", defaultValue: "WordClip Pro"),
                      body: String(localized: "help.data.pro.body",
-                                  defaultValue: "一次性买断、终身解锁：OCR 收词、iCloud 同步、词库导入/导出。收集与基础查词永久免费。")),
+                                  defaultValue: "One-time purchase, lifetime unlock: OCR capture, iCloud sync, import/export. Collecting and basic lookup are always free.")),
             ]),
-            Section(title: String(localized: "help.section.faq", defaultValue: "常见问题"), items: faqItems),
+            Section(title: String(localized: "help.section.faq", defaultValue: "FAQ"), items: faqItems),
         ]
         return result
     }
@@ -196,20 +198,20 @@ struct HelpView: View {
         #if os(macOS)
         items.append(
             Item(symbol: "questionmark.circle",
-                 heading: String(localized: "help.faq.hotkey.title", defaultValue: "收词快捷键没反应？"),
+                 heading: String(localized: "help.faq.hotkey.title", defaultValue: "Capture hotkey does nothing?"),
                  body: String(localized: "help.faq.hotkey.body",
-                              defaultValue: "检查系统设置是否授权「辅助功能」，以及设置 → 选中收词 里「启用选中收词」是否打开。（OCR 收词独立，不受此开关影响。）"))
+                              defaultValue: "Check that Accessibility is granted in System Settings, and that “Enable Selection Capture” is on under Settings → Selection Capture. (OCR capture is independent and unaffected by this switch.)"))
         )
         #endif
         items += [
             Item(symbol: "questionmark.circle",
-                 heading: String(localized: "help.faq.nodef.title", defaultValue: "某个词「暂无释义」？"),
+                 heading: String(localized: "help.faq.nodef.title", defaultValue: "A word shows “No definition”?"),
                  body: String(localized: "help.faq.nodef.body",
-                              defaultValue: "可能收录时词典未就绪。进入生词本会自动补全，也可选中该词按 ⌘R 手动修复。")),
+                              defaultValue: "The dictionary may not have been ready when it was saved. It auto-fills in the word list, or press ⌘R to repair.")),
             Item(symbol: "questionmark.circle",
-                 heading: String(localized: "help.faq.import.title", defaultValue: "导入的词典没生效？"),
+                 heading: String(localized: "help.faq.import.title", defaultValue: "Imported dictionary not working?"),
                  body: String(localized: "help.faq.import.body",
-                              defaultValue: "确认在 设置 → 词典 里该词典的开关是打开的。")),
+                              defaultValue: "Make sure the dictionary is toggled on under Settings → Dictionaries.")),
         ]
         return items
     }

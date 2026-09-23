@@ -2,6 +2,10 @@ import SwiftUI
 import SwiftData
 import WordClipKit
 
+// 隐藏按钮只承载快捷键，标签永远不显示。用常量而不是字面量 ""，
+// 免得 SwiftUI 把空串当成本地化 key 抽进字符串目录。
+private let hiddenShortcutLabel = ""
+
 /// 单词列表排序方式（含维度与升降序）。持久化用 rawValue。
 enum WordSort: String, CaseIterable, Identifiable {
     case createdDesc, createdAsc
@@ -12,12 +16,12 @@ enum WordSort: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .createdDesc:      return String(localized: "sort.created.desc", defaultValue: "最近收录")
-        case .createdAsc:       return String(localized: "sort.created.asc", defaultValue: "最早收录")
-        case .alphaAsc:         return String(localized: "sort.alpha.asc", defaultValue: "字母 A→Z")
-        case .alphaDesc:        return String(localized: "sort.alpha.desc", defaultValue: "字母 Z→A")
-        case .familiarityDesc:  return String(localized: "sort.familiarity.desc", defaultValue: "熟悉度 高→低")
-        case .familiarityAsc:   return String(localized: "sort.familiarity.asc", defaultValue: "熟悉度 低→高")
+        case .createdDesc:      return String(localized: "sort.created.desc", defaultValue: "Recently added")
+        case .createdAsc:       return String(localized: "sort.created.asc", defaultValue: "Oldest first")
+        case .alphaAsc:         return String(localized: "sort.alpha.asc", defaultValue: "Alphabetical A→Z")
+        case .alphaDesc:        return String(localized: "sort.alpha.desc", defaultValue: "Alphabetical Z→A")
+        case .familiarityDesc:  return String(localized: "sort.familiarity.desc", defaultValue: "Familiarity high→low")
+        case .familiarityAsc:   return String(localized: "sort.familiarity.asc", defaultValue: "Familiarity low→high")
         }
     }
 
@@ -127,10 +131,10 @@ struct WordListView: View {
     private var emptyDescription: String {
         #if os(macOS)
         String(localized: "wordlist.empty.description",
-               defaultValue: "在任意 App 中选中单词，用快捷键一键收录")
+               defaultValue: "Select any word in any app and use the shortcut to save it here")
         #else
         String(localized: "wordlist.empty.description.ios",
-               defaultValue: "点右上角「+」手动添加，或从其他 App 用 wordclip:// 链接收录")
+               defaultValue: "Tap + to add manually, or collect from other apps via a wordclip:// link")
         #endif
     }
 
@@ -188,7 +192,7 @@ struct WordListView: View {
 
     var body: some View {
         layout
-        .navigationTitle(String(localized: "tab.wordlist", defaultValue: "生词本"))
+        .navigationTitle(String(localized: "tab.wordlist", defaultValue: "Wordbook"))
         // 缓存重算：仅在数据源/过滤/排序变化时重排一次，body 其余刷新直接读缓存。
         .onAppear { recomputeDisplayWords() }
         .onChange(of: words) { _, _ in recomputeDisplayWords() }
@@ -216,7 +220,7 @@ struct WordListView: View {
         .searchable(
             text: $searchText,
             placement: .toolbar,
-            prompt: String(localized: "wordlist.search.prompt", defaultValue: "搜索单词或释义")
+            prompt: String(localized: "wordlist.search.prompt", defaultValue: "Search words or definitions")
         )
         .searchFocused($searchFocused)
         .background(searchFocusShortcuts)
@@ -229,7 +233,7 @@ struct WordListView: View {
                     if isRepairing {
                         ProgressView().controlSize(.small)
                     } else {
-                        Label(String(localized: "wordlist.toolbar.repair.all", defaultValue: "修复无释义"),
+                        Label(String(localized: "wordlist.toolbar.repair.all", defaultValue: "Repair missing definitions"),
                               systemImage: "wand.and.stars")
                     }
                 }
@@ -252,7 +256,7 @@ struct WordListView: View {
                         if idx < WordSort.groups.count - 1 { Divider() }
                     }
                 } label: {
-                    Label(String(localized: "wordlist.toolbar.sort", defaultValue: "排序"),
+                    Label(String(localized: "wordlist.toolbar.sort", defaultValue: "Sort"),
                           systemImage: "arrow.up.arrow.down")
                 }
 
@@ -260,7 +264,7 @@ struct WordListView: View {
                 Button {
                     showFavoritesOnly.toggle()
                 } label: {
-                    Label(String(localized: "wordlist.toolbar.favorites", defaultValue: "只看收藏"),
+                    Label(String(localized: "wordlist.toolbar.favorites", defaultValue: "Favorites Only"),
                           systemImage: showFavoritesOnly ? "star.fill" : "star")
                 }
                 .foregroundStyle(showFavoritesOnly ? .yellow : .secondary)
@@ -274,7 +278,7 @@ struct WordListView: View {
                         Button(role: .destructive) {
                             showRemovePackConfirm = true
                         } label: {
-                            Label(String(localized: "wordlist.toolbar.removePack", defaultValue: "移除此懒人包"),
+                            Label(String(localized: "wordlist.toolbar.removePack", defaultValue: "Remove This Pack"),
                                   systemImage: "trash")
                         }
                         .tint(.red)
@@ -285,7 +289,7 @@ struct WordListView: View {
                 Button {
                     NotificationCenter.default.post(name: .showWordPacks, object: nil)
                 } label: {
-                    Label(String(localized: "menu.wordpacks", defaultValue: "懒人包…"),
+                    Label(String(localized: "menu.wordpacks", defaultValue: "Word Packs…"),
                           systemImage: "square.stack.3d.up")
                 }
 
@@ -293,7 +297,7 @@ struct WordListView: View {
                 Button {
                     showingAddWord = true
                 } label: {
-                    Label(String(localized: "wordlist.toolbar.add", defaultValue: "添加单词"),
+                    Label(String(localized: "wordlist.toolbar.add", defaultValue: "Add Word"),
                           systemImage: "plus")
                 }
                 .keyboardShortcut("n", modifiers: .command)
@@ -319,7 +323,7 @@ struct WordListView: View {
             isPresented: $showDeleteConfirm,
             titleVisibility: .visible
         ) {
-            Button(String(localized: "delete.confirm", defaultValue: "删除"), role: .destructive) {
+            Button(String(localized: "delete.confirm", defaultValue: "Delete"), role: .destructive) {
                 let deletedIDs = Set(pendingDelete.map(\.id))
                 actions.delete(pendingDelete)
                 // 若当前选中项被删，清空右侧详情
@@ -328,7 +332,7 @@ struct WordListView: View {
                 }
                 pendingDelete = []
             }
-            Button(String(localized: "delete.cancel", defaultValue: "取消"), role: .cancel) {
+            Button(String(localized: "delete.cancel", defaultValue: "Cancel"), role: .cancel) {
                 pendingDelete = []
             }
         }
@@ -337,11 +341,11 @@ struct WordListView: View {
             isPresented: $showRemovePackConfirm,
             titleVisibility: .visible
         ) {
-            Button(String(localized: "wordlist.removePack.confirm", defaultValue: "移除此懒人包"),
+            Button(String(localized: "wordlist.removePack.confirm", defaultValue: "Remove This Pack"),
                    role: .destructive) {
                 removeSelectedPack()
             }
-            Button(String(localized: "delete.cancel", defaultValue: "取消"), role: .cancel) {}
+            Button(String(localized: "delete.cancel", defaultValue: "Cancel"), role: .cancel) {}
         } message: {
             Text(removePackConfirmMessage)
         }
@@ -359,22 +363,22 @@ struct WordListView: View {
 
     private var removePackConfirmTitle: String {
         String(localized: "wordlist.removePack.title",
-                defaultValue: "移除「\(selectedGroup?.name ?? "")」懒人包？")
+                defaultValue: "Remove the “\(selectedGroup?.displayName ?? "")” pack?")
     }
 
     private var removePackConfirmMessage: String {
         let count = selectedGroup.map { g in words.filter { $0.group?.id == g.id }.count } ?? 0
         return String(localized: "wordlist.removePack.message",
-                      defaultValue: "将删除该懒人包的 \(count) 个单词及其复习进度，可随时重新导入。")
+                      defaultValue: "This deletes the pack’s \(count) words and their review progress. You can import it again at any time.")
     }
 
     private var deleteConfirmTitle: String {
         if pendingDelete.count == 1 {
             return String(localized: "delete.confirm.one",
-                          defaultValue: "确定删除「\(pendingDelete.first?.headword ?? "")」？")
+                          defaultValue: "Delete “\(pendingDelete.first?.headword ?? "")”?")
         }
         return String(localized: "delete.confirm.many",
-                      defaultValue: "确定删除选中的 \(pendingDelete.count) 个单词？")
+                      defaultValue: "Delete the \(pendingDelete.count) selected words?")
     }
 
     private func requestDelete(_ targets: [WordEntry]) {
@@ -462,7 +466,7 @@ struct WordListView: View {
         Group {
             if words.isEmpty && !isSearching {
                 ContentUnavailableView(
-                    String(localized: "wordlist.empty.title", defaultValue: "还没有收藏的单词"),
+                    String(localized: "wordlist.empty.title", defaultValue: "No Words Yet"),
                     systemImage: "books.vertical",
                     description: Text(emptyDescription)
                 )
@@ -490,7 +494,7 @@ struct WordListView: View {
                     }
                 } header: {
                     if isSearching {
-                        Text(String(localized: "wordlist.section.mine", defaultValue: "生词本"))
+                        Text(String(localized: "wordlist.section.mine", defaultValue: "Wordbook"))
                     }
                 }
             }
@@ -503,7 +507,7 @@ struct WordListView: View {
                             .tag(WordSelection.dict(term))
                     }
                 } header: {
-                    Text(String(localized: "wordlist.section.dict", defaultValue: "词典（未收录）"))
+                    Text(String(localized: "wordlist.section.dict", defaultValue: "Dictionary (not saved)"))
                 }
             }
         }
@@ -555,10 +559,10 @@ struct WordListView: View {
 
     private var detailPlaceholder: some View {
         ContentUnavailableView(
-            String(localized: "detail.placeholder.title", defaultValue: "选择一个单词"),
+            String(localized: "detail.placeholder.title", defaultValue: "Select a word"),
             systemImage: "sidebar.right",
             description: Text(String(localized: "detail.placeholder.desc",
-                defaultValue: "从左侧选择单词查看释义，或搜索词典收录生词"))
+                defaultValue: "Pick a word on the left to see its definition, or search the dictionary to save a new one"))
         )
     }
 
@@ -567,13 +571,13 @@ struct WordListView: View {
         Button {
             open(word)
         } label: {
-            Label(String(localized: "wordlist.menu.detail", defaultValue: "查看详情"),
+            Label(String(localized: "wordlist.menu.detail", defaultValue: "View detail"),
                   systemImage: "info.circle")
         }
         Button {
             Speaker.shared.speak(word.headword)
         } label: {
-            Label(String(localized: "wordlist.menu.speak", defaultValue: "朗读"),
+            Label(String(localized: "wordlist.menu.speak", defaultValue: "Speak"),
                   systemImage: "speaker.wave.2")
         }
         Button {
@@ -581,21 +585,21 @@ struct WordListView: View {
             try? modelContext.save()
         } label: {
             Label(word.isFavorite
-                  ? String(localized: "wordlist.menu.unfavorite", defaultValue: "取消收藏")
-                  : String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
+                  ? String(localized: "wordlist.menu.unfavorite", defaultValue: "Unfavorite")
+                  : String(localized: "wordlist.menu.favorite", defaultValue: "Favorite"),
                   systemImage: word.isFavorite ? "star.slash" : "star")
         }
         Button {
             Task { await repairOne(word) }
         } label: {
-            Label(String(localized: "wordlist.menu.repair", defaultValue: "修复释义"),
+            Label(String(localized: "wordlist.menu.repair", defaultValue: "Repair definition"),
                   systemImage: "arrow.clockwise")
         }
         Divider()
         Button(role: .destructive) {
             requestDelete([word])
         } label: {
-            Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"),
+            Label(String(localized: "wordlist.menu.delete", defaultValue: "Delete"),
                   systemImage: "trash")
         }
     }
@@ -638,9 +642,9 @@ struct WordListView: View {
     @ViewBuilder
     private var searchFocusShortcuts: some View {
         Group {
-            Button("") { searchFocused = true }
+            Button(hiddenShortcutLabel) { searchFocused = true }
                 .keyboardShortcut("k", modifiers: .command)
-            Button("") { searchFocused = true }
+            Button(hiddenShortcutLabel) { searchFocused = true }
                 .keyboardShortcut("f", modifiers: .command)
         }
         .opacity(0)
@@ -661,24 +665,24 @@ struct WordListView: View {
     @ViewBuilder
     private var listShortcuts: some View {
         Group {
-            Button("") {
+            Button(hiddenShortcutLabel) {
                 if let w = currentWord { Speaker.shared.speak(w.headword) }
             }
             .keyboardShortcut("l", modifiers: .command)
 
-            Button("") {
+            Button(hiddenShortcutLabel) {
                 guard let w = currentWord else { return }
                 w.isFavorite.toggle()
                 try? modelContext.save()
             }
             .keyboardShortcut("d", modifiers: .command)
 
-            Button("") {
+            Button(hiddenShortcutLabel) {
                 if let w = currentWord { Task { await repairOne(w) } }
             }
             .keyboardShortcut("r", modifiers: .command)
 
-            Button("") {
+            Button(hiddenShortcutLabel) {
                 if let w = currentWord { requestDelete([w]) }
             }
             .keyboardShortcut(.delete, modifiers: .command)
@@ -693,9 +697,9 @@ struct WordListView: View {
     @ViewBuilder
     private func reviewStatusBadge(for word: WordEntry) -> some View {
         if word.isNew {
-            StatusTag(text: String(localized: "wordlist.status.new", defaultValue: "新词"), color: .green)
+            StatusTag(text: String(localized: "wordlist.status.new", defaultValue: "New"), color: .green)
         } else if word.isDue() {
-            StatusTag(text: String(localized: "wordlist.status.due", defaultValue: "待复习"), color: .orange)
+            StatusTag(text: String(localized: "wordlist.status.due", defaultValue: "Due"), color: .orange)
         } else {
             EmptyView()
         }
@@ -709,7 +713,7 @@ struct WordListView: View {
                     Text(word.headword)
                         .font(.headline)
                     if let phonetic = word.phonetic, !phonetic.isEmpty {
-                        Text("/\(phonetic)/")
+                        Text(verbatim: "/\(phonetic)/")
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
@@ -723,7 +727,7 @@ struct WordListView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 } else {
-                    Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
+                    Text(String(localized: "wordlist.nodef", defaultValue: "No definition yet"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
@@ -745,7 +749,7 @@ struct WordListView: View {
                 word.isFavorite.toggle()
                 try? modelContext.save()
             } label: {
-                Label(String(localized: "wordlist.menu.favorite", defaultValue: "收藏"),
+                Label(String(localized: "wordlist.menu.favorite", defaultValue: "Favorite"),
                       systemImage: word.isFavorite ? "star.slash" : "star")
             }
             .tint(.yellow)
@@ -754,7 +758,7 @@ struct WordListView: View {
             Button(role: .destructive) {
                 requestDelete([word])
             } label: {
-                Label(String(localized: "wordlist.menu.delete", defaultValue: "删除"), systemImage: "trash")
+                Label(String(localized: "wordlist.menu.delete", defaultValue: "Delete"), systemImage: "trash")
             }
         }
     }
@@ -764,15 +768,15 @@ struct WordListView: View {
     private func repairOne(_ word: WordEntry) async {
         let ok = await actions.repair(word)
         flashRepair(ok
-            ? String(localized: "repair.one.success", defaultValue: "已更新：\(word.headword)")
-            : String(localized: "repair.one.fail", defaultValue: "词典未收录：\(word.headword)"))
+            ? String(localized: "repair.one.success", defaultValue: "Updated: \(word.headword)")
+            : String(localized: "repair.one.fail", defaultValue: "Not in the dictionary: \(word.headword)"))
     }
 
     private func repairAll() async {
         isRepairing = true
         let count = await actions.repairAll(words)
         isRepairing = false
-        flashRepair(String(localized: "repair.all.done", defaultValue: "已修复 \(count) 个词条"))
+        flashRepair(String(localized: "repair.all.done", defaultValue: "Repaired \(count) entries"))
     }
 
     private func flashRepair(_ message: String) {
@@ -889,7 +893,7 @@ struct WordDetailPane: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             if let phonetic = word.phonetic, !phonetic.isEmpty {
-                Text("/\(phonetic)/")
+                Text(verbatim: "/\(phonetic)/")
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
@@ -908,7 +912,7 @@ struct WordDetailPane: View {
                 Spacer()
                 if words.count > 1 {
                     if let i = index {
-                        Text("\(i + 1) / \(words.count)")
+                        Text(verbatim: "\(i + 1) / \(words.count)")
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
                             .monospacedDigit()
@@ -931,7 +935,7 @@ struct WordDetailPane: View {
     private var footer: some View {
         HStack {
             if !word.sources.isEmpty {
-                Text(String(localized: "detail.collected.count", defaultValue: "收录 \(word.sources.count) 次"))
+                Text(String(localized: "detail.collected.count", defaultValue: "Collected \(word.sources.count) times"))
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
@@ -943,7 +947,7 @@ struct WordDetailPane: View {
                     if isRepairing {
                         ProgressView().controlSize(.small)
                     } else {
-                        Label(String(localized: "detail.repair", defaultValue: "修复释义"),
+                        Label(String(localized: "detail.repair", defaultValue: "Repair definition"),
                               systemImage: "arrow.clockwise")
                     }
                 }
@@ -959,9 +963,9 @@ struct WordDetailPane: View {
     private var shortcutHint: some View {
         Text(words.count > 1
              ? String(localized: "detail.shortcuts.nav",
-                      defaultValue: "↑↓ 切换 · ⌘L 朗读 · ⌘D 收藏 · ⌘R 修复")
+                      defaultValue: "↑↓ Navigate · ⌘L Speak · ⌘D Favorite · ⌘R Repair")
              : String(localized: "detail.shortcuts",
-                      defaultValue: "⌘L 朗读 · ⌘D 收藏 · ⌘R 修复"))
+                      defaultValue: "⌘L Speak · ⌘D Favorite · ⌘R Repair"))
             .font(.caption2)
             .foregroundStyle(.tertiary)
             .frame(maxWidth: .infinity, alignment: .center)
@@ -995,16 +999,16 @@ struct WordDetailPane: View {
     @ViewBuilder
     private var navShortcuts: some View {
         Group {
-            Button("") { go(-1) }.keyboardShortcut(.upArrow, modifiers: [])
-            Button("") { go(1) }.keyboardShortcut(.downArrow, modifiers: [])
-            Button("") { Speaker.shared.speak(word.headword) }
+            Button(hiddenShortcutLabel) { go(-1) }.keyboardShortcut(.upArrow, modifiers: [])
+            Button(hiddenShortcutLabel) { go(1) }.keyboardShortcut(.downArrow, modifiers: [])
+            Button(hiddenShortcutLabel) { Speaker.shared.speak(word.headword) }
                 .keyboardShortcut("l", modifiers: .command)
-            Button("") {
+            Button(hiddenShortcutLabel) {
                 word.isFavorite.toggle()
                 try? modelContext.save()
             }
             .keyboardShortcut("d", modifiers: .command)
-            Button("") { runRepair() }.keyboardShortcut("r", modifiers: .command)
+            Button(hiddenShortcutLabel) { runRepair() }.keyboardShortcut("r", modifiers: .command)
         }
         .opacity(0)
         .frame(width: 0, height: 0)
@@ -1031,7 +1035,7 @@ struct DictionaryPreviewPane: View {
                 HStack(spacing: 10) {
                     Text(result.word).font(.largeTitle.bold())
                     if let ph = result.phonetic, !ph.isEmpty {
-                        Text("/\(ph)/").font(.title3).foregroundStyle(.secondary)
+                        Text(verbatim: "/\(ph)/").font(.title3).foregroundStyle(.secondary)
                     }
                     Button {
                         Speaker.shared.speak(result.word)
@@ -1053,7 +1057,7 @@ struct DictionaryPreviewPane: View {
                     if isCollecting {
                         ProgressView().controlSize(.small)
                     } else {
-                        Label(String(localized: "lookup.collect", defaultValue: "收录到生词本"),
+                        Label(String(localized: "lookup.collect", defaultValue: "Add to Wordbook"),
                               systemImage: "plus.circle.fill")
                             .font(.body.bold())
                             .frame(maxWidth: .infinity)
@@ -1065,7 +1069,7 @@ struct DictionaryPreviewPane: View {
                 .keyboardShortcut(.return, modifiers: .command)
             } else {
                 ContentUnavailableView(
-                    String(localized: "lookup.notfound.title", defaultValue: "未找到释义"),
+                    String(localized: "lookup.notfound.title", defaultValue: "No definition found"),
                     systemImage: "questionmark.circle",
                     description: Text(term)
                 )

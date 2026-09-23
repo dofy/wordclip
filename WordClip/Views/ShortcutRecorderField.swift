@@ -39,12 +39,12 @@ struct ShortcutRecorderField: View {
 
     private var label: String {
         if isRecording {
-            return String(localized: "recorder.press", defaultValue: "按下快捷键…")
+            return String(localized: "recorder.press", defaultValue: "Press shortcut…")
         }
         if let shortcut {
             return shortcut.description
         }
-        return String(localized: "recorder.empty", defaultValue: "点击录制")
+        return String(localized: "recorder.empty", defaultValue: "Click to record")
     }
 
     private func toggleRecording() {

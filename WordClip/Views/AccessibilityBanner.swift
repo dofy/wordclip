@@ -14,10 +14,10 @@ struct AccessibilityBanner: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(String(localized: "accessibility.banner.title",
-                            defaultValue: "需要辅助功能权限"))
+                            defaultValue: "Accessibility Permission Needed"))
                     .font(.callout.bold())
                 Text(String(localized: "accessibility.banner.body",
-                            defaultValue: "WordClip 需要辅助功能权限才能读取选中的文字，请在系统设置中授权。"))
+                            defaultValue: "WordClip needs Accessibility permission to read selected text. Grant it in System Settings."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -25,7 +25,7 @@ struct AccessibilityBanner: View {
             Spacer()
 
             Button(String(localized: "accessibility.banner.open",
-                          defaultValue: "打开系统设置")) {
+                          defaultValue: "Open System Settings")) {
                 SelectionReader.openAccessibilitySettings()
             }
             .buttonStyle(.borderedProminent)

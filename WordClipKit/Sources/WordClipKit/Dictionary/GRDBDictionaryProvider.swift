@@ -180,7 +180,9 @@ public enum DictionaryError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .bundleResourceNotFound(let name):
-            return "词库文件 \(name) 在 App Bundle 中不存在"
+            return String(localized: "kit.dict.error.bundleResourceNotFound",
+                          defaultValue: "The dictionary file \(name) is not in the app bundle",
+                          bundle: .module)
         }
     }
 }

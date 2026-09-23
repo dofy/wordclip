@@ -8,10 +8,10 @@ struct GroupPicker: View {
     @Query(sort: \WordGroup.sortOrder) private var groups: [WordGroup]
 
     var body: some View {
-        Picker(String(localized: "study.group", defaultValue: "分组"), selection: $selection) {
-            Text(String(localized: "study.group.all", defaultValue: "全部")).tag(UUID?.none)
+        Picker(String(localized: "study.group", defaultValue: "Group"), selection: $selection) {
+            Text(String(localized: "study.group.all", defaultValue: "All")).tag(UUID?.none)
             ForEach(groups) { g in
-                Label(g.name, systemImage: g.iconSymbol ?? "square.stack").tag(UUID?.some(g.id))
+                Label(g.displayName, systemImage: g.iconSymbol ?? "square.stack").tag(UUID?.some(g.id))
             }
         }
         .pickerStyle(.menu)

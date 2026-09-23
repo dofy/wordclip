@@ -182,10 +182,27 @@ protocol AIProvider {
 一个用中文系统的人，可以学英语、也可以学日语；界面始终中文。
 
 **实施约定：**
-- 所有用户可见文案一律 `String(localized: "...")` / SwiftUI `Text("...")` 自动本地化，**禁止硬编码**。
-- 用 **String Catalog（`.xcstrings`）** 统一管理，首批配 `zh-Hans` + `en`。
-- `WordClipKit` 中若有面向用户的字符串，也在 Package 内建自己的本地化资源（`defaultLocalization` + `.process` 资源），不把文案泄露到 UI 层。
+- **源语言是 `en`。** 三个目录（`Localizable.xcstrings` × 2 + `InfoPlist.xcstrings`）的
+  `sourceLanguage` 都是 `en`，代码里的 `defaultValue` 一律写英文。已发布语言：
+  `en` / `zh-Hans` / `zh-Hant`（繁体按台湾用词，不是简繁字形转换）。
+- 所有用户可见文案一律走 `String(localized: "key", defaultValue: "English")`，**禁止硬编码**。
+  纯插值、纯数据透传用 `Text(verbatim:)`：写成 `Text("\(x)")` 会被 SwiftUI 抽成
+  `"%@"`、`"/%@/"` 这类垃圾 key。Swift Charts 的 `.value(_:_:)` 同理，先取好译文再传
+  `String` 重载（见 `WordClip/Views/StatsView.swift` 顶部常量）。
+- `WordClipKit` 有自己的目录（`Sources/WordClipKit/Resources/Localizable.xcstrings`，
+  `Package.swift` 里 `defaultLocalization: "en"` + `.process("Resources")`）。Kit 内取字符串
+  必须带 `bundle: .module`，否则会去查 `Bundle.main`，`swift test` 下取不到。
+- **持久化的名字不本地化。** `WordGroup.name`（写进 SwiftData、随 iCloud 同步）和词包 JSON 的
+  `name` 都是存储值，改掉会让老库认不出分组。存储值保持原样，渲染时按稳定标识
+  （`kind` / `packSlug` / `slug`）换文案，见 `WordClip/Views/GroupNameLocalization.swift`。
+- 英文有单复数，中文没有。带计数的 key 在目录里配 `variations.plural`（`one` / `other`），
+  不要只留一个 `%lld`。当前 7 条，清单见 `scripts/` 旁的再生流程。
+- `scripts/check-localization.sh` 是门禁，CI 必跑：缺 key、缺译文、孤儿 key、硬编码中文
+  四类问题一律 fail。合法例外（持久化标识、解析器输入、示范数据）在行尾加 `// i18n-exempt`。
 - 词库释义本身的语言（如英译中 vs 英英）属于「学习内容」，由词库数据决定，与界面语言无关。
+  `StructuredDefinitionView` 只按界面语言决定**哪份释义当主释义**：中文界面先中文释义，
+  其他语言先英英释义。**已知限制**：`dictionary-en.sqlite` 与 12 个词包只有简体
+  `definition` 和英文 `definition_en` 两列，没有繁体列，所以繁体界面显示的是简体释义。
 
 ### 3.8 权益抽象（EntitlementProvider）
 

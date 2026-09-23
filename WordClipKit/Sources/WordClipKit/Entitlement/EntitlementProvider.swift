@@ -86,7 +86,13 @@ public final class MockEntitlement: EntitlementProvider, ObservableObject {
 
     public func products() async -> [PlanProduct] {
         [
-            PlanProduct(product: .lifetime, localizedTitle: "终身买断", localizedPrice: "¥28"),
+            PlanProduct(
+                product: .lifetime,
+                localizedTitle: String(localized: "kit.plan.lifetime",
+                                       defaultValue: "Lifetime purchase",
+                                       bundle: .module),
+                localizedPrice: "¥28"
+            ),
         ]
     }
 }

@@ -1,6 +1,6 @@
 # WordClip 开发进度
 
-> 记录当前已实现的功能与计划中的开发。产品规划见 [PLAN.md](PLAN.md),架构决策见 [ARCHITECTURE.md](ARCHITECTURE.md),用户用法见 [../HELP.md](../HELP.md)。
+> 记录当前已实现的功能与计划中的开发。产品规划见 [PLAN.md](PLAN.md),架构决策见 [ARCHITECTURE.md](ARCHITECTURE.md),用户用法见 [../HELP.zh-Hans.md](../HELP.zh-Hans.md)（英文 [../HELP.md](../HELP.md)、繁體 [../HELP.zh-Hant.md](../HELP.zh-Hant.md)）。
 
 ---
 
@@ -10,7 +10,9 @@
 - 多平台 Xcode 工程(macOS + iOS/iPadOS),xcodegen 管理,可跨机器重新生成。
 - `WordClipKit` Swift Package 承载平台无关核心:模型、词库、复习算法、导入导出、统计。
 - SwiftData 数据模型 `WordEntry` / `CollectSource` / `ReviewLog` / `WordGroup`,纯本地存储,预留 CloudKit 切换接口(遵守 CloudKit 建模约束)。
-- String Catalog(`Localizable.xcstrings`)zh-Hans + en,界面文案全部走 `String(localized:)`。
+- String Catalog 三语 `en`(源语言)+ `zh-Hans` + `zh-Hant`:App 一份 `Localizable.xcstrings`、
+  `WordClipKit` 一份(`bundle: .module`)、`InfoPlist.xcstrings` 一份。界面文案全部走
+  `String(localized:)`,`scripts/check-localization.sh` 在 CI 里守住覆盖率与硬编码。
 - App 分类与显示名已配置。
 - `WordClipKit` 单元测试 70 条,GitHub Actions CI 跑 `swift test`。
 

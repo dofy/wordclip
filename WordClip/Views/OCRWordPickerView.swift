@@ -41,7 +41,7 @@ struct OCRWordPickerView: View {
         VStack(spacing: 16) {
             ProgressView()
                 .controlSize(.large)
-            Text(String(localized: "ocr.analyzing", defaultValue: "正在分析单词…"))
+            Text(String(localized: "ocr.analyzing", defaultValue: "Analyzing words…"))
                 .font(.headline)
                 .foregroundStyle(.secondary)
         }
@@ -50,7 +50,7 @@ struct OCRWordPickerView: View {
 
     private func pickerView(_ words: [String]) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text(String(localized: "ocr.picker.title", defaultValue: "选择要收录的单词"))
+            Text(String(localized: "ocr.picker.title", defaultValue: "Pick the words to collect"))
                 .font(.headline)
 
             ScrollView {
@@ -64,7 +64,7 @@ struct OCRWordPickerView: View {
             .frame(maxHeight: 260)
 
             HStack {
-                Button(String(localized: "ocr.picker.cancel", defaultValue: "取消"),
+                Button(String(localized: "ocr.picker.cancel", defaultValue: "Cancel"),
                        role: .cancel) { model.onCancel() }
                     .keyboardShortcut(.cancelAction)
 
@@ -74,7 +74,7 @@ struct OCRWordPickerView: View {
                     model.onConfirm(words.filter { selected.contains($0) })
                 } label: {
                     Text(String(localized: "ocr.picker.confirm",
-                                defaultValue: "收录 (\(selected.count))"))
+                                defaultValue: "Collect (\(selected.count))"))
                         .frame(minWidth: 80)
                 }
                 .buttonStyle(.borderedProminent)

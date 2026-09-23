@@ -23,11 +23,11 @@ struct DictionarySettingsSection: View {
         Section {
             // 内置词库（固定第一项）
             LabeledContent {
-                Text(String(localized: "dict.builtin.badge", defaultValue: "内置"))
+                Text(String(localized: "dict.builtin.badge", defaultValue: "Built-in"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } label: {
-                Label(String(localized: "dict.builtin.name", defaultValue: "英汉词典（ECDICT）"),
+                Label(String(localized: "dict.builtin.name", defaultValue: "English–Chinese (ECDICT)"),
                       systemImage: "book.closed")
             }
 
@@ -40,7 +40,7 @@ struct DictionarySettingsSection: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(dict.name)
                         Text(String(localized: "dict.wordcount",
-                                    defaultValue: "\(dict.wordCount) 词"))
+                                    defaultValue: "\(dict.wordCount) words"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -50,7 +50,7 @@ struct DictionarySettingsSection: View {
                         store.remove(dict)
                         appState.rebuildDictionary()
                     } label: {
-                        Label(String(localized: "dict.delete", defaultValue: "删除"),
+                        Label(String(localized: "dict.delete", defaultValue: "Delete"),
                               systemImage: "trash")
                     }
                 }
@@ -60,7 +60,7 @@ struct DictionarySettingsSection: View {
                         store.remove(dict)
                         appState.rebuildDictionary()
                     } label: {
-                        Label(String(localized: "dict.delete", defaultValue: "删除"),
+                        Label(String(localized: "dict.delete", defaultValue: "Delete"),
                               systemImage: "trash")
                     }
                 }
@@ -74,21 +74,21 @@ struct DictionarySettingsSection: View {
                 if importing {
                     HStack(spacing: 8) {
                         ProgressView().controlSize(.small)
-                        Text(String(localized: "dict.importing", defaultValue: "导入中…"))
+                        Text(String(localized: "dict.importing", defaultValue: "Importing…"))
                     }
                 } else {
-                    Label(String(localized: "dict.import", defaultValue: "导入词典…"),
+                    Label(String(localized: "dict.import", defaultValue: "Import Dictionary…"),
                           systemImage: "plus")
                 }
             }
             .disabled(importing)
         } header: {
-            Text(String(localized: "settings.section.dict", defaultValue: "词典"))
+            Text(String(localized: "settings.section.dict", defaultValue: "Dictionaries"))
         } footer: {
             VStack(alignment: .leading, spacing: 6) {
                 Text(String(localized: "settings.dict.hint",
-                    defaultValue: "导入词典可在查词时提供额外释义（不会往生词本加词）。多本按顺序叠加，内置优先。"))
-                Button(String(localized: "settings.dict.learnmore", defaultValue: "了解如何导入 ›")) {
+                    defaultValue: "Imported dictionaries add extra definitions when looking up words (they don't add words to your list). Multiple dictionaries stack in order; built-in takes priority."))
+                Button(String(localized: "settings.dict.learnmore", defaultValue: "Learn how to import ›")) {
                     NotificationCenter.default.post(name: .showDictionaryImportGuide, object: nil)
                 }
                 .buttonStyle(.plain)
@@ -106,10 +106,10 @@ struct DictionarySettingsSection: View {
             Task { await runImport(url) }
         }
         // 成功反馈：词典直接出现在上方列表（含词数）；失败才弹 alert。
-        .alert(String(localized: "dict.import.fail.title", defaultValue: "导入失败"),
+        .alert(String(localized: "dict.import.fail.title", defaultValue: "Import Failed"),
                isPresented: $showingError,
                presenting: errorMessage) { _ in
-            Button(String(localized: "common.ok", defaultValue: "好"), role: .cancel) {}
+            Button(String(localized: "common.ok", defaultValue: "OK"), role: .cancel) {}
         } message: { msg in
             Text(msg)
         }

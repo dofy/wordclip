@@ -25,9 +25,9 @@ struct BackupService {
         var errorDescription: String? {
             switch self {
             case .decodeFailed:
-                return String(localized: "backup.error.decode", defaultValue: "文件格式无法识别")
+                return String(localized: "backup.error.decode", defaultValue: "Unrecognized file format")
             case .unsupportedVersion(let v):
-                return String(localized: "backup.error.version", defaultValue: "不支持的备份版本：\(v)")
+                return String(localized: "backup.error.version", defaultValue: "Unsupported backup version: \(v)")
             }
         }
     }

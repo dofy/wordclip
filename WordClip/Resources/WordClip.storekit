@@ -16,6 +16,11 @@
           "description" : "Unlock OCR capture, iCloud sync, and import/export forever",
           "displayName" : "WordClip Pro (Lifetime)",
           "locale" : "en_US"
+        },
+        {
+          "description" : "終身解鎖 OCR 收詞、iCloud 同步與匯入/匯出功能",
+          "displayName" : "WordClip Pro（終身買斷）",
+          "locale" : "zh_TW"
         }
       ],
       "productID" : "xyz.phpz.WordClip.pro.lifetime",

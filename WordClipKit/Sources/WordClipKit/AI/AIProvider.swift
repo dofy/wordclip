@@ -35,7 +35,9 @@ public enum AIError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .notEnabled:
-            return "AI 功能尚未启用"
+            return String(localized: "kit.ai.error.notEnabled",
+                          defaultValue: "AI features aren’t enabled yet",
+                          bundle: .module)
         }
     }
 }

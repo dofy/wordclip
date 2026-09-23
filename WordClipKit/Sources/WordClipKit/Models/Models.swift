@@ -112,7 +112,7 @@ public final class WordGroup {
 extension WordGroup {
     public static let kindManual = "manual"
     public static let kindPack = "pack"
-    public static let manualGroupName = "手动收录"
+    public static let manualGroupName = "手动收录"  // i18n-exempt: SwiftData 里的存储值，改动会认不出老库；显示名见 WordGroup.displayName
 }
 
 // MARK: - CollectSource

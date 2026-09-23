@@ -1,0 +1,30 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSAccessibilityUsageDescription" : {
+      "comment" : "macOS 辅助功能权限说明，出现在系统授权弹窗里",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip needs Accessibility permission so it can read the text you select in other apps and save it as a word."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip 需要辅助功能权限，以便读取其他 App 中的选中文本用于收词。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WordClip 需要輔助使用權限，才能讀取其他 App 中選取的文字並收錄成單字。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -110,11 +110,11 @@ struct ContentView: View {
             .sheet(isPresented: $showingSettings) {
                 NavigationStack {
                     SettingsView()
-                        .navigationTitle(String(localized: "tab.settings", defaultValue: "设置"))
+                        .navigationTitle(String(localized: "tab.settings", defaultValue: "Settings"))
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .confirmationAction) {
-                                Button(String(localized: "help.done", defaultValue: "完成")) {
+                                Button(String(localized: "help.done", defaultValue: "Done")) {
                                     showingSettings = false
                                 }
                             }
@@ -227,15 +227,15 @@ struct ContentView: View {
                     .modifier(SettingsToolbarModifier(show: $showingSettings))
             }
                 .tabItem {
-                    Label(String(localized: "tab.wordlist", defaultValue: "生词本"), systemImage: "books.vertical")
+                    Label(String(localized: "tab.wordlist", defaultValue: "Wordbook"), systemImage: "books.vertical")
                 }
             NavigationStack { StudyView() }
                 .tabItem {
-                    Label(String(localized: "tab.review", defaultValue: "复习"), systemImage: "checkmark.circle")
+                    Label(String(localized: "tab.review", defaultValue: "Review"), systemImage: "checkmark.circle")
                 }
             NavigationStack { StatsView() }
                 .tabItem {
-                    Label(String(localized: "tab.stats", defaultValue: "统计"), systemImage: "chart.xyaxis.line")
+                    Label(String(localized: "tab.stats", defaultValue: "Stats"), systemImage: "chart.xyaxis.line")
                 }
         }
     }
@@ -252,7 +252,7 @@ private struct SettingsToolbarModifier: ViewModifier {
                 Button {
                     show = true
                 } label: {
-                    Label(String(localized: "tab.settings", defaultValue: "设置"),
+                    Label(String(localized: "tab.settings", defaultValue: "Settings"),
                           systemImage: "gearshape")
                 }
             }

@@ -44,7 +44,7 @@ struct WordClipApp: App {
         do {
             return try ModelContainer(for: schema, configurations: config)
         } catch {
-            fatalError("SwiftData 容器初始化失败：\(error)")
+            fatalError("SwiftData 容器初始化失败：\(error)")  // i18n-exempt: 崩溃日志，不面向用户
         }
     }()
 
@@ -71,7 +71,7 @@ struct WordClipApp: App {
         }
 
         // ── 设置窗口（⌘,）────────────────────────────────
-        Window(String(localized: "window.settings", defaultValue: "设置"), id: "settings") {
+        Window(String(localized: "window.settings", defaultValue: "Settings"), id: "settings") {
             SettingsView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
@@ -232,14 +232,14 @@ struct WordClipApp: App {
         switch outcome {
         case .collected(let word, let found, _):
             return found
-                ? String(localized: "collect.success", defaultValue: "已收录：\(word)")
-                : String(localized: "collect.success.nodef", defaultValue: "已收录：\(word)（未找到释义）")
+                ? String(localized: "collect.success", defaultValue: "Collected: \(word)")
+                : String(localized: "collect.success.nodef", defaultValue: "Collected: \(word) (no definition found)")
         case .noSelection:
-            return String(localized: "collect.noselection", defaultValue: "未检测到选中的文本")
+            return String(localized: "collect.noselection", defaultValue: "No selected text detected")
         case .notTrusted:
-            return String(localized: "collect.notrusted", defaultValue: "需要在系统设置中授予辅助功能权限")
+            return String(localized: "collect.notrusted", defaultValue: "Grant Accessibility permission in System Settings")
         case .invalid:
-            return String(localized: "collect.invalid", defaultValue: "不是有效的单词")
+            return String(localized: "collect.invalid", defaultValue: "Not a valid word")
         }
     }
 
@@ -260,14 +260,14 @@ struct WordClipApp: App {
             CollectHUD.shared.show(
                 symbol: "exclamationmark.triangle.fill", tint: .orange,
                 title: String(localized: "ocr.permission.denied",
-                              defaultValue: "需要在系统设置中授予「屏幕录制」权限"),
+                              defaultValue: "Grant Screen Recording permission in System Settings"),
                 subtitle: nil, duration: 2.4
             )
             return
         } catch {
             CollectHUD.shared.show(
                 symbol: "exclamationmark.triangle.fill", tint: .orange,
-                title: String(localized: "ocr.capture.failed", defaultValue: "截屏失败，请重试"),
+                title: String(localized: "ocr.capture.failed", defaultValue: "Screen capture failed, please try again"),
                 subtitle: nil, duration: 2.0
             )
             return
@@ -301,7 +301,7 @@ struct WordClipApp: App {
             OCRWordPicker.shared.close()
             CollectHUD.shared.show(
                 symbol: "text.viewfinder", tint: .orange,
-                title: String(localized: "ocr.notext", defaultValue: "未识别到英文单词"),
+                title: String(localized: "ocr.notext", defaultValue: "No English words recognized"),
                 subtitle: nil, duration: 1.8
             )
             return
@@ -321,7 +321,7 @@ struct WordClipApp: App {
         guard count > 0 else { return }
         CollectHUD.shared.show(
             symbol: "checkmark.circle.fill", tint: .green,
-            title: String(localized: "ocr.captured", defaultValue: "已收录 \(count) 个词"),
+            title: String(localized: "ocr.captured", defaultValue: "Collected \(count) words"),
             subtitle: nil
         )
     }
@@ -343,7 +343,7 @@ struct WordClipApp: App {
             let sub = found
                 ? definition?.components(separatedBy: "\n").first
                 : String(localized: "notification.collect.nodef",
-                         defaultValue: "词典未收录该词，释义留空")
+                         defaultValue: "Not in the dictionary, definition left empty")
             CollectHUD.shared.show(
                 symbol: found ? "checkmark.circle.fill" : "checkmark.circle",
                 tint: .green,
@@ -355,7 +355,7 @@ struct WordClipApp: App {
                 symbol: "exclamationmark.triangle.fill",
                 tint: .orange,
                 title: String(localized: "collect.notrusted",
-                              defaultValue: "需要在系统设置中授予辅助功能权限"),
+                              defaultValue: "Grant Accessibility permission in System Settings"),
                 subtitle: nil,
                 duration: 2.2
             )

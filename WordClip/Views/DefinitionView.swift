@@ -3,14 +3,28 @@ import WordClipKit
 
 /// 结构化释义展示：词性彩色 badge + 学科标记 + 中英文分区。
 /// 卡片背面与详情页共用（解析逻辑见 `DefinitionFormatter`）。
+///
+/// 两份释义（中文 / 英英）哪份当主释义，取决于界面语言：中文界面先中文释义，
+/// 其他语言先英英释义，另一份降级成带标题的次级分区。词库没有繁体释义列，
+/// 所以繁体界面走中文分支、显示简体释义（详见 docs/ARCHITECTURE.md §3.7）。
 struct StructuredDefinitionView: View {
     let definition: String?
     let definitionEn: String?
 
+    /// 界面语言是中文（简体或繁体）时优先展示中文释义。
+    private var prefersChineseGloss: Bool {
+        Locale.current.language.languageCode?.identifier == "zh"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            zhSection
-            enSection
+            if prefersChineseGloss {
+                zhSection(isPrimary: true)
+                enSection(isPrimary: false)
+            } else {
+                enSection(isPrimary: true)
+                zhSection(isPrimary: false)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -18,38 +32,56 @@ struct StructuredDefinitionView: View {
     // MARK: 中文释义
 
     @ViewBuilder
-    private var zhSection: some View {
+    private func zhSection(isPrimary: Bool) -> some View {
         if let zh = definition, !zh.isEmpty {
+            if !isPrimary {
+                sectionHeader(String(localized: "definition.chinese", defaultValue: "Chinese"))
+            }
             let lines = DefinitionFormatter.parse(zh)
             if lines.isEmpty {
-                Text(zh).font(.body).textSelection(.enabled)
+                Text(zh)
+                    .font(isPrimary ? .body : .callout)
+                    .foregroundStyle(isPrimary ? .primary : .secondary)
+                    .textSelection(.enabled)
             } else {
                 ForEach(Array(lines.enumerated()), id: \.offset) { _, line in
                     DefinitionRow(line: line)
                 }
             }
-        } else {
-            Text(String(localized: "wordlist.nodef", defaultValue: "暂无释义"))
-                .foregroundStyle(.secondary)
+        } else if isPrimary {
+            emptyState
         }
     }
 
     // MARK: 英英释义
 
     @ViewBuilder
-    private var enSection: some View {
+    private func enSection(isPrimary: Bool) -> some View {
         if let en = definitionEn, !en.isEmpty {
-            Divider().padding(.vertical, 2)
-            Label(String(localized: "definition.english", defaultValue: "英英释义"),
-                  systemImage: "character.book.closed")
-                .font(.caption.bold())
-                .foregroundStyle(.tertiary)
+            if !isPrimary {
+                sectionHeader(String(localized: "definition.english", defaultValue: "English"))
+            }
             Text(en)
-                .font(.callout)
-                .foregroundStyle(.secondary)
+                .font(isPrimary ? .body : .callout)
+                .foregroundStyle(isPrimary ? .primary : .secondary)
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
+        } else if isPrimary {
+            emptyState
         }
+    }
+
+    @ViewBuilder
+    private func sectionHeader(_ title: String) -> some View {
+        Divider().padding(.vertical, 2)
+        Label(title, systemImage: "character.book.closed")
+            .font(.caption.bold())
+            .foregroundStyle(.tertiary)
+    }
+
+    private var emptyState: some View {
+        Text(String(localized: "wordlist.nodef", defaultValue: "No definition yet"))
+            .foregroundStyle(.secondary)
     }
 }
 

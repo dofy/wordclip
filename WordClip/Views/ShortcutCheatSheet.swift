@@ -7,7 +7,7 @@ struct ShortcutCheatSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Label(String(localized: "shortcuts.title", defaultValue: "键盘快捷键"),
+                Label(String(localized: "shortcuts.title", defaultValue: "Keyboard Shortcuts"),
                       systemImage: "keyboard")
                     .font(.headline)
                 Spacer()
@@ -70,35 +70,35 @@ struct ShortcutCheatSheet: View {
 
     static var groups: [Group] {
         [
-            Group(title: String(localized: "shortcuts.group.nav", defaultValue: "导航"), items: [
-                Item(desc: String(localized: "sidebar.allwords", defaultValue: "生词本"), keys: ["⌘1"]),
-                Item(desc: String(localized: "sidebar.review", defaultValue: "复习"), keys: ["⌘2"]),
-                Item(desc: String(localized: "sidebar.stats", defaultValue: "统计"), keys: ["⌘3"]),
-                Item(desc: String(localized: "tab.settings", defaultValue: "设置"), keys: ["⌘,"]),
+            Group(title: String(localized: "shortcuts.group.nav", defaultValue: "Navigation"), items: [
+                Item(desc: String(localized: "sidebar.allwords", defaultValue: "Wordbook"), keys: ["⌘1"]),
+                Item(desc: String(localized: "sidebar.review", defaultValue: "Review"), keys: ["⌘2"]),
+                Item(desc: String(localized: "sidebar.stats", defaultValue: "Stats"), keys: ["⌘3"]),
+                Item(desc: String(localized: "tab.settings", defaultValue: "Settings"), keys: ["⌘,"]),
             ]),
-            Group(title: String(localized: "shortcuts.group.wordlist", defaultValue: "词典"), items: [
-                Item(desc: String(localized: "shortcuts.add", defaultValue: "添加单词"), keys: ["⌘N"]),
-                Item(desc: String(localized: "shortcuts.search", defaultValue: "定位搜索框"), keys: ["⌘K", "⌘F"]),
-                Item(desc: String(localized: "shortcuts.nav.rows", defaultValue: "切换词条"), keys: ["↑", "↓"]),
-                Item(desc: String(localized: "shortcuts.open", defaultValue: "打开详情"), keys: ["⏎"]),
-                Item(desc: String(localized: "shortcuts.speak", defaultValue: "朗读"), keys: ["⌘L"]),
-                Item(desc: String(localized: "shortcuts.favorite", defaultValue: "收藏 / 取消"), keys: ["⌘D"]),
-                Item(desc: String(localized: "shortcuts.repair", defaultValue: "修复释义"), keys: ["⌘R"]),
-                Item(desc: String(localized: "shortcuts.delete", defaultValue: "删除"), keys: ["⌘⌫"]),
+            Group(title: String(localized: "shortcuts.group.wordlist", defaultValue: "Word List"), items: [
+                Item(desc: String(localized: "shortcuts.add", defaultValue: "Add word"), keys: ["⌘N"]),
+                Item(desc: String(localized: "shortcuts.search", defaultValue: "Focus the search field"), keys: ["⌘K", "⌘F"]),
+                Item(desc: String(localized: "shortcuts.nav.rows", defaultValue: "Move between words"), keys: ["↑", "↓"]),
+                Item(desc: String(localized: "shortcuts.open", defaultValue: "Open detail"), keys: ["⏎"]),
+                Item(desc: String(localized: "shortcuts.speak", defaultValue: "Speak"), keys: ["⌘L"]),
+                Item(desc: String(localized: "shortcuts.favorite", defaultValue: "Favorite / unfavorite"), keys: ["⌘D"]),
+                Item(desc: String(localized: "shortcuts.repair", defaultValue: "Repair definition"), keys: ["⌘R"]),
+                Item(desc: String(localized: "shortcuts.delete", defaultValue: "Delete"), keys: ["⌘⌫"]),
             ]),
-            Group(title: String(localized: "shortcuts.group.detail", defaultValue: "词条详情"), items: [
-                Item(desc: String(localized: "shortcuts.detail.nav", defaultValue: "上一条 / 下一条"), keys: ["↑", "↓"]),
-                Item(desc: String(localized: "shortcuts.speak", defaultValue: "朗读"), keys: ["⌘L"]),
-                Item(desc: String(localized: "shortcuts.favorite", defaultValue: "收藏 / 取消"), keys: ["⌘D"]),
-                Item(desc: String(localized: "shortcuts.repair", defaultValue: "修复释义"), keys: ["⌘R"]),
+            Group(title: String(localized: "shortcuts.group.detail", defaultValue: "Word Detail"), items: [
+                Item(desc: String(localized: "shortcuts.detail.nav", defaultValue: "Previous / next word"), keys: ["↑", "↓"]),
+                Item(desc: String(localized: "shortcuts.speak", defaultValue: "Speak"), keys: ["⌘L"]),
+                Item(desc: String(localized: "shortcuts.favorite", defaultValue: "Favorite / unfavorite"), keys: ["⌘D"]),
+                Item(desc: String(localized: "shortcuts.repair", defaultValue: "Repair definition"), keys: ["⌘R"]),
             ]),
-            Group(title: String(localized: "shortcuts.group.study", defaultValue: "学习"), items: [
-                Item(desc: String(localized: "shortcuts.flip", defaultValue: "翻面看释义"), keys: ["空格"]),
-                Item(desc: String(localized: "shortcuts.grade.wrong", defaultValue: "不认识"), keys: ["←"]),
-                Item(desc: String(localized: "shortcuts.grade.correct", defaultValue: "认识"), keys: ["→"]),
+            Group(title: String(localized: "shortcuts.group.study", defaultValue: "Study"), items: [
+                Item(desc: String(localized: "shortcuts.flip", defaultValue: "Flip to the definition"), keys: [String(localized: "shortcuts.key.space", defaultValue: "Space")]),
+                Item(desc: String(localized: "shortcuts.grade.wrong", defaultValue: "Don’t know"), keys: ["←"]),
+                Item(desc: String(localized: "shortcuts.grade.correct", defaultValue: "Know it"), keys: ["→"]),
             ]),
-            Group(title: String(localized: "shortcuts.group.general", defaultValue: "通用"), items: [
-                Item(desc: String(localized: "shortcuts.self", defaultValue: "显示此速查表"), keys: ["⌘/"]),
+            Group(title: String(localized: "shortcuts.group.general", defaultValue: "General"), items: [
+                Item(desc: String(localized: "shortcuts.self", defaultValue: "Show this cheat sheet"), keys: ["⌘/"]),
             ]),
         ]
     }
@@ -112,7 +112,7 @@ private struct KeyCaps: View {
         HStack(spacing: 6) {
             ForEach(Array(keys.enumerated()), id: \.offset) { idx, key in
                 if idx > 0 {
-                    Text(String(localized: "shortcuts.or", defaultValue: "或"))
+                    Text(String(localized: "shortcuts.or", defaultValue: "or"))
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }

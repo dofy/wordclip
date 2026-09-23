@@ -40,6 +40,6 @@
 
     <!-- Accessibility 权限说明（M2 全局快捷键需要）-->
     <key>NSAccessibilityUsageDescription</key>
-    <string>WordClip 需要辅助功能权限，以便读取其他 App 中的选中文本用于收词。</string>
+    <string>WordClip needs Accessibility permission so it can read the text you select in other apps and save it as a word.</string>
 </dict>
 </plist>

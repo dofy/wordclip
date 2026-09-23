@@ -35,3 +35,18 @@ jobs:
         with:
           name: test-output
           path: WordClipKit/test-output.txt
+
+  localization:
+    name: Localization Catalogs
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      # Guards en / zh-Hans / zh-Hant coverage in both String Catalogs, plus the
+      # no-hardcoded-Chinese rule. Half the app's keys were missing from the
+      # catalog before this check existed.
+      - name: Check String Catalogs
+        run: ./scripts/check-localization.sh

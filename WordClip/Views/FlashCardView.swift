@@ -74,10 +74,10 @@ struct FlashCardView: View {
     private var swipeHint: some View {
         let progress = min(1, abs(dragOffset) / swipeThreshold)
         ZStack {
-            hintBadge(text: String(localized: "study.grade.correct", defaultValue: "认识"),
+            hintBadge(text: String(localized: "study.grade.correct", defaultValue: "Know it"),
                       systemImage: "checkmark", color: .green)
                 .opacity(dragOffset > 12 ? progress : 0)
-            hintBadge(text: String(localized: "study.grade.wrong", defaultValue: "不认识"),
+            hintBadge(text: String(localized: "study.grade.wrong", defaultValue: "Don’t know"),
                       systemImage: "xmark", color: .red)
                 .opacity(dragOffset < -12 ? progress : 0)
         }
@@ -108,7 +108,7 @@ struct FlashCardView: View {
                     .padding(.horizontal, 16)
                 HStack(spacing: 10) {
                     if let phonetic = entry.phonetic, !phonetic.isEmpty {
-                        Text("/\(phonetic)/")
+                        Text(verbatim: "/\(phonetic)/")
                             .font(.title3)
                             .foregroundStyle(.secondary)
                     }
@@ -124,7 +124,7 @@ struct FlashCardView: View {
                 Spacer(minLength: 0)
                 VStack(spacing: 8) {
                     FamiliarityBadge(familiarity: entry.familiarity)
-                    Text(String(localized: "study.tap.to.flip", defaultValue: "点击查看释义"))
+                    Text(String(localized: "study.tap.to.flip", defaultValue: "Tap to see the definition"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
@@ -142,7 +142,7 @@ struct FlashCardView: View {
                     Text(entry.headword)
                         .font(.title2.bold())
                     if let phonetic = entry.phonetic, !phonetic.isEmpty {
-                        Text("/\(phonetic)/")
+                        Text(verbatim: "/\(phonetic)/")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }

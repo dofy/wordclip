@@ -13,12 +13,12 @@ enum NotificationService {
     static func sendCollectNotification(word: String, definition: String?, found: Bool) {
         let content = UNMutableNotificationContent()
         content.title = String(localized: "notification.collect.title",
-                               defaultValue: "已收录：\(word)")
+                               defaultValue: "Collected: \(word)")
         if found, let def = definition?.components(separatedBy: "\n").first, !def.isEmpty {
             content.body = def
         } else if !found {
             content.body = String(localized: "notification.collect.nodef",
-                                  defaultValue: "词典未收录该词，释义留空")
+                                  defaultValue: "Not in the dictionary, definition left empty")
         }
         content.sound = .none  // 收词是高频操作，静音避免打扰
 
@@ -29,7 +29,7 @@ enum NotificationService {
         )
         UNUserNotificationCenter.current().add(request) { error in
             if let error {
-                NSLog("[WordClip] 发送收词通知失败: \(error)")
+                NSLog("[WordClip] 发送收词通知失败: \(error)")  // i18n-exempt: 诊断日志
             }
         }
     }
@@ -65,9 +65,9 @@ enum NotificationService {
             guard granted else { return }
 
             let content = UNMutableNotificationContent()
-            content.title = String(localized: "reminder.title", defaultValue: "该复习单词啦")
+            content.title = String(localized: "reminder.title", defaultValue: "Time to Review")
             content.body = String(localized: "reminder.body",
-                                  defaultValue: "打开 WordClip 复习今天到期的单词")
+                                  defaultValue: "Open WordClip to review words due today")
             content.sound = .default
 
             var components = DateComponents()

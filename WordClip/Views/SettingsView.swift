@@ -46,11 +46,11 @@ struct SettingsView: View {
             // ── 选中收词 ──
             Section {
                 Toggle(
-                    String(localized: "settings.capture.enabled", defaultValue: "启用选中收词"),
+                    String(localized: "settings.capture.enabled", defaultValue: "Enable Selection Capture"),
                     isOn: $appState.captureEnabled
                 )
 
-                LabeledContent(String(localized: "settings.capture.shortcut", defaultValue: "收词快捷键")) {
+                LabeledContent(String(localized: "settings.capture.shortcut", defaultValue: "Shortcut")) {
                     ShortcutRecorderField(shortcut: $collectShortcut)
                 }
                 .onChange(of: collectShortcut) { _, newValue in
@@ -58,10 +58,10 @@ struct SettingsView: View {
                     appState.refreshHotkeyRegistration()
                 }
             } header: {
-                Text(String(localized: "settings.section.capture.selection", defaultValue: "选中收词"))
+                Text(String(localized: "settings.section.capture.selection", defaultValue: "Selection Capture"))
             } footer: {
                 Text(String(localized: "settings.capture.selection.hint",
-                    defaultValue: "在任意 App 中选中单词，按下快捷键即可收录到 WordClip。"))
+                    defaultValue: "Select a word in any app and press the shortcut to save it to WordClip."))
                 .foregroundStyle(.secondary)
             }
 
@@ -70,7 +70,7 @@ struct SettingsView: View {
                 // OCR 取词快捷键（Pro）：免费用户显示锁，点击弹付费墙
                 if entitlement.isPro {
                     LabeledContent(String(localized: "settings.capture.ocr.shortcut",
-                                          defaultValue: "OCR 收词快捷键")) {
+                                          defaultValue: "OCR Capture Shortcut")) {
                         ShortcutRecorderField(shortcut: $ocrShortcut)
                     }
                     .onChange(of: ocrShortcut) { _, newValue in
@@ -83,7 +83,7 @@ struct SettingsView: View {
                     } label: {
                         HStack {
                             Label(String(localized: "settings.capture.ocr.shortcut",
-                                        defaultValue: "OCR 收词快捷键"),
+                                        defaultValue: "OCR Capture Shortcut"),
                                   systemImage: "text.viewfinder")
                             Spacer()
                             Image(systemName: "lock.fill")
@@ -93,10 +93,10 @@ struct SettingsView: View {
                     }
                 }
             } header: {
-                Text(String(localized: "settings.section.capture.ocr", defaultValue: "OCR 收词"))
+                Text(String(localized: "settings.section.capture.ocr", defaultValue: "OCR Capture"))
             } footer: {
                 Text(String(localized: "settings.capture.ocr.hint",
-                    defaultValue: "框选屏幕区域识别其中的英文单词（Pro），适用于图片 / PDF / 不可选文本。不受上面「选中收词」开关影响。"))
+                    defaultValue: "Select a screen region to recognize English words in it (Pro) — works with images, PDFs, and non-selectable text. Independent of the Selection Capture switch above."))
                 .foregroundStyle(.secondary)
             }
             #endif
@@ -104,36 +104,36 @@ struct SettingsView: View {
             // ── 学习（跨平台）────────────────────────────────
             Section {
                 Picker(
-                    String(localized: "settings.study.roundsize", defaultValue: "每轮学习词数"),
+                    String(localized: "settings.study.roundsize", defaultValue: "Words per round"),
                     selection: $roundSize
                 ) {
                     ForEach(roundSizeOptions, id: \.self) { n in
-                        Text("\(n)").tag(n)
+                        Text(verbatim: "\(n)").tag(n)
                     }
                 }
             } header: {
-                Text(String(localized: "settings.section.study", defaultValue: "学习"))
+                Text(String(localized: "settings.section.study", defaultValue: "Study"))
             } footer: {
                 Text(String(localized: "settings.study.roundsize.hint",
-                    defaultValue: "每一轮固定学习的单词数，兼顾到期复习词与新词，学完自动结束。词量不足时学实际数量。"))
+                    defaultValue: "How many words each round covers — a mix of due reviews and new words, ending automatically. Uses the actual count when you have fewer."))
                 .foregroundStyle(.secondary)
             }
 
             // ── 复习提醒（跨平台）────────────────────────────
             Section {
                 Toggle(
-                    String(localized: "settings.reminder.enabled", defaultValue: "每日复习提醒"),
+                    String(localized: "settings.reminder.enabled", defaultValue: "Daily Review Reminder"),
                     isOn: $appState.reviewReminderEnabled
                 )
                 if appState.reviewReminderEnabled {
                     DatePicker(
-                        String(localized: "settings.reminder.time", defaultValue: "提醒时间"),
+                        String(localized: "settings.reminder.time", defaultValue: "Reminder Time"),
                         selection: $appState.reviewReminderTime,
                         displayedComponents: .hourAndMinute
                     )
                 }
             } header: {
-                Text(String(localized: "settings.section.reminder", defaultValue: "提醒"))
+                Text(String(localized: "settings.section.reminder", defaultValue: "Reminder"))
             }
 
             // ── 词典（内置 + 导入）──────────────────────────
@@ -143,25 +143,25 @@ struct SettingsView: View {
             // ── 账户 ──────────────────────────────────────
             Section {
                 LabeledContent(
-                    String(localized: "settings.plan", defaultValue: "当前方案"),
+                    String(localized: "settings.plan", defaultValue: "Current Plan"),
                     value: entitlement.isPro
-                        ? String(localized: "settings.plan.pro", defaultValue: "Pro（终身）")
-                        : String(localized: "settings.plan.free", defaultValue: "免费版")
+                        ? String(localized: "settings.plan.pro", defaultValue: "Pro")
+                        : String(localized: "settings.plan.free", defaultValue: "Free")
                 )
                 if !entitlement.isPro {
                     Button {
                         showingPaywall = true
                     } label: {
-                        Label(String(localized: "settings.upgrade", defaultValue: "升级 WordClip Pro"),
+                        Label(String(localized: "settings.upgrade", defaultValue: "Upgrade to WordClip Pro"),
                               systemImage: "sparkles")
                     }
                 }
             } header: {
-                Text(String(localized: "settings.account", defaultValue: "账户"))
+                Text(String(localized: "settings.account", defaultValue: "Account"))
             } footer: {
                 if !entitlement.isPro {
                     Text(String(localized: "settings.account.hint",
-                        defaultValue: "一次性购买，终身解锁 OCR 收词、iCloud 同步与导入/导出功能。"))
+                        defaultValue: "A one-time purchase that unlocks OCR capture, iCloud sync and import/export for life."))
                     .foregroundStyle(.secondary)
                 }
             }
@@ -170,18 +170,18 @@ struct SettingsView: View {
             Section {
                 Toggle(isOn: $iCloudSyncEnabled) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(String(localized: "settings.icloud.toggle", defaultValue: "iCloud 同步"))
-                        Text(String(localized: "settings.icloud.soon", defaultValue: "即将推出"))
+                        Text(String(localized: "settings.icloud.toggle", defaultValue: "iCloud Sync"))
+                        Text(String(localized: "settings.icloud.soon", defaultValue: "Coming soon"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
                 .disabled(true)   // 预留 UI：真实同步待 CloudKit + 付费账号
             } header: {
-                Text(String(localized: "settings.section.icloud", defaultValue: "同步"))
+                Text(String(localized: "settings.section.icloud", defaultValue: "Sync"))
             } footer: {
                 Text(String(localized: "settings.icloud.hint",
-                    defaultValue: "Pro 功能：词典与学习进度跨设备自动同步。开发中，敬请期待。"))
+                    defaultValue: "Pro feature: dictionaries and study progress sync across your devices. Still in development — stay tuned."))
                 .foregroundStyle(.secondary)
             }
 
@@ -190,7 +190,7 @@ struct SettingsView: View {
                 Button {
                     exportBackup()
                 } label: {
-                    Label(String(localized: "settings.export", defaultValue: "导出词库"),
+                    Label(String(localized: "settings.export", defaultValue: "Export Vocabulary"),
                           systemImage: "square.and.arrow.up")
                 }
                 Button {
@@ -201,7 +201,7 @@ struct SettingsView: View {
                     }
                 } label: {
                     HStack {
-                        Label(String(localized: "settings.import", defaultValue: "导入词库"),
+                        Label(String(localized: "settings.import", defaultValue: "Import Vocabulary"),
                               systemImage: "square.and.arrow.down")
                         if !entitlement.isPro {
                             Spacer()
@@ -212,13 +212,13 @@ struct SettingsView: View {
                     }
                 }
             } header: {
-                Text(String(localized: "settings.section.data", defaultValue: "数据"))
+                Text(String(localized: "settings.section.data", defaultValue: "Data"))
             } footer: {
                 Text(entitlement.isPro
                     ? String(localized: "settings.data.hint",
-                        defaultValue: "导出为 JSON 文件备份，或在新设备导入。导入按单词智能合并，不会覆盖已有的学习进度。")
+                        defaultValue: "Export a JSON backup, or import on a new device. Import merges by word and won't overwrite your learning progress.")
                     : String(localized: "settings.data.hint.free",
-                        defaultValue: "免费版可导出备份；导入为 Pro 功能。导入按单词智能合并，不会覆盖已有的学习进度。"))
+                        defaultValue: "Exporting a backup is free; importing is a Pro feature. Import merges by word and won’t overwrite your learning progress."))
                 .foregroundStyle(.secondary)
             }
 
@@ -226,11 +226,11 @@ struct SettingsView: View {
             #if os(macOS)
             Section {
                 Toggle(
-                    String(localized: "settings.general.launchatlogin", defaultValue: "登录时自动启动"),
+                    String(localized: "settings.general.launchatlogin", defaultValue: "Launch at Login"),
                     isOn: $appState.launchAtLogin
                 )
             } header: {
-                Text(String(localized: "settings.section.general", defaultValue: "通用"))
+                Text(String(localized: "settings.section.general", defaultValue: "General"))
             }
             #endif
 
@@ -239,7 +239,7 @@ struct SettingsView: View {
                 Button {
                     NotificationCenter.default.post(name: .showHelp, object: nil)
                 } label: {
-                    Label(String(localized: "help.open", defaultValue: "使用帮助"),
+                    Label(String(localized: "help.open", defaultValue: "Help"),
                           systemImage: "questionmark.circle")
                 }
             }
@@ -247,15 +247,15 @@ struct SettingsView: View {
             #if DEBUG
             Section {
                 Toggle(
-                    String(localized: "settings.debug.pro", defaultValue: "模拟 Pro（调试）"),
+                    String(localized: "settings.debug.pro", defaultValue: "Simulate Pro (Debug)"),
                     isOn: $entitlement.isPro
                 )
             } header: {
-                Text("Debug")
+                Text(String(localized: "settings.section.debug", defaultValue: "Debug"))
             }
             #endif
         }
-        .navigationTitle(String(localized: "tab.settings", defaultValue: "设置"))
+        .navigationTitle(String(localized: "tab.settings", defaultValue: "Settings"))
         #if os(macOS)
         .formStyle(.grouped)
         #endif
@@ -267,9 +267,9 @@ struct SettingsView: View {
         ) { result in
             if case .failure(let error) = result {
                 flashBackup(String(localized: "backup.export.fail",
-                                   defaultValue: "导出失败：\(error.localizedDescription)"))
+                                   defaultValue: "Export failed: \(error.localizedDescription)"))
             } else {
-                flashBackup(String(localized: "backup.export.ok", defaultValue: "已导出词库"))
+                flashBackup(String(localized: "backup.export.ok", defaultValue: "Vocabulary exported"))
             }
         }
         .fileImporter(
@@ -310,7 +310,7 @@ struct SettingsView: View {
             showingExporter = true
         } catch {
             flashBackup(String(localized: "backup.export.fail",
-                               defaultValue: "导出失败：\(error.localizedDescription)"))
+                               defaultValue: "Export failed: \(error.localizedDescription)"))
         }
     }
 
@@ -323,10 +323,10 @@ struct SettingsView: View {
             let data = try Data(contentsOf: url)
             let r = try backup.importData(data)
             flashBackup(String(localized: "backup.import.result",
-                               defaultValue: "已导入：新增 \(r.added)，合并 \(r.merged)"))
+                               defaultValue: "Imported: \(r.added) added, \(r.merged) merged"))
         } catch {
             flashBackup(String(localized: "backup.import.fail",
-                               defaultValue: "导入失败：\(error.localizedDescription)"))
+                               defaultValue: "Import failed: \(error.localizedDescription)"))
         }
     }
 

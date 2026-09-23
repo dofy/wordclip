@@ -14,7 +14,7 @@ struct AddWordView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             HStack {
-                Text(String(localized: "addword.title", defaultValue: "添加单词"))
+                Text(String(localized: "addword.title", defaultValue: "Add Word"))
                     .font(.title2.bold())
                 Spacer()
                 Button {
@@ -30,7 +30,7 @@ struct AddWordView: View {
             // 输入框 + 添加
             HStack(spacing: 10) {
                 TextField(
-                    String(localized: "addword.placeholder", defaultValue: "输入英文单词"),
+                    String(localized: "addword.placeholder", defaultValue: "Enter an English word"),
                     text: $text
                 )
                 .textFieldStyle(.roundedBorder)
@@ -47,7 +47,7 @@ struct AddWordView: View {
                     if isWorking {
                         ProgressView().controlSize(.small)
                     } else {
-                        Text(String(localized: "addword.add", defaultValue: "添加"))
+                        Text(String(localized: "addword.add", defaultValue: "Add"))
                     }
                 }
                 .buttonStyle(.borderedProminent)

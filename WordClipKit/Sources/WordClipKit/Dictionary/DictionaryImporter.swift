@@ -12,13 +12,29 @@ public enum DictionaryImporter {
     public enum ImportError: Error, LocalizedError {
         case unreadable
         case emptyOrInvalid
+        /// 扩展名不受支持，payload 是扩展名本身（不含点）。
         case unsupported(String)
+        /// SQLite 文件结构不符合 entries 表要求，payload 是本地化好的原因。
+        case unsupportedDatabase(String)
 
         public var errorDescription: String? {
             switch self {
-            case .unreadable:            return "无法读取所选文件"
-            case .emptyOrInvalid:        return "文件为空或没有可解析的词条"
-            case .unsupported(let ext):  return "不支持的文件类型：.\(ext)"
+            case .unreadable:
+                return String(localized: "kit.import.error.unreadable",
+                              defaultValue: "Can’t read the selected file",
+                              bundle: .module)
+            case .emptyOrInvalid:
+                return String(localized: "kit.import.error.empty",
+                              defaultValue: "The file is empty or has no entries that can be parsed",
+                              bundle: .module)
+            case .unsupported(let ext):
+                return String(localized: "kit.import.error.unsupportedExtension",
+                              defaultValue: "Unsupported file type: .\(ext)",
+                              bundle: .module)
+            case .unsupportedDatabase(let reason):
+                return String(localized: "kit.import.error.unsupportedDatabase",
+                              defaultValue: "Unsupported SQLite file: \(reason)",
+                              bundle: .module)
             }
         }
     }
@@ -90,7 +106,7 @@ public enum DictionaryImporter {
             // 跳过表头行（首行且字段名像 header）
             if idx == 0 {
                 let w = word.lowercased()
-                if w == "word" || w == "headword" || w == "单词" { continue }
+                if w == "word" || w == "headword" || w == "单词" { continue }  // i18n-exempt: CSV 表头识别，是解析输入不是文案
             }
             let phonetic = fields.count >= 3
                 ? fields[2].trimmingCharacters(in: .whitespaces).nilIfEmpty
@@ -152,11 +168,21 @@ public enum DictionaryImporter {
             let hasTable = try Bool.fetchOne(
                 db, sql: "SELECT count(*) > 0 FROM sqlite_master WHERE type='table' AND name='entries'"
             ) ?? false
-            guard hasTable else { throw ImportError.unsupported("sqlite（缺少 entries 表）") }
+            guard hasTable else {
+                throw ImportError.unsupportedDatabase(
+                    String(localized: "kit.import.error.sqlite.noTable",
+                           defaultValue: "no “entries” table",
+                           bundle: .module)
+                )
+            }
             // 校验必需列
             let cols = try Row.fetchAll(db, sql: "PRAGMA table_info(entries)").map { $0["name"] as String }
             guard cols.contains("word"), cols.contains("definition") else {
-                throw ImportError.unsupported("sqlite（entries 缺少 word/definition 列）")
+                throw ImportError.unsupportedDatabase(
+                    String(localized: "kit.import.error.sqlite.noColumns",
+                           defaultValue: "the “entries” table has no word/definition columns",
+                           bundle: .module)
+                )
             }
             return try Int.fetchOne(db, sql: "SELECT count(*) FROM entries") ?? 0
         }

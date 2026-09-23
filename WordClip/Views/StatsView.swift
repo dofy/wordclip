@@ -3,6 +3,13 @@ import SwiftData
 import Charts
 import WordClipKit
 
+// 图表坐标轴标签。Swift Charts 的 `.value(_:_:)` 有 LocalizedStringKey 重载，
+// 直接写字面量会被当成本地化 key 抽进目录；这里先取好译文再传 String 重载。
+private let statsAxisLevel = String(localized: "stats.axis.level", defaultValue: "Level")
+private let statsAxisCount = String(localized: "stats.axis.count", defaultValue: "Count")
+private let statsAxisDate = String(localized: "stats.axis.date", defaultValue: "Date")
+private let statsAxisAccuracy = String(localized: "stats.axis.accuracy", defaultValue: "Accuracy")
+
 /// 统计页：收录趋势、熟悉度分布、复习认识率。可按分组过滤(与复习页一致)。
 struct StatsView: View {
     @Query private var words: [WordEntry]
@@ -21,17 +28,17 @@ struct StatsView: View {
             }
             .padding(20)
         }
-        .navigationTitle(String(localized: "tab.stats", defaultValue: "统计"))
+        .navigationTitle(String(localized: "tab.stats", defaultValue: "Stats"))
     }
 
     @ViewBuilder
     private var content: some View {
         if filteredWords.isEmpty {
             ContentUnavailableView(
-                String(localized: "stats.empty.title", defaultValue: "还没有统计数据"),
+                String(localized: "stats.empty.title", defaultValue: "No Stats Yet"),
                 systemImage: "chart.xyaxis.line",
                 description: Text(String(localized: "stats.empty.desc",
-                    defaultValue: "收录单词并复习后，这里会显示你的学习统计"))
+                    defaultValue: "Collect and review words to see your learning stats here"))
             )
             .padding(.top, 40)
         } else {
@@ -87,14 +94,14 @@ struct StatsView: View {
     private var summarySection: some View {
         HStack(spacing: 12) {
             summaryCard(value: "\(summary.totalWords)",
-                        label: String(localized: "stats.total", defaultValue: "总词数"), color: .blue)
+                        label: String(localized: "stats.total", defaultValue: "Total"), color: .blue)
             summaryCard(value: "\(summary.mastered)",
-                        label: String(localized: "stats.mastered", defaultValue: "已掌握"), color: .green)
+                        label: String(localized: "stats.mastered", defaultValue: "Mastered"), color: .green)
             summaryCard(value: "\(summary.learning)",
-                        label: String(localized: "stats.learning", defaultValue: "学习中"), color: .orange)
+                        label: String(localized: "stats.learning", defaultValue: "Learning"), color: .orange)
             if let acc = summary.overallAccuracy {
                 summaryCard(value: "\(Int(acc * 100))%",
-                            label: String(localized: "stats.accuracy", defaultValue: "认识率"), color: .purple)
+                            label: String(localized: "stats.accuracy", defaultValue: "Recall"), color: .purple)
             }
         }
     }
@@ -115,16 +122,16 @@ struct StatsView: View {
 
     private var familiaritySection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionTitle(String(localized: "stats.familiarity.title", defaultValue: "熟悉度分布"))
+            sectionTitle(String(localized: "stats.familiarity.title", defaultValue: "Familiarity Distribution"))
             Chart(distribution) { bucket in
                 BarMark(
-                    x: .value("Level", "L\(bucket.level)"),
-                    y: .value("Count", bucket.count)
+                    x: .value(statsAxisLevel, "L\(bucket.level)"),
+                    y: .value(statsAxisCount, bucket.count)
                 )
                 .foregroundStyle(levelColor(bucket.level))
                 .annotation(position: .top) {
                     if bucket.count > 0 {
-                        Text("\(bucket.count)").font(.caption2).foregroundStyle(.secondary)
+                        Text(verbatim: "\(bucket.count)").font(.caption2).foregroundStyle(.secondary)
                     }
                 }
             }
@@ -136,16 +143,16 @@ struct StatsView: View {
 
     private var collectTrendSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionTitle(String(localized: "stats.collect.title", defaultValue: "近 30 天收录"))
+            sectionTitle(String(localized: "stats.collect.title", defaultValue: "Last 30 Days Collected"))
             Chart(collectTrend) { day in
                 AreaMark(
-                    x: .value("Date", day.date),
-                    y: .value("Count", day.count)
+                    x: .value(statsAxisDate, day.date),
+                    y: .value(statsAxisCount, day.count)
                 )
                 .foregroundStyle(.blue.opacity(0.2))
                 LineMark(
-                    x: .value("Date", day.date),
-                    y: .value("Count", day.count)
+                    x: .value(statsAxisDate, day.date),
+                    y: .value(statsAxisCount, day.count)
                 )
                 .foregroundStyle(.blue)
             }
@@ -157,17 +164,17 @@ struct StatsView: View {
 
     private var reviewAccuracySection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionTitle(String(localized: "stats.review.title", defaultValue: "复习认识率"))
+            sectionTitle(String(localized: "stats.review.title", defaultValue: "Review Recall"))
             Chart(reviewTrend.filter { $0.total > 0 }) { day in
                 LineMark(
-                    x: .value("Date", day.date),
-                    y: .value("Accuracy", (day.accuracy ?? 0) * 100)
+                    x: .value(statsAxisDate, day.date),
+                    y: .value(statsAxisAccuracy, (day.accuracy ?? 0) * 100)
                 )
                 .foregroundStyle(.purple)
                 .symbol(.circle)
                 PointMark(
-                    x: .value("Date", day.date),
-                    y: .value("Accuracy", (day.accuracy ?? 0) * 100)
+                    x: .value(statsAxisDate, day.date),
+                    y: .value(statsAxisAccuracy, (day.accuracy ?? 0) * 100)
                 )
                 .foregroundStyle(.purple)
             }

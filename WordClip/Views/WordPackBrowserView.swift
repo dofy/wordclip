@@ -19,8 +19,8 @@ struct WordPackBrowserView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(isOnboarding
-                 ? String(localized: "packs.welcome.title", defaultValue: "选择懒人包,快速开始")
-                 : String(localized: "packs.browse.title", defaultValue: "懒人包"))
+                 ? String(localized: "packs.welcome.title", defaultValue: "Pick a word pack for a quick start")
+                 : String(localized: "packs.browse.title", defaultValue: "Word Packs"))
                 .font(.title2).bold()
 
             ScrollView {
@@ -33,13 +33,13 @@ struct WordPackBrowserView: View {
 
             HStack {
                 Button(isOnboarding
-                       ? String(localized: "packs.skip", defaultValue: "跳过")
-                       : String(localized: "packs.close", defaultValue: "关闭")) { onDone() }
+                       ? String(localized: "packs.skip", defaultValue: "Skip")
+                       : String(localized: "packs.close", defaultValue: "Close")) { onDone() }
                 Spacer()
                 Button {
                     importSelected()
                 } label: {
-                    Text(String(localized: "packs.import", defaultValue: "导入 (\(selected.count))"))
+                    Text(String(localized: "packs.import", defaultValue: "Import (\(selected.count))"))
                         .frame(minWidth: 100)
                 }
                 .buttonStyle(.borderedProminent)
@@ -62,12 +62,12 @@ struct WordPackBrowserView: View {
                 Image(systemName: pack.icon ?? "square.stack")
                     .font(.title2).frame(width: 32)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(pack.name).font(.headline)
-                    Text("\(pack.words.count) 词").font(.caption).foregroundStyle(.secondary)
+                    Text(pack.displayName).font(.headline)
+                    Text(String(localized: "packs.wordcount", defaultValue: "\(pack.words.count) words")).font(.caption).foregroundStyle(.secondary)
                 }
                 Spacer()
                 if imported {
-                    Label(String(localized: "packs.added", defaultValue: "已添加"), systemImage: "checkmark.circle.fill")
+                    Label(String(localized: "packs.added", defaultValue: "Added"), systemImage: "checkmark.circle.fill")
                         .labelStyle(.iconOnly).foregroundStyle(.green)
                 } else if isOn {
                     Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.accentColor)

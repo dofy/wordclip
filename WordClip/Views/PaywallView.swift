@@ -25,21 +25,21 @@ struct PaywallView: View {
         [
             Benefit(
                 symbol: "text.viewfinder",
-                title: String(localized: "paywall.benefit.ocr.title", defaultValue: "OCR 收词"),
+                title: String(localized: "paywall.benefit.ocr.title", defaultValue: "OCR Capture"),
                 detail: String(localized: "paywall.benefit.ocr.detail",
-                               defaultValue: "框选屏幕任意区域，识别其中的单词并收录")
+                               defaultValue: "Select any region of the screen to recognize the words in it and save them")
             ),
             Benefit(
                 symbol: "arrow.triangle.2.circlepath.icloud",
-                title: String(localized: "paywall.benefit.sync.title", defaultValue: "iCloud 同步"),
+                title: String(localized: "paywall.benefit.sync.title", defaultValue: "iCloud Sync"),
                 detail: String(localized: "paywall.benefit.sync.detail",
-                               defaultValue: "词典与单词进度跨设备自动同步")
+                               defaultValue: "Dictionaries and word progress sync across your devices automatically")
             ),
             Benefit(
                 symbol: "square.and.arrow.up.on.square",
-                title: String(localized: "paywall.benefit.io.title", defaultValue: "导入 / 导出"),
+                title: String(localized: "paywall.benefit.io.title", defaultValue: "Import / Export"),
                 detail: String(localized: "paywall.benefit.io.detail",
-                               defaultValue: "备份并在新设备恢复你的词库")
+                               defaultValue: "Back up your vocabulary and restore it on a new device")
             ),
         ]
     }
@@ -59,9 +59,9 @@ struct PaywallView: View {
         }
         .frame(minWidth: 380, minHeight: 520)
         .task { product = await entitlement.products().first }
-        .alert(String(localized: "paywall.error.title", defaultValue: "购买失败"),
+        .alert(String(localized: "paywall.error.title", defaultValue: "Purchase Failed"),
                isPresented: $showingError, presenting: errorMessage) { _ in
-            Button(String(localized: "common.ok", defaultValue: "好"), role: .cancel) {}
+            Button(String(localized: "common.ok", defaultValue: "OK"), role: .cancel) {}
         } message: { Text($0) }
     }
 
@@ -75,7 +75,7 @@ struct PaywallView: View {
             Text(String(localized: "paywall.title", defaultValue: "WordClip Pro"))
                 .font(.largeTitle.bold())
             Text(String(localized: "paywall.subtitle",
-                        defaultValue: "一次购买，终身解锁全部进阶功能"))
+                        defaultValue: "One purchase, every advanced feature unlocked for life"))
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -121,14 +121,14 @@ struct PaywallView: View {
             .disabled(purchasing)
             .padding(.horizontal, 28)
 
-            Button(String(localized: "paywall.restore", defaultValue: "恢复购买")) {
+            Button(String(localized: "paywall.restore", defaultValue: "Restore Purchase")) {
                 restore()
             }
             .font(.footnote)
             .disabled(purchasing)
 
             Text(String(localized: "paywall.legal",
-                        defaultValue: "一次性购买，无自动续费。"))
+                        defaultValue: "One-time purchase. No subscription, no auto-renewal."))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 16)
@@ -138,9 +138,9 @@ struct PaywallView: View {
     private var buyTitle: String {
         if let price = product?.localizedPrice {
             return String(localized: "paywall.buy.price",
-                          defaultValue: "终身解锁 · \(price)")
+                          defaultValue: "Unlock for life · \(price)")
         }
-        return String(localized: "paywall.buy", defaultValue: "终身解锁")
+        return String(localized: "paywall.buy", defaultValue: "Unlock for life")
     }
 
     // MARK: - 操作

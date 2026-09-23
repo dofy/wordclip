@@ -17,7 +17,7 @@ struct MenuBarMenuView: View {
     var body: some View {
         // 今日概览
         Text(String(localized: "menubar.overview",
-                    defaultValue: "生词本 \(total) · 待复习 \(due) · 新词 \(newWords)"))
+                    defaultValue: "Wordbook \(total) · Due \(due) · New \(newWords)"))
             .font(.caption)
 
         Divider()
@@ -28,8 +28,8 @@ struct MenuBarMenuView: View {
         } label: {
             Label(
                 appState.captureEnabled
-                    ? String(localized: "menubar.capture.disable", defaultValue: "停用选中收词")
-                    : String(localized: "menubar.capture.enable", defaultValue: "启用选中收词"),
+                    ? String(localized: "menubar.capture.disable", defaultValue: "Disable Selection Capture")
+                    : String(localized: "menubar.capture.enable", defaultValue: "Enable Selection Capture"),
                 systemImage: appState.captureEnabled ? "scissors.badge.ellipsis" : "scissors"
             )
         }
@@ -38,7 +38,7 @@ struct MenuBarMenuView: View {
         Divider()
 
         // 打开主窗口
-        Button(String(localized: "menubar.open", defaultValue: "打开 WordClip")) {
+        Button(String(localized: "menubar.open", defaultValue: "Open WordClip")) {
             openWindow(id: "main")
             NSApp.activate(ignoringOtherApps: true)
         }
@@ -47,7 +47,7 @@ struct MenuBarMenuView: View {
         Divider()
 
         // 退出
-        Button(String(localized: "menubar.quit", defaultValue: "退出")) {
+        Button(String(localized: "menubar.quit", defaultValue: "Quit")) {
             NSApp.terminate(nil)
         }
         .keyboardShortcut("q", modifiers: [.command])
