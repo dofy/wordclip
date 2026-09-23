@@ -140,18 +140,19 @@ struct ContentView: View {
             }
     }
 
-    /// macOS：授权横幅必须和 NavigationSplitView 平级堆叠，不能用 safeAreaInset
-    /// 挂在它身上——split view 的侧边栏和详情栏各自管理 safe area，不响应外层
-    /// inset，于是两栏都画到横幅底下，侧边栏首项和列表首行被盖住。
+    /// macOS：授权横幅装进窗口 titlebar 的 accessory，不跟 NavigationSplitView 平级堆叠。
+    /// 堆叠会把 split view 下推，而 AppKit 仍在列表顶部留 content inset 并画玻璃带，
+    /// 带子于是浮在横幅下面糊住首行。详见 TitlebarBannerInstaller 的注释。
     @ViewBuilder
     private var bannerWrapped: some View {
         #if os(macOS)
-        VStack(spacing: 0) {
-            if appState.needsAccessibilityPrompt {
-                AccessibilityBanner()
-            }
-            content
-        }
+        content
+            .background(
+                TitlebarBannerInstaller(
+                    visible: appState.needsAccessibilityPrompt,
+                    appState: appState
+                )
+            )
         #else
         content
         #endif
