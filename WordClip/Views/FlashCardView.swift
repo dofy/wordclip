@@ -188,14 +188,27 @@ struct FlashCardView: View {
 struct FamiliarityBadge: View {
     let familiarity: Int
 
+    /// 选中行整条铺主题色，点的红 / 橙 / 黄 / 绿压在上面分不出亮灭。
+    /// 选中时（`.increased`）统一改成白色实心 + 白色半透明空心。
+    @Environment(\.backgroundProminence) private var prominence
+
+    private var isSelected: Bool { prominence == .increased }
+
     var body: some View {
         HStack(spacing: 4) {
             ForEach(0..<5, id: \.self) { i in
                 Circle()
                     .frame(width: 8, height: 8)
-                    .foregroundStyle(i < familiarity ? levelColor : Color.secondary.opacity(0.25))
+                    .foregroundStyle(color(filled: i < familiarity))
             }
         }
+    }
+
+    private func color(filled: Bool) -> Color {
+        if isSelected {
+            return filled ? .white : .white.opacity(0.35)
+        }
+        return filled ? levelColor : Color.secondary.opacity(0.25)
     }
 
     private var levelColor: Color {

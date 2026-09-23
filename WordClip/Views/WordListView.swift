@@ -509,7 +509,6 @@ struct WordListView: View {
         }
         .background(isRegularWidth ? listShortcuts : nil)
         #if os(macOS)
-        .modifier(TopScrollEdgeEffectHidden(hidden: appState.needsAccessibilityPrompt))
         .onDeleteCommand {
             if case .word(let id) = selectedItem,
                let w = filteredWords.first(where: { $0.id == id }) {
@@ -694,21 +693,12 @@ struct WordListView: View {
     @ViewBuilder
     private func reviewStatusBadge(for word: WordEntry) -> some View {
         if word.isNew {
-            statusTag(String(localized: "wordlist.status.new", defaultValue: "新词"), color: .green)
+            StatusTag(text: String(localized: "wordlist.status.new", defaultValue: "新词"), color: .green)
         } else if word.isDue() {
-            statusTag(String(localized: "wordlist.status.due", defaultValue: "待复习"), color: .orange)
+            StatusTag(text: String(localized: "wordlist.status.due", defaultValue: "待复习"), color: .orange)
         } else {
             EmptyView()
         }
-    }
-
-    private func statusTag(_ text: String, color: Color) -> some View {
-        Text(text)
-            .font(.caption2.weight(.medium))
-            .foregroundStyle(color)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(color.opacity(0.14), in: Capsule())
     }
 
     @ViewBuilder
@@ -724,9 +714,7 @@ struct WordListView: View {
                             .foregroundStyle(.tertiary)
                     }
                     if word.isFavorite {
-                        Image(systemName: "star.fill")
-                            .font(.caption2)
-                            .foregroundStyle(.yellow)
+                        FavoriteStar()
                     }
                 }
                 if let definition = word.definition, !definition.isEmpty {
@@ -793,6 +781,44 @@ struct WordListView: View {
             try? await Task.sleep(nanoseconds: 2_500_000_000)
             if repairMessage == message { repairMessage = nil }
         }
+    }
+}
+
+/// 复习状态小徽标（新词 / 待复习）。
+///
+/// 选中行整条铺主题色（珊瑚橙），固定的绿 / 橙字压在上面几乎看不清，连胶囊底色
+/// 也和高亮混成一团。`backgroundProminence` 在选中行里是 `.increased`，据此换成
+/// 白字 + 白色半透明底；`.secondary` / `.tertiary` 那类层级样式系统会自己适配，
+/// 只有写死的颜色要手动处理。
+///
+/// 读环境值必须在行内的独立 View 里：写成 WordListView 的方法会读到列表级环境，
+/// 拿不到每行的选中态。
+private struct StatusTag: View {
+    let text: String
+    let color: Color
+
+    @Environment(\.backgroundProminence) private var prominence
+
+    private var isSelected: Bool { prominence == .increased }
+
+    var body: some View {
+        Text(text)
+            .font(.caption2.weight(.medium))
+            .foregroundStyle(isSelected ? .white : color)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(isSelected ? Color.white.opacity(0.25) : color.opacity(0.14), in: Capsule())
+    }
+}
+
+/// 收藏星标：选中行上黄色对珊瑚橙的对比度不够，换白色。
+private struct FavoriteStar: View {
+    @Environment(\.backgroundProminence) private var prominence
+
+    var body: some View {
+        Image(systemName: "star.fill")
+            .font(.caption2)
+            .foregroundStyle(prominence == .increased ? .white : .yellow)
     }
 }
 
@@ -1055,23 +1081,3 @@ struct DictionaryPreviewPane: View {
     }
 }
 
-#if os(macOS)
-/// 授权横幅显示时，关掉列表顶部的滚动边缘效果。
-///
-/// 横幅和 NavigationSplitView 是平级堆叠的（见 ContentView.bannerWrapped），
-/// split view 被整体下推之后，系统仍会在列表的新顶边画那条渐进模糊带，于是它脱离
-/// 工具栏、悬在横幅下面，看起来像一条来历不明的半透明条，底下还透出半截单词行。
-///
-/// 只在横幅显示时关：列表紧贴工具栏时这条模糊带是系统本来的观感，不该动。
-private struct TopScrollEdgeEffectHidden: ViewModifier {
-    let hidden: Bool
-
-    func body(content: Content) -> some View {
-        if #available(macOS 26.0, *) {
-            content.scrollEdgeEffectHidden(hidden, for: .top)
-        } else {
-            content
-        }
-    }
-}
-#endif
