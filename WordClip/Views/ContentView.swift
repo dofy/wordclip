@@ -178,12 +178,16 @@ struct ContentView: View {
         NavigationSplitView {
             SidebarView(selection: $selection)
         } detail: {
+            #if os(macOS)
+            // macOS 的详情直接由 split view 管理导航和窗口工具栏。
+            // 再嵌套 NavigationStack 会在授权横幅下方多画一层工具栏背景，遮住首行。
+            detailView(for: selection ?? .allWords)
+            #else
             NavigationStack {
                 detailView(for: selection ?? .allWords)
-                    #if os(iOS)
                     .modifier(SettingsToolbarModifier(show: $showingSettings))
-                    #endif
             }
+            #endif
         }
         .background(sidebarShortcuts)
     }
