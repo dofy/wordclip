@@ -2,6 +2,8 @@
 
 **English** · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
 
+[**wordclip.phpz.org** ↗](https://wordclip.phpz.org)
+
 A cross-platform vocabulary tool for collecting words anywhere, looking them up offline, and reviewing them with spaced repetition. Built for English today; the architecture extends to any language.
 
 **Platforms**: macOS · iOS · iPadOS
@@ -80,6 +82,7 @@ A cross-platform vocabulary tool for collecting words anywhere, looking them up 
 - [Progress](docs/PROGRESS.md) — what's built and what's next
 - [Plan](docs/PLAN.md) — product goals, scope, pricing
 - [Architecture and key technical decisions](docs/ARCHITECTURE.md)
+- [`website/`](website/README.md) — the trilingual product site at [wordclip.phpz.org](https://wordclip.phpz.org)
 
 ## Development setup
 

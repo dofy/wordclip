@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="WordClip 是一款原生 macOS 與 iOS 單字工具。在任何 App 中選取單字，按快速鍵一鍵收錄，用隨 App 離線的字典查詢，再靠 SM-2 間隔重複複習。"
+    />
+    <meta name="theme-color" content="#fffdfc" />
+    <meta property="og:title" content="WordClip — 選取，收錄，記住" />
+    <meta
+      property="og:description"
+      content="在 macOS 上隨處收詞，離線查詢，按 SM-2 排程複習。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/app-icon.png" />
+    <link rel="icon" type="image/png" href="/app-icon.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="alternate" hreflang="en" href="https://wordclip.phpz.org/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://wordclip.phpz.org/zh-Hans/" />
+    <link rel="alternate" hreflang="zh-Hant" href="https://wordclip.phpz.org/zh-Hant/" />
+    <link rel="alternate" hreflang="x-default" href="https://wordclip.phpz.org/" />
+    <title>WordClip — 選取，收錄，記住</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="WordClip 首頁">
+        <img src="/app-icon.png" width="34" height="34" alt="" />
+        <span>WordClip</span>
+      </a>
+      <nav aria-label="主要導覽">
+        <a href="#workflow">使用方式</a>
+        <a href="#content">字典</a>
+        <a href="#pricing">價格</a>
+      </nav>
+      <div class="header-end">
+        <nav class="lang-switch" aria-label="語言">
+          <a href="/" hreflang="en" lang="en">EN</a>
+          <a href="/zh-Hans/" hreflang="zh-Hans" lang="zh-Hans">简</a>
+          <a href="/zh-Hant/" hreflang="zh-Hant" aria-current="page">繁</a>
+        </nav>
+        <a
+          class="header-link"
+          href="https://github.com/dofy/wordclip"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="product-note">macOS · iOS · iPadOS</p>
+          <h1><span>選取，</span><span>收錄，</span><span>記住。</span></h1>
+          <p class="hero-description">
+            剛遇到的生字，沒人幫你留著，明天就忘了。WordClip
+            把你在任何 App 中選取的單字接下來，用隨 App 附帶的字典補上釋義，
+            再在你快要忘掉的那一刻把它送回來。
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button button-primary"
+              href="https://github.com/dofy/wordclip"
+              target="_blank"
+              rel="noreferrer"
+              >在 GitHub 查看專案</a
+            >
+            <a class="button button-secondary" href="#start">查看安裝方式</a>
+          </div>
+          <p class="hero-meta">macOS 15+ · iOS 18+ · SwiftUI · MIT License</p>
+        </div>
+
+        <div class="hero-demo" aria-label="收詞流程示範">
+          <div class="source-pane">
+            <div class="mock-toolbar">
+              <span class="traffic-lights" aria-hidden="true">
+                <i></i><i></i><i></i>
+              </span>
+              <span>Safari</span>
+            </div>
+            <p lang="en">
+              The archive was less a collection than a
+              <span class="selection">serendipity</span> engine — you went in
+              looking for one thing and left holding another.
+            </p>
+          </div>
+
+          <div class="shortcut" aria-label="快速鍵 Option Command C">
+            <kbd>⌥</kbd><kbd>⌘</kbd><kbd>C</kbd>
+          </div>
+
+          <div class="word-pane">
+            <div class="word-heading">
+              <span class="mini-brand">
+                <img src="/app-icon.png" width="28" height="28" alt="" />
+                WordClip
+              </span>
+              <span class="badge-chip">新字</span>
+            </div>
+            <p class="word-headword" lang="en">
+              serendipity
+              <span class="word-phonetic">/ˌserənˈdɪpɪti/</span>
+            </p>
+            <ul class="word-senses">
+              <li>
+                <span class="pos">n.</span>
+                <span>意外發現珍寶的運氣</span>
+              </li>
+              <li>
+                <span class="pos">n.</span>
+                <span class="gloss-en" lang="en"
+                  >the luck of finding something good without looking for it</span
+                >
+              </li>
+            </ul>
+            <div class="word-footer">
+              <span class="familiarity" aria-label="熟悉度 2 / 5">
+                <i></i><i></i><i></i><i></i><i></i>
+              </span>
+              <span class="word-control">已收錄到單字本</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow section" id="workflow">
+        <div class="section-heading">
+          <h2>從遇到一個字，到記住它，只隔三個按鍵</h2>
+          <p>不用切 App，不用重打一遍，也不用複製到翻譯網站再繞回來。</p>
+        </div>
+        <ol class="workflow-rail">
+          <li>
+            <span class="step-mark">選取</span>
+            <div>
+              <h3>在任何 App 中選取單字</h3>
+              <p>
+                瀏覽器、PDF、郵件、程式碼註解都行。不動剪貼板，
+                所以你原本複製的東西還在。
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="step-mark">收錄</span>
+            <div>
+              <h3>按 ⌥⌘C</h3>
+              <p>
+                螢幕彈出 HUD 提示，單字連著釋義一起進單字本。遇到選不到的文字
+                —— 圖片、PDF、別人傳來的截圖 —— 用 ⌥⌘O 在本機辨識就行。
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="step-mark">複習</span>
+            <div>
+              <h3>它回來的時候翻卡</h3>
+              <p>
+                認識，下次間隔就拉長；不認識，打回明天重來。
+                每日通知會告訴你什麼時候該複習了。
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <section class="duo section" id="content">
+        <div class="duo-statement">
+          <p>離線用不了的字典，不算字典。</p>
+          <h2>單字跟著 App 一起發。</h2>
+        </div>
+        <div class="duo-options">
+          <article>
+            <span class="option-symbol" aria-hidden="true">◎</span>
+            <h3>內建字典</h3>
+            <p>
+              隨 App 附帶約 5 萬條 ECDICT 詞條，帶音標、中文釋義與英英釋義。
+              變化形會還原成原形，所以查 <em lang="en">brought</em> 能命中
+              <em lang="en">bring</em>。也可以匯入自己的 CSV 或 ECDICT 結構的
+              SQLite，往上疊更多釋義來源。
+            </p>
+            <code>約 5 萬詞條 · 離線 · 資料為 MIT 開源</code>
+          </article>
+          <article>
+            <span class="option-symbol" aria-hidden="true">◍</span>
+            <h3>單字包</h3>
+            <p>
+              十二個現成單字包 —— 分級的會考、學測指考、CET-4、CET-6、研究所、
+              托福、雅思、GRE，情境的日常生活、旅遊休閒、技術英語、商務職場。
+              全部免費離線，而且各自獨立分組，絕不和你自己收的字混在一起。
+            </p>
+            <code>12 個單字包 · 隨時匯入與移除</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="details section">
+        <div class="detail-intro">
+          <h2>照你真實的閱讀方式來做。</h2>
+          <p>該快的地方快，其餘時候安靜，在你手上的每塊螢幕上都是原生的。</p>
+        </div>
+        <div class="detail-list">
+          <div>
+            <h3>SM-2 間隔重複</h3>
+            <p>
+              一直認識，間隔就越拉越長；不認識就重設。引擎抽象成了協定，
+              以後換 FSRS 是個小改動。
+            </p>
+          </div>
+          <div>
+            <h3>OCR 收詞</h3>
+            <p>
+              框選螢幕任一區域。辨識經系統 Vision 框架在本機完成 ——
+              什麼都不上傳。
+            </p>
+          </div>
+          <div>
+            <h3>一路鍵盤到底</h3>
+            <p>
+              導覽、搜尋、新增、朗讀、收藏、修復、刪除都不必去摸觸控板。
+              ⌘/ 顯示完整速查表。
+            </p>
+          </div>
+          <div>
+            <h3>一份程式碼，三個平台</h3>
+            <p>
+              macOS、iOS、iPadOS 共用 SwiftUI 與 SwiftData，
+              字典和複習引擎放在一個共享的 Swift package 裡。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="privacy section" id="pricing">
+        <div class="privacy-mark" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <h2>買一次就結束，沒有別的安排。</h2>
+          <p>
+            一次性購買、終身解鎖 —— 不訂閱，不自動續訂。收詞、離線字典、
+            單字本、複習、統計與匯出備份永久免費；OCR 收詞和匯入詞庫屬於 Pro。
+            不做任何統計、不上傳任何東西，斷網也照樣能用。
+          </p>
+        </div>
+      </section>
+
+      <section class="start section" id="start">
+        <div>
+          <h2>今天就能建置。</h2>
+          <p>
+            App Store 上架還在路上。在那之前專案是開源的 —— 複製、建置，
+            然後開始收詞。
+          </p>
+        </div>
+        <div class="terminal" aria-label="安裝指令">
+          <div class="terminal-bar"><span></span><span></span><span></span></div>
+          <pre><code>git clone https://github.com/dofy/wordclip.git
+cd wordclip
+xcodegen generate
+open WordClip.xcodeproj</code></pre>
+        </div>
+        <a
+          class="button button-primary"
+          href="https://github.com/dofy/wordclip/blob/main/README.zh-Hant.md#開發環境"
+          target="_blank"
+          rel="noreferrer"
+          >打開完整安裝說明</a
+        >
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand footer-brand">
+        <img src="/app-icon.png" width="30" height="30" alt="" />
+        <span>WordClip</span>
+      </div>
+      <p>為那些本來會溜走的字而做。</p>
+      <div class="footer-links">
+        <a href="https://github.com/dofy/wordclip">GitHub</a>
+        <a href="https://github.com/dofy/wordclip/issues">問題回報</a>
+        <a href="https://github.com/dofy/wordclip/blob/main/LICENSE">MIT License</a>
+      </div>
+      <p class="copyright">© <span id="year">2026</span> WordClip</p>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

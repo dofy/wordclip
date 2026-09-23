@@ -2,6 +2,8 @@
 
 [English](README.md) · **简体中文** · [繁體中文](README.zh-Hant.md)
 
+[**wordclip.phpz.org** ↗](https://wordclip.phpz.org)
+
 随时随地收集单词、离线查词、间隔重复复习的多平台单词学习工具。当前面向英语,架构上支持扩展到任意语言。
 
 **平台**:macOS · iOS · iPadOS
@@ -80,6 +82,7 @@
 - [开发进度](docs/PROGRESS.md) — 已实现功能与开发计划
 - [开发计划](docs/PLAN.md) — 产品目标、功能边界、收费方案
 - [架构与关键技术决策](docs/ARCHITECTURE.md)
+- [`website/`](website/README.md) —— 三语产品站，部署在 [wordclip.phpz.org](https://wordclip.phpz.org)
 
 ## 开发环境
 
