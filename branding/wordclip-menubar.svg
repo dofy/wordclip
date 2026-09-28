@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   状态栏模板图标：纯黑 + 透明底。系统按 template 自动适配明暗模式。
-  与 scripts/generate_app_icon.swift 保持一致（实际 PNG 由该脚本生成）。
-  书签几何和 W 路径与 App 图标同源，只有两处按菜单栏尺寸放大：
-  W 更大（书签高的 46%）、位置更靠上——18pt 的槽位用 App 图标的比例会看不清。
+  实际 PNG 由 scripts/generate_app_icon.swift 生成，本文件是同一几何的可读副本
+  ——下面的坐标是该脚本的 renderMenuBarIcon 折算到 64 画布的结果。
+
+  书签轮廓和 W 的比例都与 App 图标同源（W 高为书签高的 46%、中心在书签高的 42%、
+  笔画为 W 宽的 26%），唯一的差别是书签相对画布放大到 92%：菜单栏槽位本来就小，
+  再留 App 图标那样的 tile 边距只会让图形更难认。
+
+  W 曾经在这里额外上移（顶部内缩 14%，中心 37%），看起来像要飘出书签，已对齐 App 图标。
 -->
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <mask id="cut">
     <rect width="64" height="64" fill="white"/>
     <!-- W 以遮罩镂空，粗笔画圆端；template 图只携带 alpha，非透明处一律被染成同一色 -->
-    <path d="M14.4 53.5 L18.3 39.0 L23.9 47.1 L29.5 39.0 L33.4 53.5"
-          transform="translate(8.1, -30.8)"
-          fill="none" stroke="black" stroke-width="5.4"
+    <path d="M19.78 13.75 L25.39 36.53 L32 24.04 L38.61 36.53 L44.22 13.75"
+          fill="none" stroke="black" stroke-width="8.59"
           stroke-linecap="round" stroke-linejoin="round"/>
   </mask>
-  <path d="M16 5 H48 a4 4 0 0 1 4 4 V59 L32 47 L12 59 V9 a4 4 0 0 1 4 -4 Z"
+  <!-- 书签：顶部平、底部 V 缺口。44.75 x 58.88，圆角 2.82，缺口深 12.60 -->
+  <path d="M12.45 2.56 H51.56 a2.82 2.82 0 0 1 2.82 2.82 V48.84 L32 61.44 L9.63 48.84 V5.38 a2.82 2.82 0 0 1 2.82 -2.82 Z"
         fill="#000000" mask="url(#cut)"/>
 </svg>

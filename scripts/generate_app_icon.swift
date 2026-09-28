@@ -64,12 +64,20 @@ private func bookmarkPath(in rect: CGRect) -> NSBezierPath {
 /// depend on which system font version the machine happens to ship.
 /// Returns the path and the line width it must be stroked with.
 /// `heightRatio` and `topInsetRatio` are fractions of the bookmark's height.
-/// The menu bar passes larger values: an 18pt slot needs a W well above the app
-/// icon's proportions to stay readable, even if it nearly fills the bookmark.
+///
+/// The app icon and the menu bar icon use the same values, so the mark reads
+/// the same in the Dock and in the menu bar. They are sized for the menu bar:
+/// an 18pt slot needs a W well above what the app icon alone would call for,
+/// and at app icon sizes the larger W costs nothing — it survives the 16pt
+/// Finder list, where the old smaller W turned to mush.
+///
+/// The centre sits at 42% of the bookmark's height (0.19 + 0.46/2), not higher.
+/// The menu bar icon used to raise it to 37% for legibility, which made the W
+/// look like it was floating out of the bookmark.
 private func letterWPath(
     in glyphRect: CGRect,
-    heightRatio: CGFloat = 0.32,
-    topInsetRatio: CGFloat = 0.26
+    heightRatio: CGFloat = 0.46,
+    topInsetRatio: CGFloat = 0.19
 ) -> (NSBezierPath, CGFloat) {
     let letterHeight = glyphRect.height * heightRatio
     let letterWidth = letterHeight * 1.22
@@ -180,7 +188,7 @@ private func renderMenuBarIcon(size: Int) throws -> Data {
     // Punch the W out rather than drawing it in a colour: a template image only
     // carries alpha, so anything non-transparent renders as one flat tint.
     context.cgContext.setBlendMode(.destinationOut)
-    let (w, strokeWidth) = letterWPath(in: glyphRect, heightRatio: 0.46, topInsetRatio: 0.14)
+    let (w, strokeWidth) = letterWPath(in: glyphRect)
     w.lineWidth = strokeWidth
     NSColor.black.setStroke()
     w.stroke()

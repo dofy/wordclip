@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Kept in sync with scripts/generate_app_icon.swift, which renders the actual
-  AppIcon set. Shared look across the phpz.xyz apps: flat #FF674D tile inset
-  6.1% from the canvas, 25% corner radius, one solid white glyph. No gradients
-  and no drop shadows.
+  A readable copy of the geometry in scripts/generate_app_icon.swift, which
+  renders the actual AppIcon set; the coordinates below are that script's
+  renderIcon scaled onto a 1024 canvas. Shared look across the phpz.xyz apps:
+  flat #FF674D tile inset 6.1% from the canvas, 25% corner radius, one solid
+  white glyph. No gradients and no drop shadows.
+
+  The glyph is 60% of the tile's height, 0.76 as wide as it is tall. The W is
+  46% of the bookmark's height, centred at 42% of it (19% top inset), stroked
+  at 26% of the W's own width. The menu bar icon uses the same proportions, so
+  the mark reads the same in the Dock and in the menu bar — see
+  wordclip-menubar.svg.
 -->
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
   <rect x="62" y="62" width="900" height="900" rx="225" ry="225" fill="#FF674D"/>
-  <!-- 书签：顶部平、底部 V 缺口，象征“收藏单词” -->
-  <path d="M307 281 H717 a34 34 0 0 1 34 34 V627 L512 743 L273 627 V315 a34 34 0 0 1 34 -34 Z"
+  <!-- 书签：顶部平、底部 V 缺口，象征“收藏单词”。410.4 x 540，圆角 25.86，缺口深 115.56 -->
+  <path d="M332.66 242 H691.34 a25.86 25.86 0 0 1 25.86 25.86 V666.44 L512 782 L306.80 666.44 V267.86 a25.86 25.86 0 0 1 25.86 -25.86 Z"
         fill="#FFFFFF"/>
-  <!-- W 以背景色镂空，粗笔画圆端，与同族图标的字形重量一致 -->
-  <path d="M446 379 L473 481 L512 424 L551 481 L578 379"
-        fill="none" stroke="#FF674D" stroke-width="43"
+  <!-- W 以背景色镂空，粗笔画圆端，与同族图标的字形重量一致。W 宽 303.05，笔画 78.79 -->
+  <path d="M399.87 344.60 L451.39 553.60 L512 438.99 L572.61 553.60 L624.13 344.60"
+        fill="none" stroke="#FF674D" stroke-width="78.79"
         stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
