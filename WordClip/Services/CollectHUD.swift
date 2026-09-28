@@ -10,7 +10,13 @@ final class CollectHUD {
     private init() {}
 
     private var panel: NSPanel?
+    /// 停留计时：到点后开始淡出。
     private var dismissTask: Task<Void, Never>?
+    /// 淡出 + 收起面板。和 dismissTask 分开，这样一次新的 show 能各自取消。
+    private var fadeTask: Task<Void, Never>?
+
+    private static let fadeInDuration = 0.18
+    private static let fadeOutDuration = 0.25
 
     /// 显示一条 HUD。
     /// - Parameters:
@@ -21,6 +27,8 @@ final class CollectHUD {
     ///   - duration: 停留秒数
     func show(symbol: String, tint: Color, title: String, subtitle: String?, duration: Double = 1.3) {
         dismissTask?.cancel()
+        // 上一条还在淡出时也要拦住它：否则它的收尾会在这条显示期间把面板收走。
+        fadeTask?.cancel()
 
         let content = HUDContent(symbol: symbol, tint: tint, title: title, subtitle: subtitle)
         let hosting = NSHostingView(rootView: content)
@@ -36,7 +44,7 @@ final class CollectHUD {
         panel.alphaValue = 0
         panel.orderFrontRegardless()
         NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.18
+            ctx.duration = Self.fadeInDuration
             panel.animator().alphaValue = 1
         }
 
@@ -47,14 +55,31 @@ final class CollectHUD {
         }
     }
 
+    /// 淡出并把面板收下屏。
+    ///
+    /// 收起动作不挂在 `NSAnimationContext` 的 completionHandler 上。实测面板会停在
+    /// alpha 0 却仍留在屏幕上——`CGWindowList` 里还看得到一个 layer 25、alpha 0.00 的
+    /// 窗口，说明那个回调并不保证触发。面板全透明又 `ignoresMouseEvents`,所以肉眼看不
+    /// 出来,但它会一直占着一个在屏窗口。
+    ///
+    /// 改成自己等一段与动画等长的时间再 `orderOut`,动画只管动画。这个等待挂在
+    /// `fadeTask` 上,新的 `show` 一取消它,收起就不会在新 HUD 显示期间发生。
     private func hide() {
         guard let panel else { return }
+
+        // 动画留在同步上下文里发起。在 async 上下文里 `runAnimationGroup` 会解析到
+        // async 重载（error: expression is 'async' but is not marked with 'await'），
+        // 而那个重载等的正是这里不信任的那个完成回调。
         NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.25
+            ctx.duration = Self.fadeOutDuration
             panel.animator().alphaValue = 0
-        } completionHandler: {
-            // 动画完成回调始终在主线程触发,但类型系统看不出隔离,显式断言。
-            MainActor.assumeIsolated { panel.orderOut(nil) }
+        }
+
+        fadeTask?.cancel()
+        fadeTask = Task { @MainActor in
+            try? await Task.sleep(for: .seconds(Self.fadeOutDuration))
+            guard !Task.isCancelled else { return }
+            panel.orderOut(nil)
         }
     }
 
