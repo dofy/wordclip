@@ -20,7 +20,8 @@
 - **macOS 全局收词**:`KeyboardShortcuts` 注册热键(默认 `⌥⌘C`,可改),经 Accessibility 直读选中文本(`SelectionReader`),不动剪贴板;结果用悬浮 HUD(`CollectHUD`)反馈,不进通知中心。
 - **OCR 收词(Pro,macOS)**:独立热键(默认 `⌥⌘O`)→ 全屏框选(`RegionSelector`)→ ScreenCaptureKit 截图(`ScreenCapturer`)→ Vision 识别(`ScreenOCR`)→ 内置词典校验 + 滤除短大写噪声 → 选词面板(`OCRWordPicker`)多选收录。分词纯逻辑 `WordTokenizer` 在 Kit 内并单测。
 - 收词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
-- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、启用/停用选中收词、打开主窗口、退出。图标常亮/变暗指示收词是否启用。
+- **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、启用/停用选中收词、打开主窗口、打开设置、退出。图标常亮/变暗指示收词是否启用。
+- **关窗隐藏 Dock 图标**(`DockVisibility`):⌘W / 红灯被接管成 `orderOut` 而非真关(单例 `Window` 场景真关会被 SwiftUI 拆掉,重开丢侧边栏选中项和滚动位置),窗口全收起后切 `NSApp.setActivationPolicy(.accessory)`。可见窗口只认显式登记过的主窗口和设置窗口,不去过滤 `NSApp.windows`——HUD / OCR 面板 / 截屏遮罩 / MenuBarExtra 宿主都是 NSWindow,按类型和 level 猜会漏判。设置页「通用」可关,默认开。
 - **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。

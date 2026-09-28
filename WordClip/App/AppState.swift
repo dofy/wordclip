@@ -95,6 +95,19 @@ final class AppState: ObservableObject {
         didSet { refreshHotkeyRegistration() }
     }
 
+    // MARK: - Dock 图标（仅 macOS）
+    /// 主窗口的 NSWindow identifier。状态栏菜单和付费墙都按这个值找窗口。
+    static let mainWindowIdentifier = "main"
+
+    /// 窗口全收起后是否隐藏 Dock 图标，只留状态栏图标。
+    ///
+    /// 持久化由 `DockVisibility` 负责，这里只是设置页能绑定的镜像。
+    @Published var hidesDockWhenClosed: Bool = DockVisibility.shared.hidesDockWhenClosed {
+        didSet {
+            DockVisibility.shared.hidesDockWhenClosed = hidesDockWhenClosed
+        }
+    }
+
     // MARK: - 开机自启（仅 macOS）
     @Published var launchAtLogin: Bool = false {
         didSet {
@@ -117,8 +130,11 @@ final class AppState: ObservableObject {
 
     /// 请求呈现付费墙：先把 app 与主窗口前置（OCR 快捷键可能在后台触发），再置标志。
     func presentPaywall() {
+        // 先把 activation policy 拉回 .regular 再激活：Dock 图标隐藏时反过来调，activate
+        // 抢不到前台，付费墙就弹在别人窗口后面。
+        DockVisibility.shared.showDockIcon()
         NSApp.activate(ignoringOtherApps: true)
-        for window in NSApp.windows where window.identifier?.rawValue == "main" {
+        for window in NSApp.windows where window.identifier?.rawValue == Self.mainWindowIdentifier {
             window.makeKeyAndOrderFront(nil)
         }
         showingOCRPaywall = true

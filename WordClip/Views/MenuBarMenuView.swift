@@ -38,11 +38,27 @@ struct MenuBarMenuView: View {
         Divider()
 
         // 打开主窗口
+        //
+        // 先试已登记的窗口：⌘W 是 orderOut 而不是真关，窗口对象还在，直接前置能保住侧边栏
+        // 选中项和滚动位置。只有真被关掉过（「文件 → 关闭」）才走 openWindow 重建场景。
         Button(String(localized: "menubar.open", defaultValue: "Open WordClip")) {
-            openWindow(id: "main")
-            NSApp.activate(ignoringOtherApps: true)
+            if !DockVisibility.shared.reopenWindow(identifier: AppState.mainWindowIdentifier) {
+                DockVisibility.shared.showDockIcon()
+                openWindow(id: "main")
+                NSApp.activate(ignoringOtherApps: true)
+            }
         }
         .keyboardShortcut("o", modifiers: [.command])
+
+        // 打开设置
+        //
+        // Dock 图标隐藏时应用菜单栏也没了，⌘, 不再生效，设置只能从这里进。
+        Button(String(localized: "menu.settings", defaultValue: "Settings…")) {
+            DockVisibility.shared.showDockIcon()
+            openWindow(id: "settings")
+            NSApp.activate(ignoringOtherApps: true)
+        }
+        .keyboardShortcut(",", modifiers: [.command])
 
         Divider()
 

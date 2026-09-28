@@ -30,6 +30,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// 表现为收词时窗口一闪。这里在 SwiftUI 装好 handler *之后* 再覆盖它，
     /// 使 URL 只走这条路径、不进入 scene 路由，从根上消除闪烁。
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // 总在主线程调用，assumeIsolated 拿到 MainActor 隔离而不用 Task 推迟一拍。
+        MainActor.assumeIsolated { DockVisibility.shared.install() }
         NSAppleEventManager.shared().setEventHandler(
             self,
             andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),

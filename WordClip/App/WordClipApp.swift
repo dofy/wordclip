@@ -56,6 +56,7 @@ struct WordClipApp: App {
             ContentView()
                 .environmentObject(entitlement)
                 .environmentObject(appState)
+                .background(MainWindowConfigurator())
                 // macOS 的 collect scheme 由 AppDelegate 统一处理（见下方 onReceive）
                 .onReceive(NotificationCenter.default.publisher(for: .collectWordFromURL)) { note in
                     if let word = note.object as? String { collectFromURL(word) }
@@ -399,6 +400,34 @@ private struct SettingsWindowConfigurator: NSViewRepresentable {
         // 不记住打开状态:退出时即使设置窗开着,下次启动也不恢复它。
         // .suppressed 只抑制「无待恢复场景」的情况,挡不住状态恢复,故在此关掉可恢复性。
         window.isRestorable = false
+        // 交给 DockVisibility：accessory 状态下从状态栏打开设置窗口时，Dock 图标和菜单栏
+        // 得跟着回来。
+        DockVisibility.shared.adopt(window)
+    }
+}
+
+/// 把主窗口交给 `DockVisibility`：接管 ⌘W / 红灯,并保证它可见时 Dock 图标是亮的。
+///
+/// identifier 显式设成 "main",状态栏的「打开 WordClip」和 `AppState.presentPaywall()`
+/// 都按这个值找窗口。
+private struct MainWindowConfigurator: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async { configure(view.window) }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {
+        // 窗口被收起后再次出现时也要走一遍:SwiftUI 复用同一个内容视图,不会再调 makeNSView,
+        // 而 Dock 图标此刻还是隐藏的。
+        DispatchQueue.main.async { configure(nsView.window) }
+    }
+
+    private func configure(_ window: NSWindow?) {
+        guard let window, window.isVisible else { return }
+        window.identifier = NSUserInterfaceItemIdentifier(AppState.mainWindowIdentifier)
+        window.isReleasedWhenClosed = false
+        DockVisibility.shared.adopt(window)
     }
 }
 #endif

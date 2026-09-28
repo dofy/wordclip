@@ -55,7 +55,9 @@ How to use them:
 > Every pack is **free and offline**; no network needed. Imported words enter the study queue as brand-new words.
 
 ### The menu bar icon
-The bookmark icon in the menu bar shows today's overview, **enables or disables selection capture**, and opens the main window. It dims when capture is off. (OCR capture is independent and unaffected by that switch.)
+The bookmark icon in the menu bar shows today's overview, **enables or disables selection capture**, opens the main window, and opens Settings. It dims when capture is off. (OCR capture is independent and unaffected by that switch.)
+
+Close the window with `⌘W` and the Dock icon goes away with it — WordClip keeps running from the menu bar, and the capture shortcuts keep working. Reopen from the menu bar icon and the window comes back exactly as you left it. Turn this off under Settings > General if you would rather keep the Dock icon.
 
 ### Keyboard shortcuts
 | Shortcut | What it does |

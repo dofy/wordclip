@@ -229,8 +229,17 @@ struct SettingsView: View {
                     String(localized: "settings.general.launchatlogin", defaultValue: "Launch at Login"),
                     isOn: $appState.launchAtLogin
                 )
+                Toggle(
+                    String(localized: "settings.general.hidedock",
+                           defaultValue: "Hide the Dock icon when the window is closed"),
+                    isOn: $appState.hidesDockWhenClosed
+                )
             } header: {
                 Text(String(localized: "settings.section.general", defaultValue: "General"))
+            } footer: {
+                Text(String(localized: "settings.general.hidedock.hint",
+                    defaultValue: "WordClip keeps running either way. The menu bar icon and the capture shortcuts stay available, and the Dock icon comes back with the window."))
+                .foregroundStyle(.secondary)
             }
             #endif
 

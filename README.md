@@ -16,7 +16,8 @@ A cross-platform vocabulary tool for collecting words anywhere, looking them up 
 ### Capture
 - **Global capture on macOS**: select a word in any app, press the hotkey (`⌥⌘C` by default), and it's saved — a HUD confirms on screen without interrupting the app you're in. It reads the selection through Accessibility and never touches the clipboard.
 - **OCR capture (Pro)**: press the hotkey (`⌥⌘O` by default), drag to select a screen region, and Vision recognizes the words in it. Candidates are checked against the built-in dictionary, then you multi-select from a picker. Works on images, PDFs, and text you can't select.
-- **Menu bar icon**: today's overview, a quick toggle for selection capture, and a way to open the main window. The icon dims when capture is off.
+- **Menu bar icon**: today's overview, a quick toggle for selection capture, and a way to open the main window or Settings. The icon dims when capture is off.
+- **Stays out of the Dock**: `⌘W` puts the window away and takes the Dock icon with it. WordClip keeps running from the menu bar, the capture shortcuts keep working, and reopening restores the window as you left it. Switch it off under Settings > General.
 - **URL scheme**: `wordclip://collect?word=<word>` — call it from Shortcuts, a script, or another app.
 - **iOS / iPadOS**: add words by typing them or pasting from the clipboard.
 

@@ -1454,19 +1454,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "See today's overview, toggle selection capture, or open the main window. The icon dims when capture is off."
+            "value": "See today's overview, toggle selection capture, open the main window, or open Settings. The icon dims when capture is off. Close the window with ⌘W and the Dock icon goes with it — WordClip keeps running here."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看今日概览、快速启用/停用选中收词、打开主窗口。图标常亮/变暗指示收词是否启用。"
+            "value": "查看今日概览、快速启用/停用选中收词、打开主窗口、打开设置。图标常亮/变暗指示收词是否启用。按 ⌘W 关闭窗口后 Dock 图标一起消失，WordClip 继续在这里运行。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看今日總覽、快速啟用或停用選取收錄、打開主視窗。圖像亮或暗代表收錄功能是否啟用。"
+            "value": "查看今日總覽、快速啟用或停用選取收錄、打開主視窗、打開設定。圖像亮或暗代表收錄功能是否啟用。按 ⌘W 關閉視窗後 Dock 圖示一起消失，WordClip 繼續在這裡執行。"
           }
         }
       },
@@ -4128,6 +4128,52 @@
         }
       },
       "extractionState": "manual"
+    },
+    "settings.general.hidedock": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide the Dock icon when the window is closed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭窗口后隐藏 Dock 图标"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "關閉視窗後隱藏 Dock 圖示"
+          }
+        }
+      }
+    },
+    "settings.general.hidedock.hint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WordClip keeps running either way. The menu bar icon and the capture shortcuts stay available, and the Dock icon comes back with the window."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "两种设置下 WordClip 都继续运行。状态栏图标和取词快捷键始终可用，Dock 图标会随窗口一起回来。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "兩種設定下 WordClip 都會繼續執行。狀態列圖示和取詞快速鍵一直可用，Dock 圖示會隨視窗一起回來。"
+          }
+        }
+      }
     },
     "settings.general.launchatlogin": {
       "comment": "Settings toggle: launch at login",
