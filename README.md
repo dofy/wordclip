@@ -95,3 +95,36 @@ A cross-platform vocabulary tool for collecting words anywhere, looking them up 
 
 - **iOS / iPadOS**: the App Store. See [RELEASE-iOS.md](docs/RELEASE-iOS.md).
 - **macOS**: Developer ID, notarized, distributed from the site — **not the Mac App Store**, because the sandbox forbids reading another app's selected text and that would cost us native global capture. See [ARCHITECTURE §3.1](docs/ARCHITECTURE.md) and [PLAN](docs/PLAN.md).
+
+```bash
+./scripts/package-release.sh          # → dist/WordClip-<version>.dmg
+```
+
+The script builds Release as a universal binary, signs it, and writes a DMG
+holding the app, an `Applications` symlink and a trilingual first-run note
+covering Gatekeeper and the Accessibility and Screen Recording grants.
+
+**Pro is unlocked in that build.** A directly distributed copy has no App Store
+receipt, so `StoreKitEntitlement` would report "not purchased" forever and OCR
+capture and dictionary import would be locked behind a paywall with no
+transaction to complete. The build defines `WORDCLIP_DIRECT_DISTRIBUTION`, which
+swaps in `UnlockedEntitlement`; the script fails rather than shipping a build
+where that flag was silently dropped. The App Store build is the one *without*
+the flag and is unaffected.
+
+Signing defaults to a self-signed `WordClip Distribution` certificate, so macOS
+blocks the app on first launch and the recipient approves it once in System
+Settings. Back that certificate up and sign every later build with it, or macOS
+stops recognising the builds as the same app and everyone has to grant
+Accessibility again. With a paid Apple Developer account, pass the real identity
+instead and the warning disappears:
+
+```bash
+SIGNING_IDENTITY="Developer ID Application: Name (TEAMID)" \
+  ./scripts/package-release.sh
+```
+
+That path also enables the hardened runtime and a secure timestamp, which
+notarization requires. Notarization itself (`xcrun notarytool submit` and
+`stapler staple`) is not yet wired up.
+

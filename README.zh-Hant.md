@@ -95,3 +95,30 @@
 
 - **iOS / iPadOS**:上 App Store。見 [RELEASE-iOS.md](docs/RELEASE-iOS.md)。
 - **macOS**:Developer ID 加公證,從網站發佈——**不上 Mac App Store**,因為沙盒禁止讀取其他 App 選取的文字,那會讓我們失去原生的全域收錄。詳見 [ARCHITECTURE §3.1](docs/ARCHITECTURE.md) 與 [PLAN](docs/PLAN.md)。
+
+```bash
+./scripts/package-release.sh          # → dist/WordClip-<版本>.dmg
+```
+
+腳本會建置 Release 通用二進位檔、簽名,並打出一個 DMG:App、`Applications` 符號連結,
+以及一份三語的第一次執行說明(Gatekeeper、輔助使用、螢幕錄製)。
+
+**這個建置裡 Pro 是解鎖的。** 直接發佈的副本拿不到 App Store 收據,
+`StoreKitEntitlement` 會永遠判定未購買,OCR 取詞和字典匯入會被鎖在付費牆後面,而付費
+牆也沒有能完成的交易。該建置定義 `WORDCLIP_DIRECT_DISTRIBUTION`,改用
+`UnlockedEntitlement`;旗標萬一沒生效,腳本會直接失敗,而不是發出一個功能被鎖死的包。
+App Store 建置是**不帶**這個旗標的那個,不受影響。
+
+簽名預設用自簽名憑證 `WordClip Distribution`,所以 macOS 第一次啟動會擋一次,收到的人
+在系統設定裡批准一次即可。要備份這張憑證並且之後每次建置都用它,否則 macOS 不再把新
+版本認作同一個 app,所有人的輔助使用授權都要重新授予。有 Apple 開發者帳號時改傳真實
+身分,警告就不會出現:
+
+```bash
+SIGNING_IDENTITY="Developer ID Application: 名字 (TEAMID)" \
+  ./scripts/package-release.sh
+```
+
+這條路徑還會打開強化執行階段和安全時間戳記,公證需要這兩樣。公證本身
+(`xcrun notarytool submit` 與 `stapler staple`)還沒接。
+

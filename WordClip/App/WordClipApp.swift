@@ -13,9 +13,12 @@ struct WordClipApp: App {
     #endif
 
     // MARK: Dependencies
-    // DEBUG 用 Mock(可切换模拟 Pro),Release 用真实 StoreKit。见 AppEntitlement.swift。
+    // DEBUG 用 Mock(可切换模拟 Pro),直发构建用 UnlockedEntitlement,App Store 用真实
+    // StoreKit。三者的取舍见 AppEntitlement.swift。
     #if DEBUG
     @StateObject private var entitlement = MockEntitlement(overridePro: false)
+    #elseif WORDCLIP_DIRECT_DISTRIBUTION
+    @StateObject private var entitlement = UnlockedEntitlement()
     #else
     @StateObject private var entitlement = StoreKitEntitlement()
     #endif

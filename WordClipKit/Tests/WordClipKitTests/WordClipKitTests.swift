@@ -362,6 +362,34 @@ struct MockEntitlementTests {
     }
 }
 
+// MARK: - UnlockedEntitlement Tests
+
+@Suite("UnlockedEntitlement")
+@MainActor
+struct UnlockedEntitlementTests {
+
+    @Test("isPro 恒为 true,且不受 mock.isPro 残留影响")
+    func alwaysPro() {
+        // MockEntitlement 会把状态存在这个键下并优先读取它;直发构建不能被它锁住。
+        UserDefaults.standard.set(false, forKey: "mock.isPro")
+        defer { UserDefaults.standard.removeObject(forKey: "mock.isPro") }
+        #expect(UnlockedEntitlement().isPro)
+    }
+
+    @Test("不提供商品:付费墙在直发构建里不可达")
+    func noProducts() async {
+        #expect(await UnlockedEntitlement().products().isEmpty)
+    }
+
+    @Test("purchase / restore 是空操作,不抛错")
+    func purchaseAndRestoreAreNoOps() async throws {
+        let entitlement = UnlockedEntitlement()
+        try await entitlement.purchase(.lifetime)
+        try await entitlement.restore()
+        #expect(entitlement.isPro)
+    }
+}
+
 // MARK: - WordTokenizer Tests
 
 @Suite("WordTokenizer")

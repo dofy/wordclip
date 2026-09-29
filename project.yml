@@ -32,6 +32,14 @@ settings:
 configs:
   Debug: debug
   Release: release
+  # 直接分发(DMG)用的 Release 变体。只多一件事:给 macOS target 定义
+  # WORDCLIP_DIRECT_DISTRIBUTION,把 Pro 放开(见 WordClip/App/AppEntitlement.swift)。
+  #
+  # 为什么要一个配置而不是从 xcodebuild 命令行传 SWIFT_ACTIVE_COMPILATION_CONDITIONS:
+  # 命令行设置是全局的,会把 SwiftPM 依赖在自己 Package.swift 里 .define 的条件一起
+  # 替换掉,GRDB 就编不过了(cannot find '_registerErrorLogCallback' in scope)。
+  # 写在 target 的 configs 下才只影响这一个 target。
+  ReleaseDirect: release
 
 targets:
 
@@ -72,6 +80,9 @@ targets:
         CODE_SIGN_IDENTITY: "9212B14D50ACB86986465B987F4DEBBAB8D6B4F7"
         # 上架后需要的 entitlements
         CODE_SIGN_ENTITLEMENTS: WordClip/Resources/WordClip-macOS.entitlements
+      configs:
+        ReleaseDirect:
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: WORDCLIP_DIRECT_DISTRIBUTION
 
   # ── iOS / iPadOS App ───────────────────────────────────────
   WordClip-iOS:

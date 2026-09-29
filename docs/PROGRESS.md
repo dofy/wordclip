@@ -22,6 +22,7 @@
 - 收词开关可全局启用/停用(设置页 + 状态栏),热键注册一次、启用/停用切换。
 - **状态栏图标**(`MenuBarExtra` + `MenuBarMenuView`):今日概览(生词本 / 待复习 / 新词)、启用/停用选中收词、打开主窗口、打开设置、退出。图标常亮/变暗指示收词是否启用。
 - **关窗隐藏 Dock 图标**(`DockVisibility`):⌘W / 红灯被接管成 `orderOut` 而非真关(单例 `Window` 场景真关会被 SwiftUI 拆掉,重开丢侧边栏选中项和滚动位置),窗口全收起后切 `NSApp.setActivationPolicy(.accessory)`。可见窗口只认显式登记过的主窗口和设置窗口,不去过滤 `NSApp.windows`——HUD / OCR 面板 / 截屏遮罩 / MenuBarExtra 宿主都是 NSWindow,按类型和 level 猜会漏判。设置页「通用」可关,默认开。
+- **macOS 直发打包**(`scripts/package-release.sh`):Release 通用二进制 + 自签名证书 + DMG(含 `Applications` 软链和三语首次运行说明)。走 `ReleaseDirect` 配置,只给 macOS target 定义 `WORDCLIP_DIRECT_DISTRIBUTION`,换用 `UnlockedEntitlement` 把 Pro 放开——直发拿不到 App Store收据,不放开则 OCR 取词和词典导入永久锁死且付费墙无交易可完成。脚本用 `strings` 断言该标志确实生效,否则直接失败。编译条件**不能**从 xcodebuild 命令行传:命令行是全局的,会替换掉 SwiftPM 依赖自己 `.define` 的条件,GRDB 会编不过。App Store 构建仍是不带该标志的 `Release`。
 - **URL Scheme**:`wordclip://collect?word=X`。macOS 经 `AppDelegate` 统一处理,后台收录不新开/闪烁窗口;iOS 走 `onOpenURL`。
 - **收录去重**:按归一化词元合并,记录来源与时间。
 - iOS/iPad 手动输入或剪贴板粘贴添加(`AddWordView`)。
