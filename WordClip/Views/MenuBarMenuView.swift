@@ -42,11 +42,8 @@ struct MenuBarMenuView: View {
         // 先试已登记的窗口：⌘W 是 orderOut 而不是真关，窗口对象还在，直接前置能保住侧边栏
         // 选中项和滚动位置。只有真被关掉过（「文件 → 关闭」）才走 openWindow 重建场景。
         Button(String(localized: "menubar.open", defaultValue: "Open WordClip")) {
-            if !DockVisibility.shared.reopenWindow(identifier: AppState.mainWindowIdentifier) {
-                DockVisibility.shared.showDockIcon()
-                openWindow(id: "main")
-                NSApp.activate(ignoringOtherApps: true)
-            }
+            AppDelegate.openMainWindow = { openWindow(id: "main") }
+            AppDelegate.showMainWindow()
         }
         .keyboardShortcut("o", modifiers: [.command])
 

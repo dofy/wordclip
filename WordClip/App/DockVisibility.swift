@@ -135,6 +135,7 @@ final class DockVisibility: NSObject {
             $0.identifier?.rawValue == identifier
         }) else { return false }
         showDockIcon()
+        if window.isMiniaturized { window.deminiaturize(nil) }
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         return true

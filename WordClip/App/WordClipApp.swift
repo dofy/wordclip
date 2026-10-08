@@ -60,6 +60,7 @@ struct WordClipApp: App {
                 .environmentObject(entitlement)
                 .environmentObject(appState)
                 .background(MainWindowConfigurator())
+                .background(MainWindowOpener())
                 // macOS 的 collect scheme 由 AppDelegate 统一处理（见下方 onReceive）
                 .onReceive(NotificationCenter.default.publisher(for: .collectWordFromURL)) { note in
                     if let word = note.object as? String { collectFromURL(word) }
@@ -100,6 +101,7 @@ struct WordClipApp: App {
         } label: {
             // 自定义书签模板图，取词禁用时半透明提示
             Image("MenuBarIcon")
+                .background(MainWindowOpener())
                 .opacity(appState.captureEnabled ? 1.0 : 0.4)
         }
 
@@ -431,6 +433,20 @@ private struct MainWindowConfigurator: NSViewRepresentable {
         window.identifier = NSUserInterfaceItemIdentifier(AppState.mainWindowIdentifier)
         window.isReleasedWhenClosed = false
         DockVisibility.shared.adopt(window)
+    }
+}
+#endif
+
+#if os(macOS)
+/// Available before the main scene is created during a login launch.
+private struct MainWindowOpener: View {
+    @Environment(\.openWindow) private var openWindow
+
+    var body: some View {
+        Color.clear.frame(width: 0, height: 0)
+            .onAppear {
+                AppDelegate.openMainWindow = { openWindow(id: "main") }
+            }
     }
 }
 #endif

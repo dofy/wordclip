@@ -12,10 +12,31 @@ extension Notification.Name {
 /// 通知 delegate 由 NotificationDelegate 单例负责，避免被 SwiftUI 场景覆盖。
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
-        if !hasVisibleWindows {
-            for window in sender.windows { window.makeKeyAndOrderFront(nil) }
+    @MainActor static var openMainWindow: (() -> Void)? {
+        didSet {
+            if pendingMainWindowRequest, openMainWindow != nil {
+                pendingMainWindowRequest = false
+                showMainWindow()
+            }
         }
+    }
+    @MainActor private static var pendingMainWindowRequest = false
+
+    @MainActor static func showMainWindow() {
+        if DockVisibility.shared.reopenWindow(identifier: AppState.mainWindowIdentifier) {
+            return
+        }
+        DockVisibility.shared.showDockIcon()
+        if let openMainWindow {
+            openMainWindow()
+            NSApp.activate(ignoringOtherApps: true)
+        } else {
+            pendingMainWindowRequest = true
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
+        MainActor.assumeIsolated { Self.showMainWindow() }
         return false
     }
 
