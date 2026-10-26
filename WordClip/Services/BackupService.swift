@@ -69,7 +69,7 @@ struct BackupService {
             let lemma = dto.lemma.lowercased()
             guard !lemma.isEmpty else { continue }
 
-            if let existing = fetchEntry(lemma: lemma, in: manualGroup) {
+            if let existing = try fetchEntry(lemma: lemma, in: manualGroup) {
                 merge(dto, into: existing)
                 result.merged += 1
             } else {
@@ -79,7 +79,7 @@ struct BackupService {
                 result.added += 1
             }
         }
-        try? modelContext.save()
+        try modelContext.save()
         return result
     }
 
@@ -130,12 +130,12 @@ struct BackupService {
 
     /// 在指定分组内按 lemma 查已有词条（恢复备份只在手动组内去重，
     /// 不会命中懒人词包里的同词条）。
-    private func fetchEntry(lemma: String, in group: WordGroup) -> WordEntry? {
+    private func fetchEntry(lemma: String, in group: WordGroup) throws -> WordEntry? {
         let gid = group.id
         let descriptor = FetchDescriptor<WordEntry>(
             predicate: #Predicate { $0.lemma == lemma && $0.group?.id == gid }
         )
-        return try? modelContext.fetch(descriptor).first
+        return try modelContext.fetch(descriptor).first
     }
 
     /// 手动收录词条:归属手动组的词,外加存量 group==nil 老词(语义上也是手动)。

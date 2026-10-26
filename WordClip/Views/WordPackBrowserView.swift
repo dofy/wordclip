@@ -47,7 +47,11 @@ struct WordPackBrowserView: View {
             }
         }
         .padding(20)
+        #if os(macOS)
         .frame(minWidth: 560, minHeight: 480)
+        #else
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        #endif
         .task { load() }
     }
 

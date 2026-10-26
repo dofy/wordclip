@@ -3435,52 +3435,6 @@
         }
       }
     },
-    "paywall.benefit.sync.detail": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dictionaries and word progress sync across your devices automatically"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "词典与单词进度跨设备自动同步"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "字典與單字進度跨裝置自動同步"
-          }
-        }
-      }
-    },
-    "paywall.benefit.sync.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud Sync"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud 同步"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud 同步"
-          }
-        }
-      }
-    },
     "paywall.buy": {
       "extractionState": "manual",
       "localizations": {
@@ -3849,19 +3803,42 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A one-time purchase that unlocks OCR capture, iCloud sync and import/export for life."
+            "value": "A one-time purchase that unlocks OCR capture and import/export for life."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "一次性购买，终身解锁 OCR 收词、iCloud 同步与导入/导出功能。"
+            "value": "一次性购买，终身解锁 OCR 收词与导入/导出功能。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "一次性購買，終身解鎖 OCR 收錄、iCloud 同步與匯入／匯出功能。"
+            "value": "一次性購買，終身解鎖 OCR 收錄與匯入／匯出功能。"
+          }
+        }
+      }
+    },
+    "settings.account.hint.ios": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A one-time purchase that unlocks import/export for life."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一次性购买，终身解锁导入/导出功能。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一次性購買，終身解鎖匯入／匯出功能。"
           }
         }
       }

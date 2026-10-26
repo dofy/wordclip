@@ -162,9 +162,15 @@ struct SettingsView: View {
                 Text(String(localized: "settings.account", defaultValue: "Account"))
             } footer: {
                 if !entitlement.isPro {
+                    #if os(macOS)
                     Text(String(localized: "settings.account.hint",
-                        defaultValue: "A one-time purchase that unlocks OCR capture, iCloud sync and import/export for life."))
+                        defaultValue: "A one-time purchase that unlocks OCR capture and import/export for life."))
                     .foregroundStyle(.secondary)
+                    #else
+                    Text(String(localized: "settings.account.hint.ios",
+                        defaultValue: "A one-time purchase that unlocks import/export for life."))
+                    .foregroundStyle(.secondary)
+                    #endif
                 }
             }
 
