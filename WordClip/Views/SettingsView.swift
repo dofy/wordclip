@@ -119,6 +119,8 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
 
+            SpeechSettingsSection()
+
             // ── 复习提醒（跨平台）────────────────────────────
             Section {
                 Toggle(
