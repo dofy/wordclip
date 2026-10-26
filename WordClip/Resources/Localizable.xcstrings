@@ -6808,19 +6808,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uses installed English system voices for words and review cards. The original rate is 0.90×. Add more voices in your device’s Accessibility settings."
+            "value": "All voices read English; regions indicate accents. Novelty voices are excluded. Classic voices use older synthesizers and may sound robotic. The original rate is 0.90×."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "单词和复习卡片使用设备上已安装的英语系统声音，原有语速为 0.90×。可在设备的辅助功能设置中添加更多声音。"
+            "value": "所有声音均朗读英语，地区表示口音。已排除趣味效果声音；经典声音使用较早的合成器，听感可能偏机械。原有语速为 0.90×。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "單字和複習卡片使用裝置上已安裝的英語系統聲音，原有語速為 0.90×。可在裝置的輔助使用設定中加入更多聲音。"
+            "value": "所有聲音均朗讀英語，地區表示口音。已排除趣味效果聲音；經典聲音使用較早的合成器，聽感可能偏機械。原有語速為 0.90×。"
           }
         }
       }
@@ -6923,19 +6923,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "System default (US English)"
+            "value": "Default US English voice"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "系统默认（美式英语）"
+            "value": "默认美式英语声音"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "系統預設（美式英語）"
+            "value": "預設美式英語聲音"
           }
         }
       }
@@ -6959,6 +6959,167 @@
           "stringUnit": {
             "state": "translated",
             "value": "聲音"
+          }
+        }
+      }
+    },
+    "settings.speech.standard": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Standard quality"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "标准音质"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "標準音質"
+          }
+        }
+      }
+    },
+    "settings.speech.regular": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regular voices"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常规声音"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "一般聲音"
+          }
+        }
+      }
+    },
+    "settings.speech.classic": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classic voices"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "经典声音"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "經典聲音"
+          }
+        }
+      }
+    },
+    "settings.speech.showClassic": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show classic voices"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示经典声音"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "顯示經典聲音"
+          }
+        }
+      }
+    },
+    "settings.speech.manage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Accessibility settings"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开辅助功能设置"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打開輔助使用設定"
+          }
+        }
+      }
+    },
+    "settings.speech.guide": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to add system voices"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "如何添加系统声音"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "如何加入系統聲音"
+          }
+        }
+      }
+    },
+    "settings.speech.downloadHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To add voices, open Accessibility settings, then Read & Speak (Spoken Content on older systems). Download enhanced or premium English voices there."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "如需添加声音，请打开辅助功能中的「朗读与语音」（旧版系统为「朗读内容」），下载增强或优质英语声音。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "如需加入聲音，請打開輔助使用中的「朗讀與語音」（舊版系統為「朗讀內容」），下載增強或優質英語聲音。"
           }
         }
       }

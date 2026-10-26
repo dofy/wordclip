@@ -37,11 +37,24 @@ final class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
 
     func refreshVoices() {
         voices = AVSpeechSynthesisVoice.speechVoices()
-            .filter { $0.language.split(separator: "-").first == "en" }
+            .filter { $0.language.split(separator: "-").first == "en"
+                && !$0.voiceTraits.contains(.isNoveltyVoice) }
             .sorted { voiceName($0).localizedStandardCompare(voiceName($1)) == .orderedAscending }
         if !voiceIdentifier.isEmpty, !voices.contains(where: { $0.identifier == voiceIdentifier }) {
             voiceIdentifier = ""
         }
+    }
+
+    var regularVoices: [AVSpeechSynthesisVoice] { voices.filter { !Self.isClassicVoice($0) } }
+    var classicVoices: [AVSpeechSynthesisVoice] { voices.filter { Self.isClassicVoice($0) } }
+
+    var selectedVoiceIsClassic: Bool {
+        classicVoices.contains { $0.identifier == voiceIdentifier }
+    }
+
+    static func isClassicVoice(_ voice: AVSpeechSynthesisVoice) -> Bool {
+        voice.identifier.hasPrefix("com.apple.eloquence.")
+            || voice.identifier.hasPrefix("com.apple.speech.synthesis.voice.")
     }
 
     func voiceName(_ voice: AVSpeechSynthesisVoice) -> String {
@@ -52,9 +65,10 @@ final class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
             quality = String(localized: "settings.speech.enhanced", defaultValue: "Enhanced")
         case .premium:
             quality = String(localized: "settings.speech.premium", defaultValue: "Premium")
-        default: quality = ""
+        default:
+            quality = String(localized: "settings.speech.standard", defaultValue: "Standard quality")
         }
-        return quality.isEmpty ? "\(voice.name) · \(language)" : "\(voice.name) · \(language) · \(quality)"
+        return "\(voice.name) · \(language) · \(quality)"
     }
 
     static func normalizedRate(_ value: Double) -> Double {
@@ -65,7 +79,8 @@ final class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
         let utterance = AVSpeechUtterance(string: trimmed)
-        let selected = voiceIdentifier.isEmpty ? nil : AVSpeechSynthesisVoice(identifier: voiceIdentifier)
+        // Resolve only eligible voices, including preferences saved by older versions.
+        let selected = voices.first { $0.identifier == voiceIdentifier }
         let family = language.split(separator: "-").first
         utterance.voice = selected?.language.split(separator: "-").first == family
             ? selected : AVSpeechSynthesisVoice(language: language)
