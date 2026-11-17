@@ -8,6 +8,7 @@
 <a href="https://github.com/dofy/wordclip">GitHub</a> · <a href="https://github.com/dofy/wordclip/issues">Issues</a></p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Mac-Apple%20Silicon-536b83?style=flat-square" alt="Mac: Apple Silicon" />
   <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20iPadOS-3c647b?style=flat-square" alt="macOS, iOS and iPadOS" />
   <img src="https://img.shields.io/badge/dictionary-offline-607c68?style=flat-square" alt="Offline dictionary" />
   <img src="https://img.shields.io/badge/review-spaced%20repetition-a67551?style=flat-square" alt="Spaced repetition" />
@@ -108,7 +109,7 @@
 ./scripts/package-release.sh          # → dist/WordClip-<版本>.dmg
 ```
 
-腳本會建置 Release 通用二進位檔、簽名,並打出一個 DMG:App、`Applications` 符號連結,
+腳本會建置 Release Apple Silicon（`arm64`）二進位檔、簽名,並打出一個 DMG:App、`Applications` 符號連結,
 以及一份三語的第一次執行說明(Gatekeeper、輔助使用、螢幕錄製)。
 
 **這個建置裡 Pro 是解鎖的。** 直接發佈的副本拿不到 App Store 收據,

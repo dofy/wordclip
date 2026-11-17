@@ -8,6 +8,7 @@
 <a href="https://github.com/dofy/wordclip">GitHub</a> · <a href="https://github.com/dofy/wordclip/issues">Issues</a></p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Mac-Apple%20Silicon-536b83?style=flat-square" alt="Mac: Apple Silicon" />
   <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20iPadOS-3c647b?style=flat-square" alt="macOS, iOS and iPadOS" />
   <img src="https://img.shields.io/badge/dictionary-offline-607c68?style=flat-square" alt="Offline dictionary" />
   <img src="https://img.shields.io/badge/review-spaced%20repetition-a67551?style=flat-square" alt="Spaced repetition" />
@@ -108,7 +109,7 @@
 ./scripts/package-release.sh          # → dist/WordClip-<version>.dmg
 ```
 
-The script builds Release as a universal binary, signs it, and writes a DMG
+The script builds Release as an Apple Silicon (`arm64`) binary, signs it, and writes a DMG
 holding the app, an `Applications` symlink and a trilingual first-run note
 covering Gatekeeper and the Accessibility and Screen Recording grants.
 

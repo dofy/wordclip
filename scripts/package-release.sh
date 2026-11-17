@@ -129,7 +129,7 @@ ensure_signing_identity() {
 # A silently dropped compilation condition would ship a build whose Pro features
 # are locked with no purchase available, and nothing in the build output would
 # say so. Check the setting as xcodebuild resolves it for this exact scheme and
-# configuration, before spending several minutes on a universal build.
+# configuration, before spending several minutes on a Apple Silicon build.
 verify_direct_distribution_flag() {
     local conditions
     conditions="$(xcodebuild \
@@ -148,8 +148,8 @@ verify_direct_distribution_flag() {
     log "$build_configuration defines WORDCLIP_DIRECT_DISTRIBUTION"
 }
 
-build_universal_app() {
-    log "Building $app_name ($build_configuration, universal, Pro unlocked)"
+build_apple_silicon_app() {
+    log "Building $app_name ($build_configuration, Apple Silicon, Pro unlocked)"
     rm -rf "$derived_data"
 
     xcodegen generate
@@ -160,14 +160,13 @@ build_universal_app() {
     # machine. Signing happens explicitly below, so the build does not need any
     # identity at all.
     #
-    # ARCHS is forced and then checked: an arm64-only binary would leave every
-    # Intel Mac unable to open the app.
+    # Force and verify the Apple Silicon architecture.
     xcodebuild \
         -project WordClip.xcodeproj \
         -scheme WordClip-macOS \
         -configuration "$build_configuration" \
         -derivedDataPath "$derived_data" \
-        ARCHS="x86_64 arm64" \
+        ARCHS="arm64" \
         ONLY_ACTIVE_ARCH=NO \
         CODE_SIGNING_ALLOWED=NO \
         CODE_SIGN_IDENTITY="" \
@@ -176,12 +175,10 @@ build_universal_app() {
 
     local architectures
     architectures="$(lipo -archs "$built_app/Contents/MacOS/WordClip")"
-    for architecture in x86_64 arm64; do
-        if [[ " $architectures " != *" $architecture "* ]]; then
-            echo "error: the binary is missing the $architecture slice (got: $architectures)" >&2
-            exit 1
-        fi
-    done
+    if [[ "$architectures" != "arm64" ]]; then
+        echo "error: expected arm64 only, got: $architectures" >&2
+        exit 1
+    fi
     log "Architectures: $architectures"
 
     # No symbol check on the built binary: UnlockedEntitlement lives in the
@@ -321,7 +318,7 @@ main() {
     version="$(read_marketing_version)"
 
     ensure_signing_identity
-    build_universal_app
+    build_apple_silicon_app
     sign_app
 
     local dmg_path
