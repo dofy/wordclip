@@ -1,15 +1,23 @@
-# WordClip
+<p align="center"><img src="website/public/app-icon.png" alt="WordClip icon" width="120" /></p>
 
-**English** · [简体中文](README.zh-Hans.md) · [繁體中文](README.zh-Hant.md)
+<h1 align="center">WordClip</h1>
 
-[**wordclip.phpz.org** ↗](https://wordclip.phpz.org)
+<p align="center"><strong>Collect words wherever you find them.</strong></p>
 
-A cross-platform vocabulary tool for collecting words anywhere, looking them up offline, and reviewing them with spaced repetition. Built for English today; the architecture extends to any language.
+<p align="center"><strong>English</strong> · <a href="README.zh-Hans.md">简体中文</a> · <a href="README.zh-Hant.md">繁體中文</a><br />
+<a href="https://github.com/dofy/wordclip">GitHub</a> · <a href="https://github.com/dofy/wordclip/issues">Issues</a></p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20iPadOS-3c647b?style=flat-square" alt="macOS, iOS and iPadOS" />
+  <img src="https://img.shields.io/badge/dictionary-offline-607c68?style=flat-square" alt="Offline dictionary" />
+  <img src="https://img.shields.io/badge/review-spaced%20repetition-a67551?style=flat-square" alt="Spaced repetition" />
+  <img src="https://img.shields.io/badge/UI-SwiftUI-d66f56?style=flat-square" alt="SwiftUI" />
+</p>
+
+[WordClip](https://wordclip.phpz.org) is a cross-platform vocabulary tool for collecting words anywhere, looking them up offline, and reviewing them with spaced repetition. Built for English today; the architecture extends to any language.
 
 **Platforms**: macOS · iOS · iPadOS
 **Stack**: SwiftUI (one codebase, all platforms) · SwiftData · a Swift package (`WordClipKit`, the shared core) · GRDB (offline dictionary)
-
----
 
 ## What's built
 

@@ -1,15 +1,23 @@
-# WordClip
+<p align="center"><img src="website/public/app-icon.png" alt="WordClip icon" width="120" /></p>
 
-[English](README.md) · [简体中文](README.zh-Hans.md) · **繁體中文**
+<h1 align="center">WordClip</h1>
 
-[**wordclip.phpz.org** ↗](https://wordclip.phpz.org)
+<p align="center"><strong>隨手收集，慢慢掌握。</strong></p>
 
-隨時隨地收集單字、離線查詢、間隔重複複習的跨平台單字學習工具。目前針對英語,架構上可以擴充到任何語言。
+<p align="center"><a href="README.md">English</a> · <a href="README.zh-Hans.md">简体中文</a> · <strong>繁體中文</strong><br />
+<a href="https://github.com/dofy/wordclip">GitHub</a> · <a href="https://github.com/dofy/wordclip/issues">Issues</a></p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20iOS%20%7C%20iPadOS-3c647b?style=flat-square" alt="macOS, iOS and iPadOS" />
+  <img src="https://img.shields.io/badge/dictionary-offline-607c68?style=flat-square" alt="Offline dictionary" />
+  <img src="https://img.shields.io/badge/review-spaced%20repetition-a67551?style=flat-square" alt="Spaced repetition" />
+  <img src="https://img.shields.io/badge/UI-SwiftUI-d66f56?style=flat-square" alt="SwiftUI" />
+</p>
+
+[WordClip](https://wordclip.phpz.org) 是一款隨時隨地收集單字、離線查詢、間隔重複複習的跨平台單字學習工具。目前針對英語,架構上可以擴充到任何語言。
 
 **平台**:macOS · iOS · iPadOS
 **技術堆疊**:SwiftUI(跨平台單一程式碼庫)· SwiftData · Swift Package(`WordClipKit` 共用核心)· GRDB(離線詞庫)
-
----
 
 ## 已完成功能
 
