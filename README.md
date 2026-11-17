@@ -1,4 +1,4 @@
-<p align="center"><img src="website/public/app-icon.png" alt="WordClip icon" width="120" /></p>
+<p align="center"><img src="WordClip/Resources/Assets.xcassets/AppIcon.appiconset/icon_256.png" alt="WordClip icon" width="120" /></p>
 
 <h1 align="center">WordClip</h1>
 
@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/UI-SwiftUI-d66f56?style=flat-square" alt="SwiftUI" />
 </p>
 
-[WordClip](https://wordclip.phpz.org) is a cross-platform vocabulary tool for collecting words anywhere, looking them up offline, and reviewing them with spaced repetition. Built for English today; the architecture extends to any language.
+[WordClip](https://wordclip.phpz.org/) is a cross-platform vocabulary tool for collecting words anywhere, looking them up offline, and reviewing them with spaced repetition. Built for English today; the architecture extends to any language.
 
 **Platforms**: macOS · iOS · iPadOS
 **Stack**: SwiftUI (one codebase, all platforms) · SwiftData · a Swift package (`WordClipKit`, the shared core) · GRDB (offline dictionary)
@@ -92,7 +92,7 @@
 - [Progress](docs/PROGRESS.md) — what's built and what's next
 - [Plan](docs/PLAN.md) — product goals, scope, pricing
 - [Architecture and key technical decisions](docs/ARCHITECTURE.md)
-- [`website/`](website/README.md) — the trilingual product site at [wordclip.phpz.org](https://wordclip.phpz.org)
+- [Official website](https://wordclip.phpz.org/)
 
 ## Development setup
 

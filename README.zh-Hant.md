@@ -1,4 +1,4 @@
-<p align="center"><img src="website/public/app-icon.png" alt="WordClip icon" width="120" /></p>
+<p align="center"><img src="WordClip/Resources/Assets.xcassets/AppIcon.appiconset/icon_256.png" alt="WordClip icon" width="120" /></p>
 
 <h1 align="center">WordClip</h1>
 
@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/UI-SwiftUI-d66f56?style=flat-square" alt="SwiftUI" />
 </p>
 
-[WordClip](https://wordclip.phpz.org) 是一款隨時隨地收集單字、離線查詢、間隔重複複習的跨平台單字學習工具。目前針對英語,架構上可以擴充到任何語言。
+[WordClip](https://wordclip.phpz.org/zh-Hant/) 是一款隨時隨地收集單字、離線查詢、間隔重複複習的跨平台單字學習工具。目前針對英語,架構上可以擴充到任何語言。
 
 **平台**:macOS · iOS · iPadOS
 **技術堆疊**:SwiftUI(跨平台單一程式碼庫)· SwiftData · Swift Package(`WordClipKit` 共用核心)· GRDB(離線詞庫)
@@ -92,7 +92,7 @@
 - [開發進度](docs/PROGRESS.md) — 已完成功能與後續計畫
 - [開發計畫](docs/PLAN.md) — 產品目標、功能邊界、收費方案
 - [架構與關鍵技術決策](docs/ARCHITECTURE.md)
-- [`website/`](website/README.md) —— 三語產品網站，部署在 [wordclip.phpz.org](https://wordclip.phpz.org)
+- [官方網站](https://wordclip.phpz.org/zh-Hant/)
 
 ## 開發環境
 
